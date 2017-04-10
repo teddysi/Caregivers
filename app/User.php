@@ -4,10 +4,23 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Nanigans\SingleTableInheritance\SingleTableInheritanceTrait;
 
 class User extends Authenticatable
 {
     use Notifiable;
+    use SingleTableInheritanceTrait;
+
+    
+    protected $table = "users";
+
+    protected static $singleTableTypeField = 'role';
+
+    protected static $persisted = ['username', 'name', 'email', 'password'];
+
+    protected static $singleTableSubclasses = [Admin::class, HealthcarePro::class, 
+        Caregiver::class];
+    
 
     /**
      * The attributes that are mass assignable.
@@ -15,7 +28,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 'name', 'email', 'password', 'role', 'rate', 'facility', 'job'
+        'username', 'name', 'email', 'password'
     ];
 
     /**
@@ -26,4 +39,9 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+    
 }
+
+
+
+

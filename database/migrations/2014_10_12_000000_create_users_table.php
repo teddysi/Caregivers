@@ -20,9 +20,9 @@ class CreateUsersTable extends Migration
             $table->string('email');
             $table->string('password');
             $table->string('role');
-            $table->string('rate');
-            $table->string('facility');
-            $table->string('job');
+            $table->string('rate')->nullable();
+            $table->string('facility')->nullable();
+            $table->string('job')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

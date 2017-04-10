@@ -15,10 +15,12 @@ class CreatePatients extends Migration
     {
         Schema::create('patients', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('mail');
-            $table->string('caregiver_username');
+            $table->string('email');
             $table->string('name');
+            $table->integer('caregiver_id')->unsigned();
             $table->timestamps();
+
+            $table->foreign('caregiver_id')->references('id')->on('users');
         });
     }
 
