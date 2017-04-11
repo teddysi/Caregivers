@@ -12,12 +12,12 @@ class Need extends Model
 
     public function materials()
     {
-        return $this->hasMany('App\Material');
+        return $this->belongsToMany('App\Material');
     }
 
     public function patients()
     {
-        return $this->hasMany('App\Patient');
+        return $this->belongsToMany('App\Patient');
     }
 
     public function proceedings()

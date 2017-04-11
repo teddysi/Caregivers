@@ -16,7 +16,7 @@ class Material extends Model
 
     protected static $persisted = ['description', 'name'];
 
-    protected static $singleTableSubclasses = [TextFile::class, Video::class, 
+    protected static $singleTableSubclasses = [EmergencyContact::class,TextFile::class, Video::class, 
         Image::class];
 
     protected $fillable = [
@@ -25,7 +25,7 @@ class Material extends Model
 
     public function needs()
     {
-        return $this->hasMany('App\Need');
+        return $this->belongsToMany('App\Need');
     }
 
     public function proceedings()

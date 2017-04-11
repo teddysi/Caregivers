@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMaterials extends Migration
+class CreateMaterialsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -18,8 +18,9 @@ class CreateMaterials extends Migration
             $table->string('type');
             $table->text('description');
             $table->string('name');
-            $table->string('path');
-            $table->string('url');
+            $table->string('path')->nullable();
+            $table->string('url')->nullable();
+            $table->string('number')->nullable();
             $table->timestamps();
         });
     }

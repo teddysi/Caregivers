@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateNeedsMaterials extends Migration
+class CreateNeedsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateNeedsMaterials extends Migration
      */
     public function up()
     {
-        Schema::create('needs_materials', function (Blueprint $table) {
-            $table->integer('need_id');
-            $table->integer('material_id');
+        Schema::create('needs', function (Blueprint $table) {
+            $table->increments('id');
+            $table->text('description');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ class CreateNeedsMaterials extends Migration
      */
     public function down()
     {
-        Schema::drop('needs_materials');
+        Schema::drop('needs');
     }
 }

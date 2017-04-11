@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateHealthcareproCaregiverPivotTable extends Migration
+class CreateCaregiverHealthcareProPivotTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateHealthcareproCaregiverPivotTable extends Migration
      */
     public function up()
     {
-        Schema::create('healthcarepro_caregiver', function (Blueprint $table) {
-            $table->integer('healthcarepro_id')->unsigned()->index();
-            $table->foreign('healthcarepro_id')->references('id')->on('users');
+        Schema::create('caregiver_healthcare_pro', function (Blueprint $table) {
+            $table->integer('healthcare_pro_id')->unsigned()->index();
+            $table->foreign('healthcare_pro_id')->references('id')->on('users');
             $table->integer('caregiver_id')->unsigned()->index();
             $table->foreign('caregiver_id')->references('id')->on('users');
-            $table->primary(['healthcarepro_id', 'caregiver_id']);
+            $table->primary(['healthcare_pro_id', 'caregiver_id']);
         });
     }
 
@@ -29,6 +29,6 @@ class CreateHealthcareproCaregiverPivotTable extends Migration
      */
     public function down()
     {
-        Schema::drop('healthcarepro_caregiver');
+        Schema::drop('caregiver_healthcare_pro');
     }
 }

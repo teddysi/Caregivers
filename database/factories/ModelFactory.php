@@ -55,9 +55,73 @@ $factory->define(App\HealthcarePro::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Patient::class, function (Faker\Generator $faker) {
+    $caregivers = App\Caregiver::all();
 
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
+        'caregiver_id' => $caregivers->random()->id,
+    ];
+});
+
+$factory->define(App\Need::class, function (Faker\Generator $faker) {
+    $array = array('Fazer Endoscopia', 'Mudar penso', 'Dar Comprimido', 'Mudar Sonda', 'Analisar Sangue');
+
+    return [
+        'description' => $faker->randomElement($array),
+    ];
+});
+
+$factory->define(App\TextFile::class, function (Faker\Generator $faker) {
+    
+    return [
+        'name' => $faker->randomElement($array = array('Texto', 'Tutorial', 'FAQ')) . ' - ' . $faker->randomDigitNotNull,
+        'description' => $faker->randomElement($array = array('Texto', 'Tutorial', 'FAQ')) . ' de ' . $faker->name,
+        'type' => 'textFile',
+        'path' => 'C:\\',
+    ];
+});
+
+$factory->define(App\Image::class, function (Faker\Generator $faker) {
+    
+    return [
+        'name' => 'Imagem ' . $faker->randomDigitNotNull,
+        'description' => 'Imagem de ' . $faker->name,
+        'type' => 'image',
+        'path' => $faker->imageUrl($width = 304, $height = 228),
+    ];
+});
+
+$factory->define(App\Video::class, function (Faker\Generator $faker) {
+    
+    return [
+        'name' => $faker->randomElement($array = array('Video - Mudar Penso 1', 'Video - Fazer Endoscopia 1')),
+        'description' => $faker->randomElement($array = array('Video sobre como mudar o penso', 'Video sobre como fazer endoscopia')),
+        'type' => 'video',
+        'url' => $faker->randomElement($array = array('https://www.youtube.com/watch?v=-vSXINtEPpE', 'https://www.youtube.com/watch?v=RoXmMD1rVP0')),
+    ];
+});
+
+$factory->define(App\EmergencyContact::class, function (Faker\Generator $faker) {
+    
+    return [
+        'name' => 'Contacto de Emergência ' . $faker->randomDigitNotNull,
+        'description' => 'Contacto de Emergência de ' + $faker->name,
+        'type' => 'emergencyContact',
+        'number' => $faker->phoneNumber,
+    ];
+});
+
+$factory->define(App\Proceeding::class, function (Faker\Generator $faker) {
+    $patient = App\Patient::all()->random();
+    $need = $patient->needs->random();
+    $material = $need->materials->random();
+
+    return [
+        'note' => $faker->name,
+        'caregiver_id' => $patient->caregiver_id,
+        'material_id' => $material->id,
+        'need_id' => $need->id,
+        'patient_id' => $patient->id,
     ];
 });

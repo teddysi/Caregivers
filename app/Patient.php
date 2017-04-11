@@ -15,14 +15,9 @@ class Patient extends Model
         return $this->belongsTo('App\Caregiver');
     }
 
-    public function healthcarePros()
-    {
-        return $this->hasMany('App\HealthcarePro');
-    }
-
     public function needs()
     {
-        return $this->hasMany('App\Need');
+        return $this->belongsToMany('App\Need');
     }
 
     public function proceedings()
