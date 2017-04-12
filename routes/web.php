@@ -26,6 +26,11 @@ Route::get('/needs', 'AdminController@needs');
 
 Route::get('/materials', 'AdminController@materials');
 
+Route::get('/healthcarepro{id}/caregivers', [
+	'as' => 'admin.admin_healthcarepro_caregivers',
+	'uses' =>'AdminController@healthcareproCaregivers'
+	]);
+
 Route::get('/caregiver{id}/patients', [
 	'as' => 'admin.admin_caregiver_patients',
 	'uses' =>'AdminController@caregiverPatients'

@@ -18,6 +18,7 @@
             <th>Email</th>
             <th>Profissão/Estatuto</th>
             <th>Local de Trabalho</th>
+            <th>Cuidadores</th>
             <th>Acções</th>
         </tr>
     </thead>
@@ -29,9 +30,9 @@
             <td> {{ $healthcarepro->email }} </td>
             <td> {{ $healthcarepro->job }} </td>
             <td> {{ $healthcarepro->facility }} </td>
+            <td><a class="btn btn-primary" href="{{route('admin.admin_healthcarepro_caregivers', ['id' => $healthcarepro->id])}}">Cuidadores</a></td>
             <td>
-            <a class="btn btn-primary" href="">Editar Cuidador</a>
-            <a class="btn btn-danger" href="">Remover Cuidador</a>
+            <a class="btn btn-danger" href="">Remover Profissional de Saúde</a>
             </td>
     	</tr>
     @endforeach

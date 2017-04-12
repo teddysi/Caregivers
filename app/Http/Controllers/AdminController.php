@@ -26,6 +26,13 @@ class AdminController extends Controller
 		return view('admin.admin_healthcarepros', compact('healthcarepros'));
 	}
 
+	public function healthcareproCaregivers($id)
+	{
+		$caregivers = HealthcarePro::find($id)->caregivers;
+
+		return view('admin.admin_healthcarepro_caregivers', compact('caregivers'));
+	}
+
 	/****CAREGIVERS****/
 	public function caregivers()
 	{
