@@ -23,7 +23,8 @@ class CreateUsersTable extends Migration
             $table->string('rate')->nullable();
             $table->string('facility')->nullable();
             $table->string('job')->nullable();
-            $table->integer('loginCount')->nullable();
+            $table->integer('login_count')->nullable();
+            $table->string('caregiver_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
