@@ -11,37 +11,48 @@
 |
 */
 /*********ADMIN*********/
-Route::get('/', 'AdminController@dashboard');
+Route::get('/', 'UserController@dashboard');
 
-Route::get('/healthcarepros', 'AdminController@healthcarepros');
+Route::get('/all_users', 'UserController@allUsers');
+
+Route::get('/admins', 'UserController@admins');
+	
+Route::get('/healthcarepros', 'UserController@healthcarepros');
 
 Route::get('/caregivers', [
 	'as' => 'admin.admin_caregivers',
-	'uses' => 'AdminController@caregivers'
+	'uses' => 'UserController@caregivers'
 	]);
 
-Route::get('/patients', 'AdminController@patients');
+Route::get('/patients', 'UserController@patients');
 
-Route::get('/needs', 'AdminController@needs');
+Route::get('/needs', 'UserController@needs');
 
-Route::get('/materials', 'AdminController@materials');
+Route::get('/materials', 'UserController@materials');
+
+Route::get('/user{id}/details', [
+	'as' => 'admin.admin_user_details',
+	'uses' =>'UserController@details'
+	]);
 
 Route::get('/healthcarepro{id}/caregivers', [
 	'as' => 'admin.admin_healthcarepro_caregivers',
-	'uses' =>'AdminController@healthcareproCaregivers'
+	'uses' =>'UserController@healthcareproCaregivers'
 	]);
 
 Route::get('/caregiver{id}/patients', [
 	'as' => 'admin.admin_caregiver_patients',
-	'uses' =>'AdminController@caregiverPatients'
+	'uses' =>'UserController@caregiverPatients'
 	]);
 
 Route::get('/patient{id}/needs', [
 	'as' => 'admin.admin_patient_needs',
-	'uses' =>'AdminController@patientNeeds'
+	'uses' =>'UserController@patientNeeds'
 	]);
 
 Route::get('/need{id}/materials', [
 	'as' => 'admin.admin_need_materials',
-	'uses' =>'AdminController@needMaterials'
+	'uses' =>'UserController@needMaterials'
 	]);
+
+

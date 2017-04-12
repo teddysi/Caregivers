@@ -3,13 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
+use App\Admin;
 use App\HealthcarePro;
 use App\Caregiver;
 use App\Patient;
 use App\Need;
 use App\Material;
 
-class AdminController extends Controller
+
+class UserController extends Controller
 {
     
 
@@ -17,6 +20,30 @@ class AdminController extends Controller
 	{
 		return view('admin.admin_dashboard');
 	}
+
+	public function allUsers()
+	{
+		$users = User::all();
+
+		return view('admin.admin_all_users', compact('users'));
+	}
+
+	public function details($id)
+	{
+		$user = User::find($id);
+		$role = $this->roleToFullWord($user->id);
+
+		return view('admin.admin_user_details', compact('user', 'role'));
+	}
+
+	/****ADMINS****/
+	public function admins()
+	{
+		$admins = Admin::all();
+
+		return view('admin.admin_admins', compact('admins'));
+	}
+
 
 	/****HEALTHCAREPROS****/
 	public function healthcarepros()
@@ -89,5 +116,30 @@ class AdminController extends Controller
 
 		return view('admin.admin_need_materials', compact('materials'));
 	}
+
+	public function roleToFullWord($id)
+	{
+		$user = User::find($id);
+
+		switch ($user->role) {
+			case 'admin':
+				return "Administrador";
+				break;
+
+			case 'healthcarepro':
+				return "Profissional de Saúde";
+				break;
+
+			case 'caregiver':
+				return "Cuidador";
+				break;
+
+			default:
+				# code...
+				break;
+		}
+	}
+	
+	
 
 }
