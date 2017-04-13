@@ -55,8 +55,11 @@ Route::get('/need{id}/materials', [
 // Caregivers API
 Route::post('/caregivers/login', 'CaregiversController@login');
 Route::get('/caregivers/{caregiver}/patients', 'CaregiversController@patients');
-Route::get('/caregivers/{caregiver}/materials', 'CaregiversController@materials');
-
+Route::get('/caregivers/{caregiver}/materials', 'CaregiversController@caregiversMaterials');
 Route::get('/caregivers/{caregiver}/patients/{patient}/needs', 'CaregiversController@patientsNeeds');
+Route::get('/caregivers/{caregiver}/patients/{patient}/materials', 'CaregiversController@patientsMaterials');
 Route::get('/caregivers/{caregiver}/patients/{patient}/needs/{need}/materials', 'CaregiversController@patientsNeedsMaterials');
-Route::post('/caregivers/{caregiver}/patients/{patient}/materials/{material}', 'CaregiversController@createProceeding');
+Route::get('/caregivers/{caregiver}/proceedings', 'CaregiversController@proceedings');
+
+Route::post('/proceedings/create', 'ProceedingsController@create');
+Route::patch('/proceedings/{proceeding}', 'ProceedingsController@update');

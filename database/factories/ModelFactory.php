@@ -106,7 +106,7 @@ $factory->define(App\EmergencyContact::class, function (Faker\Generator $faker) 
     
     return [
         'name' => 'Contacto de Emergência ' . $faker->randomDigitNotNull,
-        'description' => 'Contacto de Emergência de ' + $faker->name,
+        'description' => 'Contacto de Emergência de ' . $faker->name,
         'type' => 'emergencyContact',
         'number' => $faker->phoneNumber,
     ];
