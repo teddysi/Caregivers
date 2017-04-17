@@ -23,6 +23,11 @@ class Material extends Model
         'description', 'name',
     ];
 
+    public function caregivers()
+    {
+        return $this->belongsToMany('App\Caregiver');
+    }
+
     public function needs()
     {
         return $this->belongsToMany('App\Need');

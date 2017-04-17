@@ -19,6 +19,12 @@ class CaregiversController extends Controller
             $user = Auth::user();
 
             if ($user->role == 'caregiver') {
+                if (!$user->login_count) {
+                    $user->login_count = 1;
+                } else {
+                    $user->login_count++;
+                }
+                
                 $user->caregiver_token = str_random(60);
                 $user->save();
 

@@ -125,3 +125,14 @@ $factory->define(App\Proceeding::class, function (Faker\Generator $faker) {
         'patient_id' => $patient->id,
     ];
 });
+
+$factory->define(App\Log::class, function (Faker\Generator $faker) {
+    $user = App\User::all()->random();
+
+    return [
+        'performed_task' => $faker->randomElement($array = array('Criou', 'Atualizou', 'Removeu')) . ' um ' .  $faker->randomElement($array = array('Patiente', 'Material', 'Cuidador', 'Profissional de Saúde')),
+        'admin_id' => $user->role == 'admin' ? $user->id : NULL,
+        'healthcare_pro_id' => $user->role == 'healthcarepro' ? $user->id : NULL,
+        'caregiver_id' => $user->role == 'caregiver' ? $user->id : NULL,
+    ];
+});

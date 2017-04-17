@@ -11,7 +11,6 @@ class User extends Authenticatable
     use Notifiable;
     use SingleTableInheritanceTrait;
 
-    
     protected $table = "users";
 
     protected static $singleTableTypeField = 'role';
@@ -21,7 +20,6 @@ class User extends Authenticatable
     protected static $singleTableSubclasses = [Admin::class, HealthcarePro::class, 
         Caregiver::class];
     
-
     /**
      * The attributes that are mass assignable.
      *
@@ -39,6 +37,11 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function logs()
+    {
+        return $this->hasMany('App\Log');
+    }
     
 }
 
