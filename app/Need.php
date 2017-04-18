@@ -10,6 +10,11 @@ class Need extends Model
         'description',
     ];
 
+    public function creator()
+    {
+        return $this->belongsTo('App\HealthcarePro', 'created_by', 'id');
+    }
+
     public function materials()
     {
         return $this->belongsToMany('App\Material');

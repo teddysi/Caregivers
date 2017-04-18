@@ -21,6 +21,8 @@ class CreateMaterialsTable extends Migration
             $table->string('path')->nullable();
             $table->string('url')->nullable();
             $table->string('number')->nullable();
+            $table->integer('healthcare_pro_id')->unsigned()->index();
+            $table->foreign('healthcare_pro_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

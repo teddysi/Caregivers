@@ -16,6 +16,8 @@ class CreateNeedsTable extends Migration
         Schema::create('needs', function (Blueprint $table) {
             $table->increments('id');
             $table->text('description');
+            $table->integer('created_by')->unsigned()->index();
+            $table->foreign('created_by')->references('id')->on('users');
             $table->timestamps();
         });
     }

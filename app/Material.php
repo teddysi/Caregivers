@@ -14,14 +14,19 @@ class Material extends Model
 
     protected static $singleTableTypeField = 'type';
 
-    protected static $persisted = ['description', 'name'];
+    protected static $persisted = ['description', 'name', 'healthcare_pro_id'];
 
     protected static $singleTableSubclasses = [EmergencyContact::class,TextFile::class, Video::class, 
         Image::class];
 
     protected $fillable = [
-        'description', 'name',
+        'description', 'name', 'healthcare_pro_id',
     ];
+
+    public function healthcare_pro()
+    {
+        return $this->belongsTo('App\HealthcarePro');
+    }
 
     public function caregivers()
     {

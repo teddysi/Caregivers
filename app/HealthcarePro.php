@@ -23,5 +23,20 @@ class HealthcarePro extends User
     {
         return $this->belongsToMany('App\Caregiver');
     }
+
+    public function patients()
+    {
+        return $this->hasMany('App\Patient');
+    }
+
+    public function needs()
+    {
+        return $this->hasMany('App\Need', 'created_by', 'id');
+    }
+
+    public function materials()
+    {
+        return $this->hasMany('App\Material');
+    }
     
 }
