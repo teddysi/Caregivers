@@ -26,7 +26,8 @@
     <br><br>
 
     @yield('content')
-
+    
+    
     <br><br>    
     
     @include('layouts.footer')

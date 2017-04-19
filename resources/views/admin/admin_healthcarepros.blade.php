@@ -5,7 +5,7 @@
 @section ('content')
 
 	<div class="container">
-	    <a class="btn btn-primary" href="">Adicionar Novo Profissional de Saúde</a>
+	    <a class="btn btn-primary" href="{{route('create_user', ['role' =>'healthcarepro'])}}">Adicionar Novo Profissional de Saúde</a>
 	    <div class="pull-right"> 
 	</div>
 	
@@ -19,7 +19,8 @@
             <th>Profissão/Estatuto</th>
             <th>Local de Trabalho</th>
             <th>Cuidadores</th>
-            <th>Acções</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -30,9 +31,16 @@
             <td> {{ $healthcarepro->email }} </td>
             <td> {{ $healthcarepro->job }} </td>
             <td> {{ $healthcarepro->facility }} </td>
-            <td><a class="btn btn-primary" href="{{route('admin.admin_healthcarepro_caregivers', ['id' => $healthcarepro->id])}}">Cuidadores</a></td>
             <td>
-            <a class="btn btn-danger" href="">Remover Profissional de Saúde</a>
+                <a class="btn btn-primary" href="{{route('admin.admin_healthcarepro_caregivers', ['id' => $healthcarepro->id])}}">Cuidadores
+                </a>
+            </td>
+            <td>    
+            <a class="btn btn-primary" href="{{route('update_user', ['id' => $healthcarepro->id])}}">Editar Cuidador</a>
+                <form action="{{route('users.deleteHealthcarepro', ['id' => $healthcarepro->id])}}" method="post" class="inline">
+                    {{ csrf_field() }}
+                <button type="submit" class="btn btn-xs btn-danger">Apagar Profissional</button>
+                </form>
             </td>
     	</tr>
     @endforeach

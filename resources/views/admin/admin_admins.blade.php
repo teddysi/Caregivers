@@ -5,7 +5,7 @@
 @section ('content')
 
 	<div class="container">
-	    <a class="btn btn-primary" href="">Adicionar Novo Administrador</a>
+	    <a class="btn btn-primary" href="{{route('create_user', ['role' =>'admin'])}}">Adicionar Novo Administrador</a>
 	    <div class="pull-right"> 
 	    </div>
 	
@@ -16,7 +16,8 @@
             <th>Username</th>
             <th>Nome</th>
             <th>Email</th>
-            <th>Acções</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -26,8 +27,13 @@
             <td> {{ $admin->name }} </td>
             <td> {{ $admin->email }} </td>
             <td>
-            <a class="btn btn-primary" href="">Editar Administrador</a>
-            <a class="btn btn-danger" href="">Remover Administrador</a>
+            <a class="btn btn-primary" href="{{route('update_user', ['id' => $admin->id])}}">Editar Administrador</a>
+            </td>
+            <td>
+            <form action="{{route('users.deleteAdmin', ['id' => $admin->id])}}" method="post" class="inline">
+                {{ csrf_field() }}
+            <button type="submit" class="btn btn-xs btn-danger">Apagar Administrador</button>
+            </form>
             </td>
         </tr>
     @endforeach
