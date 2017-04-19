@@ -5,7 +5,7 @@
 @section ('content')
 
 	<div class="container">
-	    <a class="btn btn-primary" href="">Adicionar Nova Necessidade</a>
+	    <a class="btn btn-primary" href="{{route('needs.create_need')}}">Adicionar Nova Necessidade</a>
 	    <div class="pull-right"> 
 	</div>
 	
