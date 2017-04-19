@@ -72,30 +72,30 @@ class DatabaseSeeder extends Seeder
         $caregivers = App\Caregiver::all();
 
         foreach ($caregivers as $c) {
-                $patients = $c->patients; 
+            $patients = $c->patients; 
                 
-                foreach ($patients as $p) {
-                    $needs = $p->needs;
+            foreach ($patients as $p) {
+                $needs = $p->needs;
 
-                    foreach ($needs as $n) {
-                        for($i = 0; $i < count($n_m); $i++) {
-                            if ($n->id == $n_m[$i][0]) {
-                                $c_m = DB::table('caregiver_material')->where([
-                                    ['caregiver_id', $c->id],
-                                    ['material_id', $n_m[$i][1]],
-                                ])->get();
+                foreach ($needs as $n) {
+                    for($i = 0; $i < count($n_m); $i++) {
+                        if ($n->id == $n_m[$i][0]) {
+                            $c_m = DB::table('caregiver_material')->where([
+                                ['caregiver_id', $c->id],
+                                ['material_id', $n_m[$i][1]],
+                            ])->get();
 
-                                if (count($c_m) == 0) {
-                                    DB::table('caregiver_material')->insert([
-                                        'caregiver_id' => $c->id,
-                                        'material_id' => $n_m[$i][1],
-                                    ]);
-                               }
+                            if (count($c_m) == 0) {
+                                DB::table('caregiver_material')->insert([
+                                    'caregiver_id' => $c->id,
+                                    'material_id' => $n_m[$i][1],
+                                ]);
                             }
                         }
                     }
                 }
             }
+        }
         
        factory(App\Proceeding::class, 10)->create();
 

@@ -15,9 +15,9 @@ class Patient extends Model
         return $this->belongsTo('App\Caregiver');
     }
 
-    public function healthcare_pro()
+    public function creator()
     {
-        return $this->belongsTo('App\HealthcarePro');
+        return $this->belongsTo('App\HealthcarePro', 'created_by', 'id');
     }
 
     public function needs()

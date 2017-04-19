@@ -26,7 +26,7 @@ class HealthcarePro extends User
 
     public function patients()
     {
-        return $this->hasMany('App\Patient');
+        return $this->hasMany('App\Patient', 'created_by', 'id');
     }
 
     public function needs()
@@ -36,7 +36,7 @@ class HealthcarePro extends User
 
     public function materials()
     {
-        return $this->hasMany('App\Material');
+        return $this->hasMany('App\Material', 'created_by', 'id');
     }
     
 }

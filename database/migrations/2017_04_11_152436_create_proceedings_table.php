@@ -20,8 +20,6 @@ class CreateProceedingsTable extends Migration
             $table->foreign('caregiver_id')->references('id')->on('users');
             $table->integer('material_id')->unsigned()->index();
             $table->foreign('material_id')->references('id')->on('materials');
-            $table->integer('need_id')->unsigned()->index();
-            $table->foreign('need_id')->references('id')->on('needs');
             $table->integer('patient_id')->unsigned()->index();
             $table->foreign('patient_id')->references('id')->on('patients');
             $table->timestamps();

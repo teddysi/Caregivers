@@ -16,12 +16,8 @@ class CreateLogsTable extends Migration
         Schema::create('logs', function (Blueprint $table) {
             $table->increments('id');
             $table->text('performed_task');
-            $table->integer('admin_id')->nullable()->unsigned()->index();
-            $table->foreign('admin_id')->references('id')->on('users');
-            $table->integer('healthcare_pro_id')->nullable()->unsigned()->index();
-            $table->foreign('healthcare_pro_id')->references('id')->on('users');
-            $table->integer('caregiver_id')->nullable()->unsigned()->index();
-            $table->foreign('caregiver_id')->references('id')->on('users');
+            $table->integer('user_id')->unsigned()->index();
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

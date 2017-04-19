@@ -19,8 +19,8 @@ class CreatePatientsTable extends Migration
             $table->string('name');
             $table->integer('caregiver_id')->unsigned()->index();
             $table->foreign('caregiver_id')->references('id')->on('users');
-            $table->integer('healthcare_pro_id')->unsigned()->index();
-            $table->foreign('healthcare_pro_id')->references('id')->on('users');
+            $table->integer('created_by')->unsigned()->index();
+            $table->foreign('created_by')->references('id')->on('users');
             $table->timestamps();
         });
     }

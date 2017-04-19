@@ -62,7 +62,7 @@ $factory->define(App\Patient::class, function (Faker\Generator $faker) {
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'caregiver_id' => $caregivers->random()->id,
-        'healthcare_pro_id' => $healthcare_pros->random()->id,
+        'created_by' => $healthcare_pros->random()->id,
     ];
 });
 
@@ -84,7 +84,7 @@ $factory->define(App\TextFile::class, function (Faker\Generator $faker) {
         'description' => $faker->randomElement($array = array('Texto', 'Tutorial', 'FAQ')) . ' de ' . $faker->name,
         'type' => 'textFile',
         'path' => 'C:\\',
-        'healthcare_pro_id' => $healthcare_pros->random()->id,
+        'created_by' => $healthcare_pros->random()->id,
     ];
 });
 
@@ -96,7 +96,7 @@ $factory->define(App\Image::class, function (Faker\Generator $faker) {
         'description' => 'Imagem de ' . $faker->name,
         'type' => 'image',
         'path' => $faker->imageUrl($width = 304, $height = 228),
-        'healthcare_pro_id' => $healthcare_pros->random()->id,
+        'created_by' => $healthcare_pros->random()->id,
     ];
 });
 
@@ -108,7 +108,7 @@ $factory->define(App\Video::class, function (Faker\Generator $faker) {
         'description' => $faker->randomElement($array = array('Video sobre como mudar o penso', 'Video sobre como fazer endoscopia')),
         'type' => 'video',
         'url' => $faker->randomElement($array = array('https://www.youtube.com/watch?v=-vSXINtEPpE', 'https://www.youtube.com/watch?v=RoXmMD1rVP0')),
-        'healthcare_pro_id' => $healthcare_pros->random()->id,
+        'created_by' => $healthcare_pros->random()->id,
     ];
 });
 
@@ -120,7 +120,7 @@ $factory->define(App\EmergencyContact::class, function (Faker\Generator $faker) 
         'description' => 'Contacto de Emergência de ' . $faker->name,
         'type' => 'emergencyContact',
         'number' => $faker->phoneNumber,
-        'healthcare_pro_id' => $healthcare_pros->random()->id,
+        'created_by' => $healthcare_pros->random()->id,
     ];
 });
 
@@ -133,7 +133,6 @@ $factory->define(App\Proceeding::class, function (Faker\Generator $faker) {
         'note' => $faker->name,
         'caregiver_id' => $patient->caregiver_id,
         'material_id' => $material->id,
-        'need_id' => $need->id,
         'patient_id' => $patient->id,
     ];
 });
@@ -143,8 +142,6 @@ $factory->define(App\Log::class, function (Faker\Generator $faker) {
 
     return [
         'performed_task' => $faker->randomElement($array = array('Criou', 'Atualizou', 'Removeu')) . ' um ' .  $faker->randomElement($array = array('Patiente', 'Material', 'Cuidador', 'Profissional de Saúde')),
-        'admin_id' => $user->role == 'admin' ? $user->id : NULL,
-        'healthcare_pro_id' => $user->role == 'healthcarepro' ? $user->id : NULL,
-        'caregiver_id' => $user->role == 'caregiver' ? $user->id : NULL,
+        'user_id' => $user->id,
     ];
 });

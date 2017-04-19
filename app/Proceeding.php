@@ -12,7 +12,7 @@ class Proceeding extends Model
 
     public function material()
     {
-        return $this->belongsTo('App\Material');
+        return $this->belongsTo('App\Material', 'material_id', 'id');
     }
 
     public function caregiver()
@@ -23,10 +23,5 @@ class Proceeding extends Model
     public function patient()
     {
         return $this->belongsTo('App\Patient');
-    }
-
-    public function need()
-    {
-        return $this->belongsTo('App\Need');
     }
 }

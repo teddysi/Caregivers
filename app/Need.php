@@ -25,9 +25,4 @@ class Need extends Model
         return $this->belongsToMany('App\Patient');
     }
 
-    public function proceedings()
-    {
-        return $this->hasMany('App\Proceeding');
-    }
-
 }
