@@ -26,14 +26,14 @@ class UserController extends Controller
 
 	public function dashboard()
 	{
-		return view('admin.admin_dashboard');
+		return view('dashboard.admin_dashboard');
 	}
 
 	public function allUsers()
 	{
 		$users = User::all();
 
-		return view('admin.admin_all_users', compact('users'));
+		return view('users.all_users', compact('users'));
 	}
 
 	public function details($id)
@@ -41,7 +41,7 @@ class UserController extends Controller
 		$user = User::find($id);
 		$role = $this->roleToFullWord($user->id);
 
-		return view('admin.admin_user_details', compact('user', 'role'));
+		return view('users.user_details', compact('user', 'role'));
 	}
 
 	/****ADMINS****/
@@ -49,7 +49,7 @@ class UserController extends Controller
 	{
 		$admins = Admin::all();
 
-		return view('admin.admin_admins', compact('admins'));
+		return view('admins.admins', compact('admins'));
 	}
 
 
@@ -58,14 +58,14 @@ class UserController extends Controller
 	{
 		$healthcarepros = HealthcarePro::all();
 
-		return view('admin.admin_healthcarepros', compact('healthcarepros'));
+		return view('healthcarepros.healthcarepros', compact('healthcarepros'));
 	}
 
 	public function healthcareproCaregivers($id)
 	{
 		$caregivers = HealthcarePro::find($id)->caregivers;
 
-		return view('admin.admin_healthcarepro_caregivers', compact('caregivers'));
+		return view('healthcarepros.healthcarepro_caregivers', compact('caregivers'));
 	}
 
 	/****CAREGIVERS****/
@@ -73,7 +73,7 @@ class UserController extends Controller
 	{
 		$caregivers = Caregiver::all();
 
-		return view('admin.admin_caregivers', compact('caregivers'));
+		return view('caregivers.caregivers', compact('caregivers'));
 	}
 
 	/****PATIENTS****/
@@ -81,23 +81,15 @@ class UserController extends Controller
 	{
 		$patients = Patient::all();
 
-		return view('admin.admin_patients', compact('patients'));
+		return view('patients.patients', compact('patients'));
 	}
-
-	/****NEEDS****/
-	
-
-
-	/****MATERIALS****/
-	
-
 
 	/****HEALTHCAREPROS****/
 	public function caregiverPatients($id)
 	{
 		$patients = Patient::where("caregiver_id", $id)->get();
 
-		return view('admin.admin_caregiver_patients', compact('patients'));
+		return view('caregivers.caregiver_patients', compact('patients'));
 	}
 
 	public function patientNeeds($id)
@@ -105,15 +97,9 @@ class UserController extends Controller
 		
 		$needs = Patient::find($id)->needs;
 
-		return view('admin.admin_patient_needs', compact('needs'));
+		return view('patients.patient_needs', compact('needs'));
 	}
 
-	public function needMaterials($id)
-	{
-		$materials = Need::find($id)->materials;
-
-		return view('admin.admin_need_materials', compact('materials'));
-	}
 
 	public function roleToFullWord($id)
 	{
@@ -143,7 +129,7 @@ class UserController extends Controller
 		$user = new User();
 		$user->role = $role;
 
-		return view('create_user', compact('user'));
+		return view('users.create_user', compact('user'));
 	}
 
 	public function saveAdmin(Request $request)
@@ -153,11 +139,14 @@ class UserController extends Controller
 				'username' => 'required|min:4|unique:users',
 				'name' => 'required',
 				'email' => 'required|email|unique:users',
-				'password' => 'required|min:6',
-				'password_confirmation' => 'required|confirmed'
+				'password' => 'required|min:6|confirmed',
+				
 			], $this->messages);
 
 		$user = new Admin($request->all());
+		$user->username = $request->input('username');
+		$user->name = $request->input('name');
+		$user->email = $request->input('email');
 		$user->password = bcrypt($user->password );
 
 		$user->save();
@@ -171,8 +160,7 @@ class UserController extends Controller
 				'username' => 'required|min:4|unique:users',
 				'name' => 'required',
 				'email' => 'required|email|unique:users',
-				'password' => 'required|min:6',
-				'password_confirmation' => 'required|confirmed',
+				'password' => 'required|min:6|confirmed',
 				'job' => 'required',
 				'facility' => 'required',
 			], $this->messages);
@@ -195,8 +183,7 @@ class UserController extends Controller
 				'username' => 'required|min:4|unique:users',
 				'name' => 'required',
 				'email' => 'required|email|unique:users',
-				'password' => 'required|min:6',
-				'password_confirmation' => 'required|confirmed'
+				'password' => 'required|min:6|confirmed',
 			], $this->messages);
 
 		$user = new Caregiver($request->all());
@@ -244,7 +231,7 @@ class UserController extends Controller
 			$updateUser = Admin::find($id);
 			
 
-			return view('update_user', compact('updateUser'));
+			return view('users.update_user', compact('updateUser'));
 
 		}
 
@@ -257,7 +244,7 @@ class UserController extends Controller
 			$updateUser->job = $user->job;
 			$updateUser->facility = $user->facility;
 
-			return view('update_user', compact('updateUser'));
+			return view('users.update_user', compact('updateUser'));
 
 		}
 
@@ -268,7 +255,7 @@ class UserController extends Controller
 			$updateUser->name = $user->name;
 			$updateUser->email = $user->email;
 
-			return view('update_user', compact('updateUser'));
+			return view('users.update_user', compact('updateUser'));
 
 		}
 	}

@@ -58,7 +58,7 @@ Route::get('/patient{id}/needs', [
 
 Route::get('/need{id}/materials', [
 	'as' => 'admin.admin_need_materials',
-	'uses' =>'UserController@needMaterials'
+	'uses' =>'NeedController@needMaterials'
 ]);
 
 Route::get('/users/create/{role}', [

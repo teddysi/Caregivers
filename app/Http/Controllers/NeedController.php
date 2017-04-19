@@ -18,7 +18,7 @@ class NeedController extends Controller
 	{
 		$needs = Need::all();
 
-		return view('admin.admin_needs', compact('needs'));
+		return view('needs.needs', compact('needs'));
 	}
 
     public function createNeed()
@@ -48,6 +48,13 @@ class NeedController extends Controller
         $need->delete();
 
         return redirect('/needs');
+	}
+
+	public function needMaterials($id)
+	{
+		$materials = Need::find($id)->materials;
+
+		return view('needs.need_materials', compact('materials'));
 	}
 
 }

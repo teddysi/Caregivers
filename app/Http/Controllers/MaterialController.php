@@ -20,7 +20,7 @@ class MaterialController extends Controller
 	{
 		$materials = Material::all();
 
-		return view('admin.admin_materials', compact('materials'));
+		return view('materials.materials', compact('materials'));
 	}
 
     public function createMaterial($type)
