@@ -10,6 +10,11 @@ class Need extends Model
         'description',
     ];
 
+    public function creator()
+    {
+        return $this->belongsTo('App\HealthcarePro', 'created_by', 'id');
+    }
+
     public function materials()
     {
         return $this->belongsToMany('App\Material');
@@ -18,11 +23,6 @@ class Need extends Model
     public function patients()
     {
         return $this->belongsToMany('App\Patient');
-    }
-
-    public function proceedings()
-    {
-        return $this->hasMany('App\Proceeding');
     }
 
 }

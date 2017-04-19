@@ -11,7 +11,13 @@
 |
 */
 /*********ADMIN*********/
-Route::get('/', 'AdminController@dashboard');
+Auth::routes();
+
+Route::get('/', function () {
+    return view('auth.login');
+});
+
+Route::get('/dashboard', 'AdminController@dashboard');
 
 Route::get('/healthcarepros', 'AdminController@healthcarepros');
 
@@ -45,3 +51,15 @@ Route::get('/need{id}/materials', [
 	'as' => 'admin.admin_need_materials',
 	'uses' =>'AdminController@needMaterials'
 	]);
+
+// Caregivers API
+Route::post('/caregivers/login', 'CaregiversController@login');
+Route::get('/caregivers/{caregiver}/patients', 'CaregiversController@patients');
+Route::get('/caregivers/{caregiver}/materials', 'CaregiversController@caregiversMaterials');
+Route::get('/caregivers/{caregiver}/patients/{patient}/needs', 'CaregiversController@patientsNeeds');
+Route::get('/caregivers/{caregiver}/patients/{patient}/materials', 'CaregiversController@patientsMaterials');
+Route::get('/caregivers/{caregiver}/patients/{patient}/needs/{need}/materials', 'CaregiversController@patientsNeedsMaterials');
+Route::get('/caregivers/{caregiver}/proceedings', 'CaregiversController@proceedings');
+
+Route::post('/proceedings/create', 'ProceedingsController@create');
+Route::patch('/proceedings/{proceeding}', 'ProceedingsController@update');

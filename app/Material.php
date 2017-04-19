@@ -14,14 +14,24 @@ class Material extends Model
 
     protected static $singleTableTypeField = 'type';
 
-    protected static $persisted = ['description', 'name'];
+    protected static $persisted = ['description', 'name', 'created_by'];
 
     protected static $singleTableSubclasses = [EmergencyContact::class,TextFile::class, Video::class, 
         Image::class];
 
     protected $fillable = [
-        'description', 'name',
+        'description', 'name', 'created_by',
     ];
+
+    public function creator()
+    {
+        return $this->belongsTo('App\HealthcarePro', 'created_by', 'id');
+    }
+
+    public function caregivers()
+    {
+        return $this->belongsToMany('App\Caregiver');
+    }
 
     public function needs()
     {
@@ -30,7 +40,7 @@ class Material extends Model
 
     public function proceedings()
     {
-        return $this->hasMany('App\Proceeding');
+        return $this->hasMany('App\Proceeding', 'material_id', 'id');
     }
 
 }

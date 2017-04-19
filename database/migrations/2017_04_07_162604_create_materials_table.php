@@ -21,6 +21,8 @@ class CreateMaterialsTable extends Migration
             $table->string('path')->nullable();
             $table->string('url')->nullable();
             $table->string('number')->nullable();
+            $table->integer('created_by')->unsigned()->index();
+            $table->foreign('created_by')->references('id')->on('users');
             $table->timestamps();
         });
     }
