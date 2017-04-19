@@ -19,6 +19,11 @@ class HealthcarePro extends User
         'facility', 'job'
     ];
 
+    public function caregivers_created()
+    {
+        return $this->hasMany('App\Caregiver', 'created_by', 'id');
+    }
+
     public function caregivers()
     {
         return $this->belongsToMany('App\Caregiver');

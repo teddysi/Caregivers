@@ -8,7 +8,7 @@ class Caregiver extends User
 {
     protected static $singleTableType = 'caregiver';
 
-    protected static $persisted = ['rate', 'caregiver_token', 'login_count'];
+    protected static $persisted = ['rate', 'location', 'caregiver_token', 'login_count', 'created_by'];
 
     /**
      * The attributes that are mass assignable.
@@ -16,8 +16,13 @@ class Caregiver extends User
      * @var array
      */
     protected $fillable = [
-        'rate', 'caregiver_token'
+        'rate', 'location', 'caregiver_token', 'created_by'
     ];
+
+    public function creator()
+    {
+        return $this->belongsTo('App\HealthcarePro', 'created_by', 'id');
+    }
 
     public function healthcarePros()
     {

@@ -12,15 +12,15 @@ class DatabaseSeeder extends Seeder
     public function run()
     {        
         //Users ids: 1 - 12
-        factory(App\Caregiver::class, 5)->create();
         factory(App\Admin::class, 2)->create();
         factory(App\HealthcarePro::class, 5)->create();
+        factory(App\Caregiver::class, 5)->create();
 
         $hp_care = [
-            [8, 1], [8, 2], [8, 5],
-            [9, 2], [9, 3], [9, 4],
-            [10, 1], [10, 5],
-            [11, 3], [11, 4] 
+            [3, 8], [3, 9], [3, 12],
+            [4, 9], [4, 10], [4, 11],
+            [5, 8], [5, 12],
+            [6, 10], [6, 11] 
         ]; 
 
         for($i = 0; $i < count($hp_care); $i++) {

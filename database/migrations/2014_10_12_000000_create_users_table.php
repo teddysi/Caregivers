@@ -21,10 +21,14 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('role');
             $table->string('rate')->nullable();
+            $table->string('location')->nullable();
             $table->string('facility')->nullable();
             $table->string('job')->nullable();
-            $table->integer('login_count')->nullable();
+            $table->integer('login_count')->default(0);
             $table->string('caregiver_token')->nullable();
+            $table->boolean('blocked')->default(false);
+            $table->integer('created_by')->nullable()->unsigned()->index();
+            $table->foreign('created_by')->references('id')->on('users');
             $table->rememberToken();
             $table->timestamps();
         });

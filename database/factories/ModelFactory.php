@@ -14,6 +14,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(App\Caregiver::class, function (Faker\Generator $faker) {
     static $password;
+    $users = App\User::all();
 
     return [
         'username' => $faker->unique()->userName,
@@ -23,6 +24,8 @@ $factory->define(App\Caregiver::class, function (Faker\Generator $faker) {
         'remember_token' => str_random(10),
         'role' => 'caregiver',
         'rate' => $faker->randomElement($array = array('Mau', 'Normal', 'Bom', 'Muito Bom', 'Excelente')),
+        'location' => $faker->randomElement($array = array('Lisboa', 'Porto', 'Leiria', 'Coimbra', 'Faro')),
+        'created_by' => $users->random()->id,
     ];
 });
 
@@ -61,6 +64,7 @@ $factory->define(App\Patient::class, function (Faker\Generator $faker) {
     return [
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
+        'location' => $faker->randomElement($array = array('Lisboa', 'Porto', 'Leiria', 'Coimbra', 'Faro')),
         'caregiver_id' => $caregivers->random()->id,
         'created_by' => $healthcare_pros->random()->id,
     ];
