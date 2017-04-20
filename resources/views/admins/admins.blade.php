@@ -30,9 +30,13 @@
             <a class="btn btn-primary" href="{{route('update_user', ['id' => $admin->id])}}">Editar Administrador</a>
             </td>
             <td>
-            <form action="{{route('users.deleteAdmin', ['id' => $admin->id])}}" method="post" class="inline">
+            <form action="{{route('users.block', ['id' => $admin->id])}}" method="post" class="inline">
                 {{ csrf_field() }}
-            <button type="submit" class="btn btn-xs btn-danger">Apagar Administrador</button>
+            @if($admin->blocked == 0)
+                <button type="submit" class="btn btn btn-danger">Bloquear</button>
+            @else
+                <button type="submit" class="btn btn-success">Desbloquear</button>
+            @endif
             </form>
             </td>
         </tr>

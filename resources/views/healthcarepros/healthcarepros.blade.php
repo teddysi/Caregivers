@@ -36,11 +36,15 @@
                 </a>
             </td>
             <td>    
-            <a class="btn btn-primary" href="{{route('update_user', ['id' => $healthcarepro->id])}}">Editar Cuidador</a>
-                <form action="{{route('users.deleteHealthcarepro', ['id' => $healthcarepro->id])}}" method="post" class="inline">
-                    {{ csrf_field() }}
-                <button type="submit" class="btn btn-xs btn-danger">Apagar Profissional</button>
-                </form>
+                <a class="btn btn-primary" href="{{route('update_user', ['id' => $healthcarepro->id])}}">Editar Cuidador</a>
+                <form action="{{route('users.block', ['id' => $healthcarepro->id])}}" method="post" class="inline">
+                {{ csrf_field() }}
+            @if($healthcarepro->blocked == 0)
+                <button type="submit" class="btn btn btn-danger">Bloquear</button>
+            @else
+                <button type="submit" class="btn btn-success">Desbloquear</button>
+            @endif
+            </form>
             </td>
     	</tr>
     @endforeach

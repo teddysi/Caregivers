@@ -70,21 +70,10 @@ Route::post('/users/create_admin', 'UserController@saveAdmin');
 Route::post('/users/create_healthcarepro', 'UserController@saveHealthcarepro');
 Route::post('/users/create_caregiver', 'UserController@saveCaregiver');
 
-
-Route::post('users/deleteHealthcarepro/{id}', [              
-        'as' => 'users.deleteHealthcarepro',
-        'uses' => 'UserController@deleteHealthcarepro',
-]);
-
-Route::post('users/deleteAdmin/{id}', [              
-        'as' => 'users.deleteAdmin',
-        'uses' => 'UserController@deleteAdmin',
-]);
-
-Route::post('users/deleteCaregiver/{id}', [              
-        'as' => 'users.deleteCaregiver',
-        'uses' => 'UserController@deleteCaregiver',
-]);
+Route::post('users/block/{id}', [ // admin block advertisements at dashboard
+        'as' => 'users.block',
+        'uses' => 'UserController@blockUser',
+    ]);
 
 Route::get('/users/update/{id}', [
 	'as' => 'update_user',

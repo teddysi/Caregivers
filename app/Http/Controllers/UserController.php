@@ -197,28 +197,31 @@ class UserController extends Controller
 		return redirect('/caregivers');
 	}
 
-	public function deleteHealthcarepro($id)
+	public function blockUser($id)
 	{
-		$user = HealthcarePro::find($id);
-        $user->delete();
+		$user = User::find($id);
+        if ($user->blocked == 0) {
+            $user->blocked = 1;
+        } else {
+            $user->blocked = 0;
+        }
 
-        return redirect('/healthcarepros');
-	}
+        $user->save();
 
-	public function deleteAdmin($id)
-	{
-		$user = Admin::find($id);
-        $user->delete();
-
-        return redirect('/admins');
-	}
-
-	public function deleteCaregiver($id)
-	{
-		$user = Caregiver::find($id);
-        $user->delete();
-
-        return redirect('/caregivers');
+        switch ($user->role) {
+        	case 'admin':
+        		# code...
+        		return redirect('/admins');
+        		break;
+        	case 'healthcarepro':
+        		# code...
+        		return redirect('/healthcarepros');
+        		break;
+        	case 'caregiver':
+        		# code...
+        		return redirect('/caregivers');
+        		break;
+        }
 	}
 
 	public function updateUser($id)
@@ -340,5 +343,6 @@ class UserController extends Controller
 			return redirect('/caregivers');
 		}
 	}
+
 
 }

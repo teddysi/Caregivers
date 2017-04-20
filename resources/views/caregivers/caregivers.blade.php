@@ -33,9 +33,13 @@
             <a class="btn btn-primary" href="{{route('update_user', ['id' => $caregiver->id])}}">Editar Cuidador</a>
             </td>
             <td>
-            <form action="{{route('users.deleteCaregiver', ['id' => $caregiver->id])}}" method="post" class="inline">
+            <form action="{{route('users.block', ['id' => $caregiver->id])}}" method="post" class="inline">
                 {{ csrf_field() }}
-            <button type="submit" class="btn btn-xs btn-danger">Apagar Cuidador</button>
+            @if($caregiver->blocked == 0)
+                <button type="submit" class="btn btn btn-danger">Bloquear</button>
+            @else
+                <button type="submit" class="btn btn-success">Desbloquear</button>
+            @endif
             </form>
             </td>
         </tr>

@@ -15,7 +15,7 @@ class User extends Authenticatable
 
     protected static $singleTableTypeField = 'role';
 
-    protected static $persisted = ['username', 'name', 'email', 'password'];
+    protected static $persisted = ['username', 'name', 'email', 'password', 'blocked'];
 
     protected static $singleTableSubclasses = [Admin::class, HealthcarePro::class, 
         Caregiver::class];
@@ -26,7 +26,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'username', 'name', 'email', 'password'
+        'username', 'name', 'email', 'password', 'blocked'
     ];
 
     /**
