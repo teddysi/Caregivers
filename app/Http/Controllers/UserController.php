@@ -229,32 +229,20 @@ class UserController extends Controller
 		if($role == 'admin')
 		{
 			$updateUser = Admin::find($id);
-			
-
 			return view('users.update_user', compact('updateUser'));
 
 		}
 
 		if($role == 'healthcarepro')
 		{
-			$updateUser = new HealthcarePro();
-			$updateUser->role = $role;
-			$updateUser->name = $user->name;
-			$updateUser->email = $user->email;
-			$updateUser->job = $user->job;
-			$updateUser->facility = $user->facility;
-
+			$updateUser = HealthcarePro::find($id);
 			return view('users.update_user', compact('updateUser'));
 
 		}
 
 		if($role == 'caregiver')
 		{
-			$updateUser = new HealthcarePro();
-			$updateUser->role = $role;
-			$updateUser->name = $user->name;
-			$updateUser->email = $user->email;
-
+			$updateUser = Caregiver::find($id);
 			return view('users.update_user', compact('updateUser'));
 
 		}

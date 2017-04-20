@@ -75,7 +75,7 @@
             <input
                 type="password" class="form-control"
                 name="password" id="inputPassword"
-                value="{{$updateUser->password}}"/>
+                value=""/>
         </div>
 
         <div class="form-group">
@@ -136,7 +136,7 @@
             <input
                 type="password" class="form-control"
                 name="password" id="inputPassword"
-                value="{{$updateUser->password}}"/>
+                value=""/>
         </div>
 
         <div class="form-group">
