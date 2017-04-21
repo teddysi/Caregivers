@@ -92,6 +92,16 @@ Route::get('/patients/create/', [
 
 Route::post('/patients/save_patient', 'PatientsController@savePatient');
 
+Route::get('/patients/update_patient/{id}', [
+	'as' => 'patients.update_patient',
+	'uses' =>'PatientsController@updatePatient'
+]);
+
+Route::post('/patients/update/{id}', [          
+        'as' => 'patients.update',
+        'uses' => 'PatientsController@update',
+]);
+
 
 //------------------------------------------------
 

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Patient;
 use Auth;
+
 
 class PatientsController extends Controller
 {
@@ -51,6 +53,33 @@ class PatientsController extends Controller
 		$needs = Patient::find($id)->needs;
 
 		return view('patients.patient_needs', compact('needs'));
+	}
+
+	public function updatePatient($id)
+	{	
+		$updatePatient =  Patient::find($id);
+		
+		return view('patients.update_patient', compact('updatePatient'));
+	}
+
+	public function update(Request $request)
+	{
+		$this->validate($request, [
+				'name' => 'required',
+				'email' => [
+						'required', 'email' , Rule::unique('users')->ignore($request->id, 'id'),
+						],
+				'location' => 'required',
+			], $this->messages);
+
+		$patient = Patient::find($request->id);
+		$patient->name = $request->input('name');
+		$patient->email = $request->input('email');
+		$patient->location = $request->input('location');
+
+		$patient->save();
+
+		return redirect('/patients');
 	}
 
 }

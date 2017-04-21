@@ -26,7 +26,7 @@
             <a class="btn btn-primary" href="{{route('admin.admin_patient_needs', ['id' => $patient->id])}}">Ver Necessidades</a> 
             </td>
             <td>
-            <a class="btn btn-danger" href="">Remover Paciente</a>
+            <a class="btn btn-primary" href="{{route('patients.update_patient', ['id' => $patient->id])}}">Editar</a>
             </td>
         </tr>
     @endforeach
