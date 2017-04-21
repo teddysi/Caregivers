@@ -5,7 +5,7 @@
 @section ('content')
 
 	<div class="container">
-	    <a class="btn btn-primary" href="">Adicionar Novo Paciente</a>
+	    <a class="btn btn-primary" href="{{route('create_patients')}}">Adicionar Novo Paciente</a>
 	    <div class="pull-right"> 
 	    </div>
 	

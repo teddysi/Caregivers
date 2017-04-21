@@ -30,7 +30,7 @@ Route::get('/caregivers', [
 	'uses' => 'UserController@caregivers'
 ]);
 
-Route::get('/patients', 'UserController@patients');
+Route::get('/patients', 'PatientsController@patients');
 
 Route::get('/needs', 'NeedController@needs');
 
@@ -53,7 +53,7 @@ Route::get('/caregiver{id}/patients', [
 
 Route::get('/patient{id}/needs', [
 	'as' => 'admin.admin_patient_needs',
-	'uses' =>'UserController@patientNeeds'
+	'uses' =>'PatientsController@patientNeeds'
 ]);
 
 Route::get('/need{id}/materials', [
@@ -85,6 +85,14 @@ Route::post('users/update_admin/{id}', [
         'uses' => 'UserController@updateAdmin',
 ]);
 
+Route::get('/patients/create/', [
+	'as' => 'create_patients',
+	'uses' =>'PatientsController@createPatient'
+]);
+
+Route::post('/patients/save_patient', 'PatientsController@savePatient');
+
+
 //------------------------------------------------
 
 Route::get('/needs/create/', [
@@ -115,3 +123,4 @@ Route::get('/caregivers/{caregiver}/proceedings', 'CaregiversController@proceedi
 
 Route::post('/proceedings/create', 'ProceedingsController@create');
 Route::patch('/proceedings/{proceeding}', 'ProceedingsController@update');
+
