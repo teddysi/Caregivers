@@ -13,11 +13,7 @@
 /*********ADMIN*********/
 Auth::routes();
 
-Route::get('/', function () {
-    return view('auth.login');
-});
-
-Route::get('/dashboard', 'UserController@dashboard');
+Route::get('/', 'UserController@dashboard');
 
 Route::get('/all_users', 'UserController@allUsers');
 
@@ -27,14 +23,38 @@ Route::get('/healthcarepros', 'UserController@healthcarepros');
 
 Route::get('/caregivers', [
 	'as' => 'admin.admin_caregivers',
-	'uses' => 'UserController@caregivers'
+	'uses' => 'UserController@caregivers',
+	'middleware' => 'auth'
 ]);
 
 Route::get('/patients', 'UserController@patients');
 
 Route::get('/needs', 'NeedController@needs');
 
-Route::get('/materials', 'MaterialController@materials');
+Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
+    Route::get('/', 'MaterialController@materials');
+	
+	Route::get('/materials/create/{type}', 'MaterialController@create');
+
+	Route::post('create', 'MaterialController@store');
+
+	Route::get('{id}', [
+		'as' => 'materials.show',
+		'uses' =>'MaterialController@show'
+	]);
+
+	Route::get('{id}/edit', [
+		'as' => 'materials.edit',
+		'uses' =>'MaterialController@edit'
+	]);
+
+	Route::patch('{material}', 'MaterialController@update');
+
+	Route::post('{material}/toggleBlock', [
+		'as' => 'materials.toggleBlock',
+		'uses' =>'MaterialController@toggleBlock'
+	]);
+});
 
 Route::get('/user{id}/details', [
 	'as' => 'admin.admin_user_details',
@@ -104,16 +124,6 @@ Route::get('/needs/create/', [
 ]);
 
 Route::post('/needs/save_need', 'NeedController@saveNeed');
-
-Route::get('/materials/create/{type}', [
-	'as' => 'materials.create_material',
-	'uses' =>'MaterialController@createMaterial'
-]);
-
-Route::post('/materials/create_text', 'MaterialController@saveText');
-Route::post('/materials/create_video', 'MaterialController@saveVideo');
-Route::post('/materials/create_image', 'MaterialController@saveImage');
-Route::post('/materials/create_contact', 'MaterialController@saveContact');
 
 // Caregivers API
 Route::post('/caregivers/login', 'CaregiversController@login');
