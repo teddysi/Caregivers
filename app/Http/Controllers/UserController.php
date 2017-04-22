@@ -39,7 +39,7 @@ class UserController extends Controller
         }
 
         if (Auth::user()->role == 'admin') {
-			$materials = Material::paginate(6);
+			$materials = Material::paginate(10);
 			$this->changeTypeFormat($materials);
             return view('dashboard.admin', compact('materials'));
         } elseif (Auth::user()->role == 'healthcarepro') {

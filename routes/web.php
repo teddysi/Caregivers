@@ -32,10 +32,16 @@ Route::get('/patients', 'UserController@patients');
 Route::get('/needs', 'NeedController@needs');
 
 Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
-    Route::get('/', 'MaterialController@materials');
+    Route::get('/', [
+		'as' => 'materials',
+		'uses' =>'MaterialController@index'
+	]);
+	Route::post('/', 'MaterialController@index');
 	
-	Route::get('/materials/create/{type}', 'MaterialController@create');
-
+	Route::get('create/{type}', [
+		'as' => 'materials.create',
+		'uses' =>'MaterialController@create'
+	]);
 	Route::post('create', 'MaterialController@store');
 
 	Route::get('{id}', [
@@ -47,7 +53,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
 		'as' => 'materials.edit',
 		'uses' =>'MaterialController@edit'
 	]);
-
 	Route::patch('{material}', 'MaterialController@update');
 
 	Route::post('{material}/toggleBlock', [

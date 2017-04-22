@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Auth;
 use App\Material;
 use App\TextFile;
 use App\Video;
 use App\Image;
 use App\EmergencyContact;
+use App\User;
 
 class MaterialController extends Controller
 {
@@ -28,6 +30,115 @@ class MaterialController extends Controller
 		$material = Material::find($id);
 		$this->changeTypeFormat($material);
 		return view('materials.show', compact('material'));
+	}
+
+	private function saveDataFieldsToSession(Request $request)
+    {
+        $request->session()->put('name', $request->input('name'));
+        $request->session()->put('type', $request->input('type'));
+        $request->session()->put('creator', $request->input('creator'));
+		$request->session()->put('sort', $request->input('sort'));
+        $request->session()->put('pages', $request->input('pages'));
+        $request->session()->put('blocked', $request->input('blocked'));
+    }
+
+    private function retrieveDataFieldsFromSessionToArray(Request $request, $searchData)
+    {
+        $searchData['name'] = $request->session()->get('name');
+        $searchData['type'] = $request->session()->get('type');
+        $searchData['creator'] = $request->session()->get('creator');
+        $searchData['sort'] = $request->session()->get('sort');
+        $searchData['pages'] = $request->session()->get('pages');
+		$searchData['blocked'] = $request->session()->get('blocked');
+        return $searchData;
+    }
+
+    private function isRequestDataEmpty(Request $request)
+    {
+        if(!$request->has('name') && !$request->has('type')
+            && !$request->has('creator') && !$request->has('sort')
+            && !$request->has('pages') && !$request->has('blocked')) {
+            return true;
+        }
+        return false;
+    }
+
+	public function index(Request $request)
+	{
+		$where = [];
+        $pages = '10';
+        $col = 'created_at';
+        $order = 'desc';
+        $searchData = ['name' => '', 'type' => '', 'creator' => '', 'sort' => '', 'pages' => '', 'blocked' => ''];
+
+        if ($request->has('dashboard')) {
+            $this->saveDataFieldsToSession($request);
+            $searchData = $this->retrieveDataFieldsFromSessionToArray($request, $searchData);
+        } else {
+            $url = $request->fullUrl();
+            if ($this->isRequestDataEmpty($request) && str_contains($url, 'materials?page=')) {
+                $searchData = $this->retrieveDataFieldsFromSessionToArray($request, $searchData);
+            } else {
+                $this->saveDataFieldsToSession($request);
+                $searchData = $this->retrieveDataFieldsFromSessionToArray($request, $searchData);
+            }
+        }
+
+		if (!empty($searchData['name'])) {
+           	$where[] = ['name', 'like', '%'.$searchData['name'].'%'];
+        }
+
+        if (!empty($searchData['type'])) {
+			if($searchData['type'] != 'all') {
+                $where[] = ['type', 'like', '%'.$searchData['type'].'%'];
+            }
+        }
+
+        if (!empty($searchData['creator'])) {
+			$user = User::where('username','like','%'.$searchData['creator'].'%')->first();
+           	$where[] = ['created_by', $user->id];
+        }
+
+		if (!empty($searchData['blocked'])) {
+            if($searchData['blocked'] == 'just_blocked') {
+                $where[] = ['blocked', 1];
+            } elseif($searchData['blocked'] == 'just_unblocked') {
+                $where[] = ['blocked', 0];
+            }
+        }
+
+		if (!empty($searchData['sort'])) {
+            if($searchData['sort'] == 'mrc') {
+                $col = 'created_at';
+                $order = 'desc';
+            } elseif($searchData['sort'] == 'lrc') {
+                $col = 'created_at';
+                $order = 'asc';
+            } elseif($searchData['sort'] == 'name_az') {
+                $col = 'name';
+                $order = 'asc';
+            } elseif($searchData['sort'] == 'name_za') {
+                $col = 'name';
+                $order = 'desc';
+            } elseif($searchData['sort'] == 'type_az') {
+                $col = 'type';
+                $order = 'asc';
+            } elseif($searchData['sort'] == 'type_za') {
+                $col = 'type';
+                $order = 'desc';
+            }
+        }
+
+		if (!empty($searchData['pages'])) {
+            $pages = $searchData['pages'];
+        }
+
+		$materials = Material::where($where)->orderBy($col, $order)->paginate((int)$pages);
+		foreach ($materials as $material) {
+			$this->changeTypeFormat($material);
+		}
+
+		return view('materials.index', compact('materials','searchData'));
 	}
 
 	public function edit($id) {
@@ -74,91 +185,53 @@ class MaterialController extends Controller
         return back();
 	}
 
-    public function createMaterial($type)
+    public function create($type)
 	{	
-		$material = new Material();
-		$material->type = $type;
-
-		return view('materials.create_material', compact('material'));
+		return view('materials.create', compact('type'));
 	}
 
-	public function saveText(Request $request)
-	{
-
+	public function store(Request $request)
+	{	
 		$this->validate($request, [
-				'name' => 'required|unique:materials',
-				'description' => 'required|unique:materials',
-			], $this->messages);
+				'name' => 'required|min:4|unique:materials',
+				'description' => 'required|min:4',
+				'path' => 'nullable|required_if:type,textFile|required_if:type,image',
+				'url' => 'nullable|url|required_if:type,video',
+				'number' => 'nullable|required_if:type,emergencyContact',
+		], $this->messages);
 
-		$material = new TextFile();
+		$material;
+		switch ($request->input('type')) {
+			case 'textFile':
+				$material = new TextFile();
+				break;
+
+			case 'image':
+				$material = new Image();
+				break;
+
+			case 'video':
+				$material = new Video();
+				break;
+
+			case 'emergencyContact':
+				$material = new EmergencyContact();
+				break;
+
+			default:
+				break;
+		}
+
 		$material->name = $request->input('name');
 		$material->description = $request->input('description');
-
-		$material->save();
-
-		return redirect('/materials');
-	}
-
-	public function saveVideo(Request $request)
-	{
-
-		$this->validate($request, [
-				'name' => 'required|unique:materials',
-				'description' => 'required|unique:materials',
-				'url' => 'required',
-			], $this->messages);
-
-		$material = new Video();
-		$material->name = $request->input('name');
-		$material->description = $request->input('description');
+		$material->path = $request->input('path');
 		$material->url = $request->input('url');
-
-		$material->save();
-
-		return redirect('/materials');
-	}
-
-	public function saveImage(Request $request)
-	{
-
-		$this->validate($request, [
-				'name' => 'required|unique:materials',
-				'description' => 'required|unique:materials',
-			], $this->messages);
-
-		$material = new Image();
-		$material->name = $request->input('name');
-		$material->description = $request->input('description');
-
-		$material->save();
-
-		return redirect('/materials');
-	}
-
-	public function saveContact(Request $request)
-	{
-
-		$this->validate($request, [
-				'name' => 'required|unique:materials',
-				'number' => 'required|unique:materials', /////////FALTA REGEX
-			], $this->messages);
-
-		$material = new EmergencyContact();
-		$material->description = "";
-		$material->name = $request->input('name');
 		$material->number = $request->input('number');
+		$material->created_by = Auth::user()->id;
 
 		$material->save();
 
-		return redirect('/materials');
-	}
-
-	public function deleteMaterial($id)
-	{
-		$material = Material::find($id);
-        $material->delete();
-
-        return redirect('/materials');
+		return redirect('/');
 	}
 
 	public static function changeTypeFormat($material)
