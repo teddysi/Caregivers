@@ -18,7 +18,7 @@ class CreatePatientsTable extends Migration
             $table->string('email')->unique();
             $table->string('name');
             $table->string('location');
-            $table->integer('caregiver_id')->unsigned()->index();
+            $table->integer('caregiver_id')->nullable()->unsigned()->index();
             $table->foreign('caregiver_id')->references('id')->on('users');
             $table->integer('created_by')->unsigned()->index();
             $table->foreign('created_by')->references('id')->on('users');

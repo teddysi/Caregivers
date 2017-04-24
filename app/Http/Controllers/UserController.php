@@ -77,12 +77,7 @@ class UserController extends Controller
 	}
 
 	/****PATIENTS****/
-	public function patients()
-	{
-		$patients = Patient::all();
-
-		return view('patients.patients', compact('patients'));
-	}
+	
 
 	/****HEALTHCAREPROS****/
 	public function caregiverPatients($id)
@@ -90,14 +85,6 @@ class UserController extends Controller
 		$patients = Patient::where("caregiver_id", $id)->get();
 
 		return view('caregivers.caregiver_patients', compact('patients'));
-	}
-
-	public function patientNeeds($id)
-	{
-		
-		$needs = Patient::find($id)->needs;
-
-		return view('patients.patient_needs', compact('needs'));
 	}
 
 
