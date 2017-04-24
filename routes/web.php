@@ -31,6 +31,37 @@ Route::get('/patients', 'PatientsController@patients');
 
 Route::get('/needs', 'NeedController@needs');
 
+Route::group(['middleware' => 'auth', 'prefix' => 'users'], function () {
+	// falta fazer index, edit e block
+    Route::get('/', [
+		'as' => 'users',
+		'uses' =>'UserController@index'
+	]);
+	Route::post('/', 'UserController@index');
+	
+	Route::get('create/{role}', [
+		'as' => 'users.create',
+		'uses' =>'UserController@create'
+	]);
+	Route::post('create', 'UserController@store');
+
+	Route::get('{user}', [
+		'as' => 'users.show',
+		'uses' =>'UserController@show'
+	]);
+
+	Route::get('{user}/edit', [
+		'as' => 'users.edit',
+		'uses' =>'UserController@edit'
+	]);
+	Route::patch('{user}', 'UserController@update');
+
+	Route::post('{user}/toggleBlock', [
+		'as' => 'users.toggleBlock',
+		'uses' =>'UserController@toggleBlock'
+	]);
+});
+
 Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
     Route::get('/', [
 		'as' => 'materials',
@@ -44,12 +75,12 @@ Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
 	]);
 	Route::post('create', 'MaterialsController@store');
 
-	Route::get('{id}', [
+	Route::get('{material}', [
 		'as' => 'materials.show',
 		'uses' =>'MaterialsController@show'
 	]);
 
-	Route::get('{id}/edit', [
+	Route::get('{material}/edit', [
 		'as' => 'materials.edit',
 		'uses' =>'MaterialsController@edit'
 	]);
@@ -60,11 +91,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
 		'uses' =>'MaterialsController@toggleBlock'
 	]);
 });
-
-Route::get('/user{id}/details', [
-	'as' => 'admin.admin_user_details',
-	'uses' =>'UserController@details'
-]);
 
 Route::get('/healthcarepro{id}/caregivers', [
 	'as' => 'admin.admin_healthcarepro_caregivers',
@@ -84,30 +110,6 @@ Route::get('/patient{id}/needs', [
 Route::get('/need{id}/materials', [
 	'as' => 'admin.admin_need_materials',
 	'uses' =>'NeedController@needMaterials'
-]);
-
-Route::get('/users/create/{role}', [
-	'as' => 'create_user',
-	'uses' =>'UserController@createUser'
-]);
-
-Route::post('/users/create_admin', 'UserController@saveAdmin');
-Route::post('/users/create_healthcarepro', 'UserController@saveHealthcarepro');
-Route::post('/users/create_caregiver', 'UserController@saveCaregiver');
-
-Route::post('users/block/{id}', [ // admin block advertisements at dashboard
-        'as' => 'users.block',
-        'uses' => 'UserController@blockUser',
-    ]);
-
-Route::get('/users/update/{id}', [
-	'as' => 'update_user',
-	'uses' =>'UserController@updateUser'
-]);
-
-Route::post('users/update_admin/{id}', [          
-        'as' => 'users.update_admin',
-        'uses' => 'UserController@updateAdmin',
 ]);
 
 Route::get('/patients/create/', [

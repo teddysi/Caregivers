@@ -39,12 +39,15 @@ class UserController extends Controller
         }
 
         if (Auth::user()->role == 'admin') {
+			$users = User::paginate(10, ['*'], 'users');
+			foreach ($users as $user) {
+				$this->roleToFullWord($user);
+			}
+			$users->setPageName('users');
+
 			$materials = Material::paginate(10, ['*'], 'materials');
 			$this->changeTypeFormat($materials);
 			$materials->setPageName('materials');
-
-			$users = User::paginate(10, ['*'], 'users');
-			$users->setPageName('users');
             return view('dashboard.admin', compact('users', 'materials'));
         } elseif (Auth::user()->role == 'healthcarepro') {
 			return view('dashboard.healthcarepro');
@@ -68,12 +71,132 @@ class UserController extends Controller
 		return view('users.all_users', compact('users'));
 	}
 
-	public function details($id)
+	public function show(User $user)
 	{
-		$user = User::find($id);
-		$role = $this->roleToFullWord($user->id);
+		$this->roleToFullWord($user);
 
-		return view('users.user_details', compact('user', 'role'));
+		return view('users.show', compact('user'));
+	}
+
+	public function create($role)
+	{	
+		return view('users.create', compact('role'));
+	}
+
+	public function store(Request $request)
+	{	
+		$this->validate($request, [
+			'username' => 'required|min:4|unique:users',
+			'name' => 'required|min:4',
+			'email' => 'required|email|unique:users',
+			'job' => 'nullable|min:4|required_if:role,healthcarepro',
+			'facility' => 'nullable|min:4|required_if:role,healthcarepro',
+			'location' => 'nullable|min:4|required_if:role,caregiver',
+			'password' => 'required|min:6|confirmed',
+		], $this->messages);
+
+		$user;
+		switch ($request->input('role')) {
+			case 'admin':
+				$user = new Admin();
+				break;
+
+			case 'healthcarepro':
+				$user = new HealthcarePro();
+				$user->job = $request->input('job');
+				$user->facility = $request->input('facility');
+				break;
+
+			case 'caregiver':
+				$user = new Caregiver();
+				$user->location = $request->input('location');
+				$user->rate = 'Sem avaliação';
+				$user->created_by = Auth::user()->id;
+				break;
+
+			default:
+				break;
+		}
+
+		$user->username = $request->input('username');
+		$user->name = $request->input('name');
+		$user->email = $request->input('email');
+		$user->password = bcrypt($request->input('password'));
+
+		$user->save();
+
+		return redirect('/');
+	}
+
+	public function edit(User $user) {
+		$this->roleToFullWord($user);
+		return view('users.edit', compact('user'));
+	}
+
+	public function update(Request $request, User $user)
+	{
+		$this->validate($request, [
+			'name' => 'required',
+			'email' => 'required|email|unique:users,email,'.$user->id,
+			'job' => 'nullable|min:4|required_if:role,healthcarepro',
+			'facility' => 'nullable|min:4|required_if:role,healthcarepro',
+			'location' => 'nullable|min:4|required_if:role,caregiver',
+		], $this->messages);
+
+		$user->name = $request->name;
+		$user->email = $request->email;
+		$user->job = $request->job;
+		$user->facility = $request->facility;
+		$user->location = $request->location;
+
+		if ($request->input('password')) {
+			$this->validate($request, [
+				'password' => 'required|confirmed|min:6',
+			], $this->messages);
+
+			$user->password = bcrypt($request->input('password'));
+		}
+
+		$user->save();
+
+		return redirect('/');
+	}
+	
+	public function toggleBlock(Request $request, User $user)
+	{
+		if ($user->blocked == 0) {
+            $user->blocked = 1;
+            $user->save();
+
+            //$request->session()->flash('blockedStatus', "User $user->name blocked.");
+        } elseif ($user->blocked == 1) {
+            $user->blocked = 0;
+            $user->save();
+
+            //$request->session()->flash('blockedStatus', "User $user->name unblocked.");
+        }
+
+        return back();
+	}
+
+	private function roleToFullWord($user)
+	{
+		switch ($user->role) {
+			case 'admin':
+				$user->role = 'Administrador';
+				break;
+
+			case 'healthcarepro':
+				$user->role = 'Profissional de Saúde';
+				break;
+
+			case 'caregiver':
+				$user->role = 'Cuidador';
+				break;
+
+			default:
+				break;
+		}
 	}
 
 	/****ADMINS****/
@@ -83,7 +206,6 @@ class UserController extends Controller
 
 		return view('admins.admins', compact('admins'));
 	}
-
 
 	/****HEALTHCAREPROS****/
 	public function healthcarepros()
@@ -108,260 +230,10 @@ class UserController extends Controller
 		return view('caregivers.caregivers', compact('caregivers'));
 	}
 
-	/****PATIENTS****/
-	
-
-	/****HEALTHCAREPROS****/
 	public function caregiverPatients($id)
 	{
 		$patients = Patient::where("caregiver_id", $id)->get();
 
 		return view('caregivers.caregiver_patients', compact('patients'));
 	}
-
-
-	public function roleToFullWord($id)
-	{
-		$user = User::find($id);
-
-		switch ($user->role) {
-			case 'admin':
-				return "Administrador";
-				break;
-
-			case 'healthcarepro':
-				return "Profissional de Saúde";
-				break;
-
-			case 'caregiver':
-				return "Cuidador";
-				break;
-
-			default:
-				# code...
-				break;
-		}
-	}
-	
-	public function createUser($role)
-	{	
-		$user = new User();
-		$user->role = $role;
-
-		return view('users.create_user', compact('user'));
-	}
-
-	public function saveAdmin(Request $request)
-	{
-
-		$this->validate($request, [
-				'username' => 'required|min:4|unique:users',
-				'name' => 'required',
-				'email' => 'required|email|unique:users',
-				'password' => 'required|min:6|confirmed',
-				
-			], $this->messages);
-
-		$user = new Admin($request->all());
-		$user->username = $request->input('username');
-		$user->name = $request->input('name');
-		$user->email = $request->input('email');
-		$user->password = bcrypt($user->password );
-
-		$user->save();
-
-		return redirect('/admins');
-	}
-
-	public function saveHealthcarepro(Request $request)
-	{
-		$this->validate($request, [
-				'username' => 'required|min:4|unique:users',
-				'name' => 'required',
-				'email' => 'required|email|unique:users',
-				'password' => 'required|min:6|confirmed',
-				'job' => 'required',
-				'facility' => 'required',
-			], $this->messages);
-
-		$user = new HealthcarePro($request->all());
-		$user->username = $request->input('username');
-		$user->name = $request->input('name');
-		$user->email = $request->input('email');
-		$user->password = bcrypt($user->password );
-
-		$user->save();
-
-		return redirect('/healthcarepros');
-		
-	}
-
-	public function saveCaregiver(Request $request)
-	{
-		$this->validate($request, [
-				'username' => 'required|min:4|unique:users',
-				'name' => 'required',
-				'email' => 'required|email|unique:users',
-				'password' => 'required|min:6|confirmed',
-			], $this->messages);
-
-		$user = new Caregiver($request->all());
-		$user->username = $request->input('username');
-		$user->name = $request->input('name');
-		$user->email = $request->input('email');
-		$user->password = bcrypt($user->password );
-		$user->rate = 'Sem avaliação';
-		$user->save();
-
-		return redirect('/caregivers');
-	}
-
-	public function blockUser($id)
-	{
-		$user = User::find($id);
-        if ($user->blocked == 0) {
-            $user->blocked = 1;
-        } else {
-            $user->blocked = 0;
-        }
-
-        $user->save();
-
-        switch ($user->role) {
-        	case 'admin':
-        		# code...
-        		return redirect('/admins');
-        		break;
-        	case 'healthcarepro':
-        		# code...
-        		return redirect('/healthcarepros');
-        		break;
-        	case 'caregiver':
-        		# code...
-        		return redirect('/caregivers');
-        		break;
-        }
-	}
-
-	public function updateUser($id)
-	{	
-		$user =  User::find($id);
-		$role = $user->role;
-
-		if($role == 'admin')
-		{
-			$updateUser = Admin::find($id);
-			return view('users.update_user', compact('updateUser'));
-
-		}
-
-		if($role == 'healthcarepro')
-		{
-			$updateUser = HealthcarePro::find($id);
-			return view('users.update_user', compact('updateUser'));
-
-		}
-
-		if($role == 'caregiver')
-		{
-			$updateUser = Caregiver::find($id);
-			return view('users.update_user', compact('updateUser'));
-
-		}
-	}
-
-	public function updateAdmin(Request $request)
-	{
-
-		$user =  User::find($request->id);
-		$role = $user->role;
-
-		if ($role == 'admin')
-		{
-			$this->validate($request, [
-					'name' => 'required',
-					'email' => [
-							'required', 'email' , Rule::unique('users')->ignore($request->id, 'id'),
-							],
-		
-				], $this->messages);
-
-			$admin = Admin::find($request->id);
-			$admin->name = $request->name;
-			$admin->email = $request->email;
-
-			if ($request->input('password'))
-			{
-				$this->validate($request, [
-						'password' => 'confirmed|min:4',
-					], $this->messages);
-
-				$admin->password = bcrypt($request->input('password'));
-			}
-
-			$admin->save();
-
-			return redirect('/admins');
-		}
-
-		if ($role == 'healthcarepro')
-		{
-			$this->validate($request, [
-					'name' => 'required',
-					'email' => [
-							'required', 'email' , Rule::unique('users')->ignore($request->id, 'id'),
-							],
-		
-				], $this->messages);
-
-			$healthcarepro = HealthcarePro::find($request->id);
-			$healthcarepro->name = $request->name;
-			$healthcarepro->email = $request->email;
-			$healthcarepro->job = $request->job;
-			$healthcarepro->facility = $request->facility;
-
-			if ($request->input('password'))
-			{
-				$this->validate($request, [
-						'password' => 'confirmed|min:4',
-					], $this->messages);
-
-				$healthcarepro->password = bcrypt($request->input('password'));
-			}
-
-			$healthcarepro->save();
-
-			return redirect('/healthcarepros');
-		}
-
-		if ($role == 'caregiver')
-		{
-			$this->validate($request, [
-					'name' => 'required',
-					'email' => [
-							'required', 'email' , Rule::unique('users')->ignore($request->id, 'id'),
-							],
-		
-				], $this->messages);
-
-			$caregiver = Caregiver::find($request->id);
-			$caregiver->name = $request->name;
-			$caregiver->email = $request->email;
-
-			if ($request->input('password'))
-			{
-				$this->validate($request, [
-						'password' => 'confirmed|min:4',
-					], $this->messages);
-
-				$caregiver->password = bcrypt($request->input('password'));
-			}
-
-			$caregiver->save();
-
-			return redirect('/caregivers');
-		}
-	}
-
-
 }

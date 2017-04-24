@@ -38,6 +38,16 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function caregivers_created()
+    {
+        return $this->hasMany('App\Caregiver', 'created_by', 'id');
+    }
+
+    public function materials_created()
+    {
+        return $this->hasMany('App\Material', 'created_by', 'id');
+    }
+
     public function logs()
     {
         return $this->hasMany('App\Log', 'user_id', 'id');

@@ -6,25 +6,58 @@
 	<div class="row">
 		<div class="col-lg-12">
             <h1>Utilizadores</h1>
+			<fieldset>
+				<legend>Criar</legend>
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'admin']) }}">Administrador</a>
+				</div>
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'healthcarepro']) }}">Profissional de Saúde</a>
+				</div>
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'caregiver']) }}">Cuidador</a>
+				</div>
+			</fieldset>
 			@if (count($users))
 				<br /><br />
 				<legend>Listar</legend>
 		        <table class="table table-striped">
 			        <thead>
 			            <tr>
-							<th>Nome de Utilizador</th>
+							<th>Nome</th>
 							<th>Email</th>
-			                <th>Nome</th>
 							<th>Função</th>
+							<th>Ações</th>
 			            </tr>
 			        </thead>
 			        <tbody>
 						@foreach ($users as $user)
 							<tr>
-					        	<td>{{ $user->username }}</td>
-								<td>{{ $user->email }}</td>
 					        	<td>{{ $user->name }}</td>
+								<td>{{ $user->email }}</td>
 								<td>{{ $user->role }}</td>
+								<td style="width:35%">
+									<div class="row">
+										<div class="col-sm-6 col-md-4 col-lg-4">
+											<a class="btn btn-block btn-primary" href="{{ route('users.show', ['user' => $user->id]) }}">Detalhes</a>
+										</div>
+										<div class="col-sm-6 col-md-4 col-lg-4">
+											<a class="btn btn-block btn-warning" href="{{ route('users.edit', ['user' => $user->id]) }}">Editar</a>
+										</div>
+										<div class="col-sm-6 col-md-4 col-lg-4">
+											<form action="{{ route('users.toggleBlock', ['users' => $user->id]) }}" method="POST" class="form-group">
+												{{ csrf_field() }}
+												<div class="form-group">
+													@if ($user->blocked == 0)
+														<button type="submit" class="btn btn-block btn-danger" name="block">Bloquear</button>
+													@elseif ($user->blocked == 1)
+														<button type="submit" class="btn btn-block btn-success" name="unblock">Desbloquear</button>
+													@endif
+												</div>
+											</form>
+										</div>
+									</div>
+								</td>
 					        </tr>
 				        @endforeach
 					</tbody>
@@ -118,13 +151,13 @@
 					        	<td>{{ $material->creator->username }}</td>
 								<td style="width:35%">
 									<div class="row">
-										<div class="col-lg-4">
-											<a class="btn btn-block btn-primary" href="{{ route('materials.show', ['id' => $material->id]) }}">Detalhes</a>
+										<div class="col-sm-6 col-md-4 col-lg-4">
+											<a class="btn btn-block btn-primary" href="{{ route('materials.show', ['material' => $material->id]) }}">Detalhes</a>
 										</div>
-										<div class="col-lg-4">
-											<a class="btn btn-block btn-warning" href="{{ route('materials.edit', ['id' => $material->id]) }}">Editar</a>
+										<div class="col-sm-6 col-md-4 col-lg-4">
+											<a class="btn btn-block btn-warning" href="{{ route('materials.edit', ['material' => $material->id]) }}">Editar</a>
 										</div>
-										<div class="col-lg-4">
+										<div class="col-sm-6 col-md-4 col-lg-4">
 											<form action="{{ route('materials.toggleBlock', ['material' => $material->id]) }}" method="POST" class="form-group">
 												{{ csrf_field() }}
 												<div class="form-group">
