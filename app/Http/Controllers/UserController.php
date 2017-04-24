@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Auth;
+use Session;
 use App\User;
 use App\Admin;
 use App\HealthcarePro;
@@ -11,7 +13,7 @@ use App\Caregiver;
 use App\Patient;
 use App\Need;
 use App\Material;
-
+use App\Http\Controllers\MaterialsController;
 
 class UserController extends Controller
 {
@@ -26,7 +28,37 @@ class UserController extends Controller
 
 	public function dashboard()
 	{
-		return view('dashboard.admin_dashboard');
+		if (Auth::guest()) {
+			return view('auth.login');
+		}
+		
+		if (Auth::user()->blocked == 1) {
+            Auth::logout();
+           	Session::flash('blockedAccount', "Your account as been blocked.");
+            return back();
+        }
+
+        if (Auth::user()->role == 'admin') {
+			$materials = Material::paginate(10, ['*'], 'materials');
+			$this->changeTypeFormat($materials);
+			$materials->setPageName('materials');
+
+			$users = User::paginate(10, ['*'], 'users');
+			$users->setPageName('users');
+            return view('dashboard.admin', compact('users', 'materials'));
+        } elseif (Auth::user()->role == 'healthcarepro') {
+			return view('dashboard.healthcarepro');
+		}
+
+        Auth::logout();
+    	return back();
+	}
+
+	private function changeTypeFormat($materials)
+	{
+		foreach ($materials as $material) {
+			MaterialsController::changeTypeFormat($material);
+		}
 	}
 
 	public function allUsers()

@@ -14,18 +14,18 @@ class Material extends Model
 
     protected static $singleTableTypeField = 'type';
 
-    protected static $persisted = ['description', 'name', 'created_by'];
+    protected static $persisted = ['description', 'name', 'created_by', 'blocked'];
 
     protected static $singleTableSubclasses = [EmergencyContact::class,TextFile::class, Video::class, 
         Image::class];
 
     protected $fillable = [
-        'description', 'name', 'created_by',
+        'description', 'name', 'created_by', 'blocked',
     ];
 
     public function creator()
     {
-        return $this->belongsTo('App\HealthcarePro', 'created_by', 'id');
+        return $this->belongsTo('App\User', 'created_by', 'id');
     }
 
     public function caregivers()

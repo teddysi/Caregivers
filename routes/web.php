@@ -13,11 +13,7 @@
 /*********ADMIN*********/
 Auth::routes();
 
-Route::get('/', function () {
-    return view('auth.login');
-});
-
-Route::get('/dashboard', 'UserController@dashboard');
+Route::get('/', 'UserController@dashboard');
 
 Route::get('/all_users', 'UserController@allUsers');
 
@@ -27,14 +23,43 @@ Route::get('/healthcarepros', 'UserController@healthcarepros');
 
 Route::get('/caregivers', [
 	'as' => 'admin.admin_caregivers',
-	'uses' => 'UserController@caregivers'
+	'uses' => 'UserController@caregivers',
+	'middleware' => 'auth'
 ]);
 
 Route::get('/patients', 'PatientsController@patients');
 
 Route::get('/needs', 'NeedController@needs');
 
-Route::get('/materials', 'MaterialController@materials');
+Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
+    Route::get('/', [
+		'as' => 'materials',
+		'uses' =>'MaterialsController@index'
+	]);
+	Route::post('/', 'MaterialsController@index');
+	
+	Route::get('create/{type}', [
+		'as' => 'materials.create',
+		'uses' =>'MaterialsController@create'
+	]);
+	Route::post('create', 'MaterialsController@store');
+
+	Route::get('{id}', [
+		'as' => 'materials.show',
+		'uses' =>'MaterialsController@show'
+	]);
+
+	Route::get('{id}/edit', [
+		'as' => 'materials.edit',
+		'uses' =>'MaterialsController@edit'
+	]);
+	Route::patch('{material}', 'MaterialsController@update');
+
+	Route::post('{material}/toggleBlock', [
+		'as' => 'materials.toggleBlock',
+		'uses' =>'MaterialsController@toggleBlock'
+	]);
+});
 
 Route::get('/user{id}/details', [
 	'as' => 'admin.admin_user_details',
@@ -111,16 +136,6 @@ Route::get('/needs/create/', [
 ]);
 
 Route::post('/needs/save_need', 'NeedController@saveNeed');
-
-Route::get('/materials/create/{type}', [
-	'as' => 'materials.create_material',
-	'uses' =>'MaterialController@createMaterial'
-]);
-
-Route::post('/materials/create_text', 'MaterialController@saveText');
-Route::post('/materials/create_video', 'MaterialController@saveVideo');
-Route::post('/materials/create_image', 'MaterialController@saveImage');
-Route::post('/materials/create_contact', 'MaterialController@saveContact');
 
 // Caregivers API
 Route::post('/caregivers/login', 'CaregiversController@login');

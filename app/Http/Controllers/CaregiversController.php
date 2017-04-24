@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Auth;
 use App\Caregiver;
 use App\Patient;
 use App\Need;
