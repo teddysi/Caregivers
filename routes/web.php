@@ -34,30 +34,30 @@ Route::get('/needs', 'NeedController@needs');
 Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
     Route::get('/', [
 		'as' => 'materials',
-		'uses' =>'MaterialController@index'
+		'uses' =>'MaterialsController@index'
 	]);
-	Route::post('/', 'MaterialController@index');
+	Route::post('/', 'MaterialsController@index');
 	
 	Route::get('create/{type}', [
 		'as' => 'materials.create',
-		'uses' =>'MaterialController@create'
+		'uses' =>'MaterialsController@create'
 	]);
-	Route::post('create', 'MaterialController@store');
+	Route::post('create', 'MaterialsController@store');
 
 	Route::get('{id}', [
 		'as' => 'materials.show',
-		'uses' =>'MaterialController@show'
+		'uses' =>'MaterialsController@show'
 	]);
 
 	Route::get('{id}/edit', [
 		'as' => 'materials.edit',
-		'uses' =>'MaterialController@edit'
+		'uses' =>'MaterialsController@edit'
 	]);
-	Route::patch('{material}', 'MaterialController@update');
+	Route::patch('{material}', 'MaterialsController@update');
 
 	Route::post('{material}/toggleBlock', [
 		'as' => 'materials.toggleBlock',
-		'uses' =>'MaterialController@toggleBlock'
+		'uses' =>'MaterialsController@toggleBlock'
 	]);
 });
 

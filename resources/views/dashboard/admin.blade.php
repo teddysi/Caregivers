@@ -4,6 +4,38 @@
 
 <div class="container">
 	<div class="row">
+		<div class="col-lg-12">
+            <h1>Utilizadores</h1>
+			@if (count($users))
+				<br /><br />
+				<legend>Listar</legend>
+		        <table class="table table-striped">
+			        <thead>
+			            <tr>
+							<th>Nome de Utilizador</th>
+							<th>Email</th>
+			                <th>Nome</th>
+							<th>Função</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+						@foreach ($users as $user)
+							<tr>
+					        	<td>{{ $user->username }}</td>
+								<td>{{ $user->email }}</td>
+					        	<td>{{ $user->name }}</td>
+								<td>{{ $user->role }}</td>
+					        </tr>
+				        @endforeach
+					</tbody>
+			    </table>
+			@else
+				<h4>Não existem utilizadores.</h4>
+			@endif
+			<div class="text-center">
+				{!! $users->links() !!}
+			</div>
+        </div>
 	</div>
 	<div class="row">
 		<div class="col-lg-12">

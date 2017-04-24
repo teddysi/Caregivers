@@ -11,7 +11,7 @@ use App\Image;
 use App\EmergencyContact;
 use App\User;
 
-class MaterialController extends Controller
+class MaterialsController extends Controller
 {
     private $messages = [
 	    'unique' =>  ':attribute já existe. Escolha outro.',

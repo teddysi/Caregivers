@@ -13,7 +13,7 @@ use App\Caregiver;
 use App\Patient;
 use App\Need;
 use App\Material;
-use App\Http\Controllers\MaterialController;
+use App\Http\Controllers\MaterialsController;
 
 class UserController extends Controller
 {
@@ -39,9 +39,13 @@ class UserController extends Controller
         }
 
         if (Auth::user()->role == 'admin') {
-			$materials = Material::paginate(10);
+			$materials = Material::paginate(10, ['*'], 'materials');
 			$this->changeTypeFormat($materials);
-            return view('dashboard.admin', compact('materials'));
+			$materials->setPageName('materials');
+
+			$users = User::paginate(10, ['*'], 'users');
+			$users->setPageName('users');
+            return view('dashboard.admin', compact('users', 'materials'));
         } elseif (Auth::user()->role == 'healthcarepro') {
 			return view('dashboard.healthcarepro');
 		}
@@ -53,7 +57,7 @@ class UserController extends Controller
 	private function changeTypeFormat($materials)
 	{
 		foreach ($materials as $material) {
-			MaterialController::changeTypeFormat($material);
+			MaterialsController::changeTypeFormat($material);
 		}
 	}
 
