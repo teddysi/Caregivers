@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Need;
+use Auth;
 
 
 class NeedController extends Controller
@@ -36,7 +37,7 @@ class NeedController extends Controller
 			], $this->messages);
 
 		$need = new Need($request->all());
-
+		$need->created_by = Auth::user()->id;
 		$need->save();
 
 		return redirect('/needs');
@@ -55,6 +56,24 @@ class NeedController extends Controller
 		$materials = Need::find($id)->materials;
 
 		return view('needs.need_materials', compact('materials'));
+	}
+
+	public function edit($id) {
+		$need = Need::find($id);
+		return view('needs.edit', compact('need'));
+	}
+
+	public function update(Request $request, Need $need)
+	{
+		$this->validate($request, [
+			'description' => 'required',
+		], $this->messages);
+
+		$need->description = $request->description;
+
+		$need->save();
+
+		return redirect('/needs');
 	}
 
 }

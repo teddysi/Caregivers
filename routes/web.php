@@ -129,13 +129,20 @@ Route::post('/patients/update/{id}', [
 
 
 //------------------------------------------------
+Route::group(['middleware' => 'auth', 'prefix' => 'needs'], function () {
+	Route::get('/needs/create/', [
+		'as' => 'needs.create_need',
+		'uses' =>'NeedController@createNeed'
+	]);
 
-Route::get('/needs/create/', [
-	'as' => 'needs.create_need',
-	'uses' =>'NeedController@createNeed'
-]);
+	Route::get('{id}/edit', [
+			'as' => 'needs.edit',
+			'uses' =>'NeedController@edit'
+		]);
+		Route::patch('{need}', 'NeedController@update');
 
-Route::post('/needs/save_need', 'NeedController@saveNeed');
+	Route::post('save_need', 'NeedController@saveNeed');
+});
 
 // Caregivers API
 Route::post('/caregivers/login', 'CaregiversController@login');

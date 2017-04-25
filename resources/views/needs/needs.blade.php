@@ -16,6 +16,7 @@
             <th>Descrição</th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -24,6 +25,9 @@
             <td> {{ $need->description }} </td>
             <td> 
             <a class="btn btn-primary" href="{{route('admin.admin_need_materials', ['id' => $need->id])}}">Ver Materiais</a> </td>
+            <td>
+            <a class="btn btn-block btn-warning" href="{{ route('needs.edit', ['id' => $need->id]) }}">Editar</a>
+            </td>
             <td>
             <a class="btn btn-danger" href="">Remover Necessidade</a>
             </td>
