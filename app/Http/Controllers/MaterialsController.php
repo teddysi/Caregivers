@@ -18,13 +18,6 @@ class MaterialsController extends Controller
 	    'required' => ':attribute tem que ser preenchido.',
 	];
 
-	public function materials()
-	{
-		$materials = Material::all();
-
-		return view('materials.materials', compact('materials'));
-	}
-
 	public function index(Request $request)
 	{
 		$where = [];
@@ -37,8 +30,7 @@ class MaterialsController extends Controller
             $this->saveDataFieldsToSession($request);
             $searchData = $this->retrieveDataFieldsFromSessionToArray($request, $searchData);
         } else {
-            $url = $request->fullUrl();
-            if ($this->isRequestDataEmpty($request) && str_contains($url, 'materials?page=')) {
+            if ($this->isRequestDataEmpty($request)) {
                 $searchData = $this->retrieveDataFieldsFromSessionToArray($request, $searchData);
             } else {
                 $this->saveDataFieldsToSession($request);

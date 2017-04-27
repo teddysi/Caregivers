@@ -32,7 +32,7 @@ Route::get('/patients', 'PatientsController@patients');
 Route::get('/needs', 'NeedController@needs');
 
 Route::group(['middleware' => 'auth', 'prefix' => 'users'], function () {
-	// falta fazer index, edit e block
+	// falta fazer index
     Route::get('/', [
 		'as' => 'users',
 		'uses' =>'UserController@index'

@@ -86,9 +86,9 @@
 						<div class="form-group form-inline	">
 							<label for="blockedItems">Materiais:</label>
 							<select name="blocked" class="form-control">
-								<option value="all" {{ $searchData['blocked'] == 'all' ? 'selected' : '' }}>Ver Todos</option>
-								<option value="just_blocked" {{ $searchData['blocked'] == 'just_blocked' ? 'selected' : '' }}>Só Bloqueados</option>
-								<option value="just_unblocked" {{ $searchData['blocked'] == 'just_unblocked' ? 'just_unblocked' : '' }}>Só Não Bloqueados</option>
+								<option value="all" {{ $searchData['blocked'] == 'all' ? 'selected' : '' }}>Todos</option>
+								<option value="just_blocked" {{ $searchData['blocked'] == 'just_blocked' ? 'selected' : '' }}>Bloqueados</option>
+								<option value="just_unblocked" {{ $searchData['blocked'] == 'just_unblocked' ? 'just_unblocked' : '' }}>Não Bloqueados</option>
 							</select>
 						</div>
 					</div>

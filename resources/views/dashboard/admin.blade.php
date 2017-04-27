@@ -21,6 +21,47 @@
 			@if (count($users))
 				<br /><br />
 				<legend>Listar</legend>
+				<form class="form" method="POST" action="{{ route('users') }}">
+					{{ csrf_field() }}
+					<input name="dashboard" type="hidden" value="true">
+					<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-6">
+							<label class="sr-only" for="inputUserName">Nome</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+								</div>
+								<input type="text" name="name" class="form-control" id="inputUserName" placeholder="Nome">
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-6">
+							<label class="sr-only" for="inputEmail">Email</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+								</div>
+								<input type="text" name="email" class="form-control" id="inputEmail" placeholder="Email">
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-6">
+							<div class="form-group form-inline">
+								<label for="userRole">Função:</label>
+								<select name="role" class="form-control">
+									<option value="all">Todos</option>
+									<option value="admin">Administrador</option>
+									<option value="healthcarepro">Profissional de Saúde</option>
+									<option value="caregiver">Cuidador</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-6 pull-right">
+							<button type="submit" class="btn btn-default btn-block">
+								<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Procurar
+							</button>
+						</div>
+					</div>
+				</form>
+				<br />
 		        <table class="table table-striped">
 			        <thead>
 			            <tr>
@@ -91,7 +132,6 @@
 			@if (count($materials))
 				<br /><br />
 				<legend>Listar</legend>
-
 				<form class="form" method="POST" action="{{ route('materials') }}">
 					{{ csrf_field() }}
 					<input name="dashboard" type="hidden" value="true">
@@ -106,16 +146,16 @@
 							</div>
 						</div>
 						<div class="col-lg-3 col-md-3 col-sm-6">
-							<div class="form-group form-inline	">
-							<label for="materialType">Tipo:</label>
-							<select name="type" class="form-control">
-                                <option value="all">Todos</option>
-								<option value="textFile">Ficheiro de Texto</option>
-					    		<option value="image">Imagem</option>
-								<option value="video">Video</option>
-                                <option value="emergencyContact">Contacto de Emergência</option>
-							</select>
-						</div>
+							<div class="form-group form-inline">
+								<label for="materialType">Tipo:</label>
+								<select name="type" class="form-control">
+									<option value="all">Todos</option>
+									<option value="textFile">Ficheiro de Texto</option>
+									<option value="image">Imagem</option>
+									<option value="video">Video</option>
+									<option value="emergencyContact">Contacto de Emergência</option>
+								</select>
+							</div>
 						</div>
 						<div class="col-lg-3 col-md-3 col-sm-6">
 							<label class="sr-only" for="inputCreator">Criador</label>

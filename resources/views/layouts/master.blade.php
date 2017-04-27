@@ -45,7 +45,8 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         @if (Auth::user())
-                            <li><a href="{{ route('materials') }}">Materials</a></li>
+                            <li><a href="{{ route('users') }}">Utilizadores</a></li>
+                            <li><a href="{{ route('materials') }}">Materiais</a></li>
                         @endif
                     </ul>
 
