@@ -60,8 +60,8 @@ Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
 		'uses' =>'MaterialsController@toggleBlock'
 	]);
 
-	Route::get('{material}/lelito', [
-		'as' => 'materials.lelito',
+	Route::get('{material}/showContent', [
+		'as' => 'materials.showContent',
 		'uses' =>'MaterialsController@showMaterial'
 	]);
 
