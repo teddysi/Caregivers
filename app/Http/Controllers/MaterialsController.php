@@ -10,6 +10,8 @@ use App\Video;
 use App\Image;
 use App\EmergencyContact;
 use App\User;
+use Storage;
+use Response;
 
 class MaterialsController extends Controller
 {
@@ -267,5 +269,13 @@ class MaterialsController extends Controller
 			default:
 				break;
 		}
+	}
+
+	public function showMaterial(Material $material)
+	{
+		$content = Storage::get($material->path);
+		$whatIWant = substr($material->path, strpos($material->path, ".") + 1);
+		$var =  '.' . $whatIWant;
+		return response($content)->header('Content-Type', $var );
 	}
 }
