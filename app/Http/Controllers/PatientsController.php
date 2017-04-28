@@ -15,71 +15,59 @@ class PatientsController extends Controller
 	    'required' => ':attribute tem que ser preenchido.',
 	];
 
-	public function patients()
-	{
-		$patients = Patient::all();
-
-		return view('patients.patients', compact('patients'));
-	}
-
-    public function createPatient()
+    public function create()
 	{	
-		$patient = new Patient();
-
-		return view('patients.create_patient', compact('patient'));
+		return view('patients.create');
 	}
 
-	public function savePatient(Request $request)
+	public function store(Request $request)
 	{
-
 		$this->validate($request, [
-				'name' => 'required',
-				'email' => 'email|required|unique:patients', 
-				'location' => 'required',
-			], $this->messages);
+			'name' => 'required',
+			'email' => 'email|required|unique:patients', 
+			'location' => 'required',
+		], $this->messages);
 
-		$patient = new Patient($request->all());
+		$patient = new Patient();
+		$patient->name = $request->input('name');
+		$patient->email = $request->input('email');
+		$patient->location = $request->input('location');
 		$patient->created_by = Auth::user()->id;
 		$patient->save();
 
-		return redirect('/patients');
+		return redirect('/');
 	}
 
-
-	
-	public function patientNeeds($id)
+	public function show(Patient $patient)
 	{
-		
-		$needs = Patient::find($id)->needs;
-
-		return view('patients.patient_needs', compact('needs'));
+		return view('patients.show', compact('patient'));
 	}
 
-	public function updatePatient($id)
-	{	
-		$updatePatient =  Patient::find($id);
-		
-		return view('patients.update_patient', compact('updatePatient'));
+	public function edit(Patient $patient) {
+		return view('patients.edit', compact('patient'));
 	}
 
-	public function update(Request $request)
+	public function update(Request $request, Patient $patient)
 	{
 		$this->validate($request, [
-				'name' => 'required',
-				'email' => [
-						'required', 'email' , Rule::unique('users')->ignore($request->id, 'id'),
-						],
-				'location' => 'required',
-			], $this->messages);
+			'name' => 'required',
+			'email' => 'required|email|unique:patients,email,'.$patient->id,
+			'location' => 'required',
+		], $this->messages);
 
-		$patient = Patient::find($request->id);
 		$patient->name = $request->input('name');
 		$patient->email = $request->input('email');
 		$patient->location = $request->input('location');
 
 		$patient->save();
 
-		return redirect('/patients');
+		return redirect('/');
 	}
 
+	public function needs(Patient $patient)
+    {
+        $needs = $patient->needs()->paginate(10);
+
+        return view('patients.needs',  compact('patient', 'needs'));   
+    }
 }

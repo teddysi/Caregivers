@@ -166,11 +166,11 @@ class MaterialsController extends Controller
 			'number' => 'nullable',
 		], $this->messages);
 
-		$material->name = $request->name;
-		$material->description = $request->description;
-		$material->path = $request->path;
-		$material->url = $request->url;
-		$material->number = $request->number;
+		$material->name = $request->input('name');
+		$material->description = $request->input('description');
+		$material->path = $request->input('path');
+		$material->url = $request->input('url');
+		$material->number = $request->input('number');
 
 		$material->save();
 

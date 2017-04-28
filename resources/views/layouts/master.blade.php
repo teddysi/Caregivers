@@ -45,8 +45,12 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         @if (Auth::user())
-                            <li><a href="{{ route('users') }}">Utilizadores</a></li>
-                            <li><a href="{{ route('materials') }}">Materiais</a></li>
+                            @if (Auth::user()->role == 'admin')
+                                <li><a href="{{ route('users') }}">Utilizadores</a></li>
+                                <li><a href="{{ route('materials') }}">Materiais</a></li>
+                            @elseif (Auth::user()->role == 'healthcarepro')
+                                <li><a href="{{ route('materials') }}">Materiais</a></li>
+                            @endif
                         @endif
                     </ul>
 

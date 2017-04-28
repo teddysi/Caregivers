@@ -7,9 +7,48 @@ use Auth;
 use App\Caregiver;
 use App\Patient;
 use App\Need;
+use App\Http\Controllers\UsersController;
 
 class CaregiversController extends Controller
 {
+    public function patients(Caregiver $caregiver)
+    {
+        $patients = $caregiver->patients()->paginate(10);
+        $notMyPatients = Patient::whereNull('caregiver_id')->paginate(10);
+
+        return view('caregivers.patients',  compact('caregiver', 'patients', 'notMyPatients'));   
+    }
+
+    public function associate(Caregiver $caregiver, Patient $patient)
+    {
+        $patient->caregiver_id = $caregiver->id;
+        $patient->save();
+
+        $patients = $caregiver->patients()->paginate(10);
+        $notMyPatients = Patient::whereNull('caregiver_id')->paginate(10);
+
+        return redirect()->route('caregivers.patients', ['caregiver' => $caregiver->id]); 
+    }
+
+    public function diassociate(Caregiver $caregiver, Patient $patient)
+    {
+        $patient->caregiver_id = null;
+        $patient->save();
+
+        $patients = $caregiver->patients()->paginate(10);
+        $notMyPatients = Patient::whereNull('caregiver_id')->paginate(10);
+
+        return redirect()->route('caregivers.patients', ['caregiver' => $caregiver->id]);
+    }
+
+    public function materials(Caregiver $caregiver)
+    {
+        $materials = $caregiver->materials()->paginate(10);
+        UsersController::changeTypeFormat($materials);
+
+        return view('caregivers.materials',  compact('caregiver', 'materials'));   
+    }
+
     public function login(Request $request)
     {
         $username = $request->input('username');
@@ -35,7 +74,7 @@ class CaregiversController extends Controller
         return response('Não Autorizado', 401);
     }
 
-    public function patients(Request $request, $id)
+    public function patientsAPI(Request $request, $id)
     {
         $caregiver_token = $request->header('Authorization');
         $user = Caregiver::find($id);
@@ -51,7 +90,7 @@ class CaregiversController extends Controller
         return response()->json($user->patients);      
     }
 
-    public function caregiversMaterials(Request $request, $id)
+    public function caregiversMaterialsAPI(Request $request, $id)
     {
         $caregiver_token = $request->header('Authorization');
         $caregiver = Caregiver::find($id);

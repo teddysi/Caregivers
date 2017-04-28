@@ -13,52 +13,119 @@
 /*********ADMIN*********/
 Auth::routes();
 
-Route::get('/', 'UserController@dashboard');
-
-Route::get('/all_users', 'UserController@allUsers');
-
-Route::get('/admins', 'UserController@admins');
-	
-Route::get('/healthcarepros', 'UserController@healthcarepros');
-
-Route::get('/caregivers', [
-	'as' => 'admin.admin_caregivers',
-	'uses' => 'UserController@caregivers',
-	'middleware' => 'auth'
-]);
-
-Route::get('/patients', 'PatientsController@patients');
-
-Route::get('/needs', 'NeedController@needs');
+Route::get('/', 'UsersController@dashboard');
 
 Route::group(['middleware' => 'auth', 'prefix' => 'users'], function () {
-	// falta fazer index
     Route::get('/', [
 		'as' => 'users',
-		'uses' =>'UserController@index'
+		'uses' =>'UsersController@index'
 	]);
-	Route::post('/', 'UserController@index');
+	Route::post('/', 'UsersController@index');
 	
 	Route::get('create/{role}', [
 		'as' => 'users.create',
-		'uses' =>'UserController@create'
+		'uses' =>'UsersController@create'
 	]);
-	Route::post('create', 'UserController@store');
+	Route::post('create', 'UsersController@store');
 
 	Route::get('{user}', [
 		'as' => 'users.show',
-		'uses' =>'UserController@show'
+		'uses' =>'UsersController@show'
 	]);
 
 	Route::get('{user}/edit', [
 		'as' => 'users.edit',
-		'uses' =>'UserController@edit'
+		'uses' =>'UsersController@edit'
 	]);
-	Route::patch('{user}', 'UserController@update');
+	Route::patch('{user}', 'UsersController@update');
 
 	Route::post('{user}/toggleBlock', [
 		'as' => 'users.toggleBlock',
-		'uses' =>'UserController@toggleBlock'
+		'uses' =>'UsersController@toggleBlock'
+	]);
+});
+
+Route::group(['middleware' => 'auth', 'prefix' => 'caregivers'], function () {
+    Route::get('{caregiver}/patients', [
+		'as' => 'caregivers.patients',
+		'uses' =>'CaregiversController@patients'
+	]);
+
+	Route::post('{caregiver}/patients/{patient}/associate', [
+		'as' => 'caregivers.associatePatient',
+		'uses' =>'CaregiversController@associate'
+	]);
+
+	Route::post('{caregiver}/patients/{patient}/diassociate', [
+		'as' => 'caregivers.diassociatePatient',
+		'uses' =>'CaregiversController@diassociate'
+	]);
+
+	Route::get('{caregiver}/materials', [
+		'as' => 'caregivers.materials',
+		'uses' =>'CaregiversController@materials'
+	]);
+});
+
+Route::group(['middleware' => 'auth', 'prefix' => 'patients'], function () {
+	//falta index e needs
+    Route::get('/', [
+		'as' => 'patients',
+		'uses' =>'PatientsController@index'
+	]);
+	Route::post('/', 'PatientsController@index');
+	
+	Route::get('create', [
+		'as' => 'patients.create',
+		'uses' =>'PatientsController@create'
+	]);
+	Route::post('create', 'PatientsController@store');
+
+	Route::get('{patient}', [
+		'as' => 'patients.show',
+		'uses' =>'PatientsController@show'
+	]);
+
+	Route::get('{patient}/edit', [
+		'as' => 'patients.edit',
+		'uses' =>'PatientsController@edit'
+	]);
+	Route::patch('{patient}', 'PatientsController@update');
+
+	Route::get('{patient}/needs', [
+		'as' => 'patients.needs',
+		'uses' =>'PatientsController@needs'
+	]);
+});
+
+Route::group(['middleware' => 'auth', 'prefix' => 'needs'], function () {
+	//falta index e materials
+    Route::get('/', [
+		'as' => 'needs',
+		'uses' =>'NeedsController@index'
+	]);
+	Route::post('/', 'NeedsController@index');
+	
+	Route::get('create', [
+		'as' => 'needs.create',
+		'uses' =>'NeedsController@create'
+	]);
+	Route::post('create', 'NeedsController@store');
+
+	Route::get('{need}', [
+		'as' => 'needs.show',
+		'uses' =>'NeedsController@show'
+	]);
+
+	Route::get('{need}/edit', [
+		'as' => 'needs.edit',
+		'uses' =>'NeedsController@edit'
+	]);
+	Route::patch('{need}', 'NeedsController@update');
+
+	Route::get('{need}/materials', [
+		'as' => 'needs.materials',
+		'uses' =>'NeedsController@materials'
 	]);
 });
 
@@ -97,57 +164,16 @@ Route::get('/healthcarepro{id}/caregivers', [
 	'uses' =>'UserController@healthcareproCaregivers'
 ]);
 
-Route::get('/caregiver{id}/patients', [
-	'as' => 'admin.admin_caregiver_patients',
-	'uses' =>'UserController@caregiverPatients'
-]);
-
-Route::get('/patient{id}/needs', [
-	'as' => 'admin.admin_patient_needs',
-	'uses' =>'PatientsController@patientNeeds'
-]);
-
-Route::get('/need{id}/materials', [
-	'as' => 'admin.admin_need_materials',
-	'uses' =>'NeedController@needMaterials'
-]);
-
-Route::get('/patients/create/', [
-	'as' => 'create_patients',
-	'uses' =>'PatientsController@createPatient'
-]);
-
-Route::post('/patients/save_patient', 'PatientsController@savePatient');
-
-Route::get('/patients/update_patient/{id}', [
-	'as' => 'patients.update_patient',
-	'uses' =>'PatientsController@updatePatient'
-]);
-
-Route::post('/patients/update/{id}', [          
-        'as' => 'patients.update',
-        'uses' => 'PatientsController@update',
-]);
-
-
-//------------------------------------------------
-
-Route::get('/needs/create/', [
-	'as' => 'needs.create_need',
-	'uses' =>'NeedController@createNeed'
-]);
-
-Route::post('/needs/save_need', 'NeedController@saveNeed');
 
 // Caregivers API
-Route::post('/caregivers/login', 'CaregiversController@login');
-Route::get('/caregivers/{caregiver}/patients', 'CaregiversController@patients');
-Route::get('/caregivers/{caregiver}/materials', 'CaregiversController@caregiversMaterials');
-Route::get('/caregivers/{caregiver}/patients/{patient}/needs', 'CaregiversController@patientsNeeds');
-Route::get('/caregivers/{caregiver}/patients/{patient}/materials', 'CaregiversController@patientsMaterials');
-Route::get('/caregivers/{caregiver}/patients/{patient}/needs/{need}/materials', 'CaregiversController@patientsNeedsMaterials');
-Route::get('/caregivers/{caregiver}/proceedings', 'CaregiversController@proceedings');
+Route::post('/caregiversAPI/login', 'CaregiversController@login');
+Route::get('/caregiversAPI/{caregiver}/patients', 'CaregiversController@patientsAPI');
+Route::get('/caregiversAPI/{caregiver}/materials', 'CaregiversController@caregiversMaterialsAPI');
+Route::get('/caregiversAPI/{caregiver}/patients/{patient}/needs', 'CaregiversController@patientsNeeds');
+Route::get('/caregiversAPI/{caregiver}/patients/{patient}/materials', 'CaregiversController@patientsMaterials');
+Route::get('/caregiversAPI/{caregiver}/patients/{patient}/needs/{need}/materials', 'CaregiversController@patientsNeedsMaterials');
+Route::get('/caregiversAPI/{caregiver}/proceedings', 'CaregiversController@proceedings');
 
-Route::post('/proceedings/create', 'ProceedingsController@create');
-Route::patch('/proceedings/{proceeding}', 'ProceedingsController@update');
+Route::post('/proceedingsAPI/create', 'ProceedingsController@create');
+Route::patch('/proceedingsAPI/{proceeding}', 'ProceedingsController@update');
 

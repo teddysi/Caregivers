@@ -15,7 +15,7 @@ use App\Need;
 use App\Material;
 use App\Http\Controllers\MaterialsController;
 
-class UserController extends Controller
+class UsersController extends Controller
 {
 
 	private $messages = [
@@ -50,7 +50,19 @@ class UserController extends Controller
 			$materials->setPageName('materials');
             return view('dashboard.admin', compact('users', 'materials'));
         } elseif (Auth::user()->role == 'healthcarepro') {
-			return view('dashboard.healthcarepro');
+			$caregivers = Caregiver::paginate(10, ['*'], 'caregivers');
+			$caregivers->setPageName('caregivers');
+
+			$patients = Patient::paginate(10, ['*'], 'patients');
+			$patients->setPageName('patients');
+
+			$needs = Need::paginate(10, ['*'], 'needs');
+			$needs->setPageName('needs');
+
+			$materials = Material::paginate(10, ['*'], 'materials');
+			$this->changeTypeFormat($materials);
+			$materials->setPageName('materials');
+			return view('dashboard.healthcarepro',  compact('caregivers', 'patients', 'needs', 'materials'));
 		}
 
         Auth::logout();
@@ -211,11 +223,11 @@ class UserController extends Controller
 			'location' => 'nullable|min:4|required_if:role,caregiver',
 		], $this->messages);
 
-		$user->name = $request->name;
-		$user->email = $request->email;
-		$user->job = $request->job;
-		$user->facility = $request->facility;
-		$user->location = $request->location;
+		$user->name = $request->input('name');
+		$user->email = $request->input('email');
+		$user->job = $request->input('job');
+		$user->facility = $request->input('facility');
+		$user->location = $request->input('location');
 
 		if ($request->input('password')) {
 			$this->validate($request, [
@@ -267,7 +279,7 @@ class UserController extends Controller
 		}
 	}
 
-	private function changeTypeFormat($materials)
+	public static function changeTypeFormat($materials)
 	{
 		foreach ($materials as $material) {
 			MaterialsController::changeTypeFormat($material);
@@ -304,36 +316,6 @@ class UserController extends Controller
         }
         return false;
     }
-
-	public function allUsers()
-	{
-		$users = User::all();
-
-		return view('users.all_users', compact('users'));
-	}
-
-	/****ADMINS****/
-	public function admins()
-	{
-		$admins = Admin::all();
-
-		return view('admins.admins', compact('admins'));
-	}
-
-	/****HEALTHCAREPROS****/
-	public function healthcarepros()
-	{
-		$healthcarepros = HealthcarePro::all();
-
-		return view('healthcarepros.healthcarepros', compact('healthcarepros'));
-	}
-
-	public function healthcareproCaregivers($id)
-	{
-		$caregivers = HealthcarePro::find($id)->caregivers;
-
-		return view('healthcarepros.healthcarepro_caregivers', compact('caregivers'));
-	}
 
 	/****CAREGIVERS****/
 	public function caregivers()
