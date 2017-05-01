@@ -10,7 +10,6 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-/*********ADMIN*********/
 Auth::routes();
 
 Route::get('/', 'UsersController@dashboard');
@@ -68,7 +67,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'caregivers'], function () {
 });
 
 Route::group(['middleware' => 'auth', 'prefix' => 'patients'], function () {
-	//falta index e needs
     Route::get('/', [
 		'as' => 'patients',
 		'uses' =>'PatientsController@index'
@@ -96,10 +94,19 @@ Route::group(['middleware' => 'auth', 'prefix' => 'patients'], function () {
 		'as' => 'patients.needs',
 		'uses' =>'PatientsController@needs'
 	]);
+
+	Route::post('{patient}/needs/{need}/associate', [
+		'as' => 'patients.associateNeed',
+		'uses' =>'PatientsController@associate'
+	]);
+
+	Route::post('{patient}/needs/{need}/diassociate', [
+		'as' => 'patients.diassociateNeed',
+		'uses' =>'PatientsController@diassociate'
+	]);
 });
 
 Route::group(['middleware' => 'auth', 'prefix' => 'needs'], function () {
-	//falta index e materials
     Route::get('/', [
 		'as' => 'needs',
 		'uses' =>'NeedsController@index'

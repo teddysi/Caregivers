@@ -24,7 +24,7 @@ class MaterialsController extends Controller
         $pages = '10';
         $col = 'created_at';
         $order = 'desc';
-        $searchData = ['name' => '', 'type' => '', 'creator' => '', 'sort' => '', 'pages' => '', 'blocked' => ''];
+        $searchData = ['materialName' => '', 'materialType' => '', 'materialCreator' => '', 'materialSort' => '', 'materialPages' => '', 'materialBlocked' => ''];
 
         if ($request->has('dashboard')) {
             $this->saveDataFieldsToSession($request);
@@ -38,53 +38,53 @@ class MaterialsController extends Controller
             }
         }
 
-		if (!empty($searchData['name'])) {
-           	$where[] = ['name', 'like', '%'.$searchData['name'].'%'];
+		if (!empty($searchData['materialName'])) {
+           	$where[] = ['name', 'like', '%'.$searchData['materialName'].'%'];
         }
 
-        if (!empty($searchData['type'])) {
-			if($searchData['type'] != 'all') {
-                $where[] = ['type', 'like', '%'.$searchData['type'].'%'];
+        if (!empty($searchData['materialType'])) {
+			if($searchData['materialType'] != 'all') {
+                $where[] = ['type', 'like', '%'.$searchData['materialType'].'%'];
             }
         }
 
-        if (!empty($searchData['creator'])) {
-			$user = User::where('username','like','%'.$searchData['creator'].'%')->first();
+        if (!empty($searchData['materialCreator'])) {
+			$user = User::where('username','like','%'.$searchData['materialCreator'].'%')->first();
            	$where[] = ['created_by', $user->id];
         }
 
-		if (!empty($searchData['blocked'])) {
-            if($searchData['blocked'] == 'just_blocked') {
+		if (!empty($searchData['materialBlocked'])) {
+            if($searchData['materialBlocked'] == 'just_blocked') {
                 $where[] = ['blocked', 1];
-            } elseif($searchData['blocked'] == 'just_unblocked') {
+            } elseif($searchData['materialBlocked'] == 'just_unblocked') {
                 $where[] = ['blocked', 0];
             }
         }
 
-		if (!empty($searchData['sort'])) {
-            if($searchData['sort'] == 'mrc') {
+		if (!empty($searchData['materialSort'])) {
+            if($searchData['materialSort'] == 'mrc') {
                 $col = 'created_at';
                 $order = 'desc';
-            } elseif($searchData['sort'] == 'lrc') {
+            } elseif($searchData['materialSort'] == 'lrc') {
                 $col = 'created_at';
                 $order = 'asc';
-            } elseif($searchData['sort'] == 'name_az') {
+            } elseif($searchData['materialSort'] == 'name_az') {
                 $col = 'name';
                 $order = 'asc';
-            } elseif($searchData['sort'] == 'name_za') {
+            } elseif($searchData['materialSort'] == 'name_za') {
                 $col = 'name';
                 $order = 'desc';
-            } elseif($searchData['sort'] == 'type_az') {
+            } elseif($searchData['materialSort'] == 'type_az') {
                 $col = 'type';
                 $order = 'asc';
-            } elseif($searchData['sort'] == 'type_za') {
+            } elseif($searchData['materialSort'] == 'type_za') {
                 $col = 'type';
                 $order = 'desc';
             }
         }
 
-		if (!empty($searchData['pages'])) {
-            $pages = $searchData['pages'];
+		if (!empty($searchData['materialPages'])) {
+            $pages = $searchData['materialPages'];
         }
 
 		$materials = Material::where($where)->orderBy($col, $order)->paginate((int)$pages);
@@ -220,30 +220,30 @@ class MaterialsController extends Controller
 
 	private function saveDataFieldsToSession(Request $request)
     {
-        $request->session()->put('name', $request->input('name'));
-        $request->session()->put('type', $request->input('type'));
-        $request->session()->put('creator', $request->input('creator'));
-		$request->session()->put('sort', $request->input('sort'));
-        $request->session()->put('pages', $request->input('pages'));
-        $request->session()->put('blocked', $request->input('blocked'));
+        $request->session()->put('materialName', $request->input('materialName'));
+        $request->session()->put('materialType', $request->input('materialType'));
+        $request->session()->put('materialCreator', $request->input('materialCreator'));
+		$request->session()->put('materialSort', $request->input('materialSort'));
+        $request->session()->put('materialPages', $request->input('materialPages'));
+        $request->session()->put('materialBlocked', $request->input('materialBlocked'));
     }
 
     private function retrieveDataFieldsFromSessionToArray(Request $request, $searchData)
     {
-        $searchData['name'] = $request->session()->get('name');
-        $searchData['type'] = $request->session()->get('type');
-        $searchData['creator'] = $request->session()->get('creator');
-        $searchData['sort'] = $request->session()->get('sort');
-        $searchData['pages'] = $request->session()->get('pages');
-		$searchData['blocked'] = $request->session()->get('blocked');
+        $searchData['materialName'] = $request->session()->get('materialName');
+        $searchData['materialType'] = $request->session()->get('materialType');
+        $searchData['materialCreator'] = $request->session()->get('materialCreator');
+        $searchData['materialSort'] = $request->session()->get('materialSort');
+        $searchData['materialPages'] = $request->session()->get('materialPages');
+		$searchData['materialBlocked'] = $request->session()->get('materialBlocked');
         return $searchData;
     }
 
     private function isRequestDataEmpty(Request $request)
     {
-        if(!$request->has('name') && !$request->has('type')
-            && !$request->has('creator') && !$request->has('sort')
-            && !$request->has('pages') && !$request->has('blocked')) {
+        if(!$request->has('materialName') && !$request->has('materialType')
+            && !$request->has('materialCreator') && !$request->has('materialSort')
+            && !$request->has('materialPages') && !$request->has('materialBlocked')) {
             return true;
         }
         return false;

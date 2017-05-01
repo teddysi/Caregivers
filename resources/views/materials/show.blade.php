@@ -19,7 +19,7 @@
     <h4><strong>Criador:</strong> {{ $material->creator->username }}</h4>
     <h4><strong>Data da criação:</strong> {{ $material->created_at }}</h4>
     <h4><strong>Data da última atualização:</strong> {{ $material->updated_at }}</h4>
-    <p><a class="btn btn-default" href="{{ url('/') }}">Voltar a atrás</a></p>
+    <p><a class="btn btn-default" href="javascript:history.back()">Voltar a atrás</a></p>
 </div>
 
 @endsection

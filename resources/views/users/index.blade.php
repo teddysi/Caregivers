@@ -36,7 +36,7 @@
 						<label class="sr-only" for="inputEmail">Email</label>
 						<div class="input-group">
 							<div class="input-group-addon">
-								<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+								<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
 							</div>
 							<input type="text" name="email" class="form-control" id="inputEmail" placeholder="Email" value="{{ $searchData['email'] }}">
 						</div>

@@ -69,7 +69,7 @@ class UsersController extends Controller
     	return back();
 	}
 
-		public function index(Request $request)
+	public function index(Request $request)
 	{
 		$where = [];
         $pages = '10';
@@ -316,19 +316,4 @@ class UsersController extends Controller
         }
         return false;
     }
-
-	/****CAREGIVERS****/
-	public function caregivers()
-	{
-		$caregivers = Caregiver::all();
-
-		return view('caregivers.caregivers', compact('caregivers'));
-	}
-
-	public function caregiverPatients($id)
-	{
-		$patients = Patient::where("caregiver_id", $id)->get();
-
-		return view('caregivers.caregiver_patients', compact('patients'));
-	}
 }

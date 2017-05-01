@@ -83,6 +83,45 @@
 			@if (count($patients))
 				<br /><br />
 				<legend>Listar</legend>
+				<form class="form" method="POST" action="{{ route('patients') }}">
+					{{ csrf_field() }}
+					<input name="dashboard" type="hidden" value="true">
+					<div class="row">
+						<div class="col-lg-3 col-md-3 col-sm-6">
+							<label class="sr-only" for="inputPatientName">Nome</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+								</div>
+								<input type="text" name="patientName" class="form-control" id="inputPatientName" placeholder="Nome">
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-6">
+							<label class="sr-only" for="inputPatientEmail">Email</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+								</div>
+								<input type="text" name="patientEmail" class="form-control" id="inputPatientEmail" placeholder="Email">
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-6">
+							<label class="sr-only" for="inputPatientLocation">Localização</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+								</div>
+								<input type="text" name="patientLocation" class="form-control" id="inputPatientLocation" placeholder="Localização">
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-3 col-sm-6 pull-right">
+							<button type="submit" class="btn btn-default btn-block">
+								<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Procurar
+							</button>
+						</div>
+					</div>
+				</form>
+				<br />
 		        <table class="table table-striped">
 			        <thead>
 			            <tr>
@@ -100,7 +139,7 @@
 								<td>{{ $patient->email }}</td>
 								<td>{{ $patient->location }}</td>
 								<td>{{ $patient->creator->username }}</td>
-								<td style="width:35%">
+								<td style="width:37%">
 									<div class="row">
 										<div class="col-sm-6 col-md-4 col-lg-4">
 											<a class="btn btn-block btn-primary" href="{{ route('patients.show', ['patient' => $patient->id]) }}">Detalhes</a>
@@ -137,6 +176,36 @@
 			@if (count($needs))
 				<br /><br />
 				<legend>Listar</legend>
+				<form class="form" method="POST" action="{{ route('needs') }}">
+					{{ csrf_field() }}
+					<input name="dashboard" type="hidden" value="true">
+					<div class="row">
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<label class="sr-only" for="inputDescription">Descrição</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+								</div>
+								<input type="text" name="needDescription" class="form-control" id="inputDescription" placeholder="Descrição">
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<label class="sr-only" for="inputCreator">Criador</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+								</div>
+								<input type="text" name="needCreator" class="form-control" id="inputCreator" placeholder="Criador">
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6 pull-right">
+							<button type="submit" class="btn btn-default btn-block">
+								<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Procurar
+							</button>
+						</div>
+					</div>
+				</form>
+				<br />
 		        <table class="table table-striped">
 			        <thead>
 			            <tr>
@@ -206,13 +275,13 @@
 								<div class="input-group-addon">
 									<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
 								</div>
-								<input type="text" name="name" class="form-control" id="inputMaterialName" placeholder="Nome">
+								<input type="text" name="materialName" class="form-control" id="inputMaterialName" placeholder="Nome">
 							</div>
 						</div>
 						<div class="col-lg-3 col-md-3 col-sm-6">
 							<div class="form-group form-inline">
 								<label for="materialType">Tipo:</label>
-								<select name="type" class="form-control">
+								<select name="materialType" class="form-control">
 									<option value="all">Todos</option>
 									<option value="textFile">Ficheiro de Texto</option>
 									<option value="image">Imagem</option>
@@ -227,7 +296,7 @@
 								<div class="input-group-addon">
 									<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 								</div>
-								<input type="text" name="creator" class="form-control" id="inputCreator" placeholder="Criador">
+								<input type="text" name="materialCreator" class="form-control" id="inputCreator" placeholder="Criador">
 							</div>
 						</div>
 						<div class="col-lg-3 col-md-3 col-sm-6 pull-right">

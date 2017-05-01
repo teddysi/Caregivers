@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Patient;
+use App\Need;
+use App\User;
 use Auth;
-
 
 class PatientsController extends Controller
 {
@@ -14,6 +15,80 @@ class PatientsController extends Controller
 	    'unique' =>  ':attribute já existe. Escolha outro.',
 	    'required' => ':attribute tem que ser preenchido.',
 	];
+
+	public function index(Request $request)
+	{
+		$where = [];
+        $pages = '10';
+        $col = 'created_at';
+        $order = 'desc';
+        $searchData = ['patientName' => '', 'patientEmail' => '', 'patientLocation' => '', 'patientCreator' => '', 'patientSort' => '', 'patientPages' => ''];
+
+        if ($request->has('dashboard')) {
+            $this->saveDataFieldsToSession($request);
+            $searchData = $this->retrieveDataFieldsFromSessionToArray($request, $searchData);
+        } else {
+            if ($this->isRequestDataEmpty($request)) {
+                $searchData = $this->retrieveDataFieldsFromSessionToArray($request, $searchData);
+            } else {
+                $this->saveDataFieldsToSession($request);
+                $searchData = $this->retrieveDataFieldsFromSessionToArray($request, $searchData);
+            }
+        }
+
+		if (!empty($searchData['patientName'])) {
+           	$where[] = ['name', 'like', '%'.$searchData['patientName'].'%'];
+        }
+
+        if (!empty($searchData['patientEmail'])) {
+        	$where[] = ['email', 'like', '%'.$searchData['patientEmail'].'%'];
+        }
+
+		if (!empty($searchData['patientLocation'])) {
+           	$where[] = ['location', 'like', '%'.$searchData['patientLocation'].'%'];
+        }
+
+        if (!empty($searchData['patientCreator'])) {
+			$user = User::where('username','like','%'.$searchData['patientCreator'].'%')->first();
+           	$where[] = ['created_by', $user->id];
+        }
+
+		if (!empty($searchData['patientSort'])) {
+            if($searchData['patientSort'] == 'mrc') {
+                $col = 'created_at';
+                $order = 'desc';
+            } elseif($searchData['patientSort'] == 'lrc') {
+                $col = 'created_at';
+                $order = 'asc';
+            } elseif($searchData['patientSort'] == 'name_az') {
+                $col = 'name';
+                $order = 'asc';
+            } elseif($searchData['patientSort'] == 'name_za') {
+                $col = 'name';
+                $order = 'desc';
+            } elseif($searchData['patientSort'] == 'email_az') {
+                $col = 'email';
+                $order = 'asc';
+            } elseif($searchData['patientSort'] == 'email_za') {
+                $col = 'email';
+                $order = 'desc';
+            } elseif($searchData['patientSort'] == 'location_az') {
+                $col = 'location';
+                $order = 'asc';
+            } elseif($searchData['patientSort'] == 'location_za') {
+                $col = 'location';
+                $order = 'desc';
+            }
+        }
+
+		if (!empty($searchData['patientPages'])) {
+            $pages = $searchData['patientPages'];
+        }
+
+		$patients = Patient::where($where)->orderBy($col, $order)->paginate((int)$pages);
+
+		return view('patients.index', compact('patients','searchData'));
+	}
 
     public function create()
 	{	
@@ -67,7 +142,68 @@ class PatientsController extends Controller
 	public function needs(Patient $patient)
     {
         $needs = $patient->needs()->paginate(10);
+		$needs->setPageName('needs');
 
-        return view('patients.needs',  compact('patient', 'needs'));   
+		$notMyNeeds = Need::whereNotIn('id', $patient->needs->modelKeys())->paginate(10);
+		$notMyNeeds->setPageName('notMyNeeds');
+
+        return view('patients.needs',  compact('patient', 'needs', 'notMyNeeds'));   
+    }
+
+	public function associate(Patient $patient, Need $need)
+    {
+		$patient->needs()->attach($need->id);
+
+        $needs = $patient->needs()->paginate(10);
+		$needs->setPageName('needs');
+
+		$notMyNeeds = Need::whereNotIn('id', $patient->needs->modelKeys())->paginate(10);
+		$notMyNeeds->setPageName('notMyNeeds');
+
+        return redirect()->route('patients.needs', ['patient' => $patient->id]); 
+    }
+
+    public function diassociate(Patient $patient, Need $need)
+    {
+        $patient->needs()->detach($need->id);
+
+        $needs = $patient->needs()->paginate(10);
+		$needs->setPageName('needs');
+
+		$notMyNeeds = Need::whereNotIn('id', $patient->needs->modelKeys())->paginate(10);
+		$notMyNeeds->setPageName('notMyNeeds');
+
+        return redirect()->route('patients.needs', ['patient' => $patient->id]);
+    }
+
+		private function saveDataFieldsToSession(Request $request)
+    {
+        $request->session()->put('patientName', $request->input('patientName'));
+        $request->session()->put('patientEmail', $request->input('patientEmail'));
+        $request->session()->put('patientLocation', $request->input('patientLocation'));
+		$request->session()->put('patientCreator', $request->input('patientCreator'));
+        $request->session()->put('patientSort', $request->input('patientSort'));
+        $request->session()->put('patientPages', $request->input('patientPages'));
+    }
+
+    private function retrieveDataFieldsFromSessionToArray(Request $request, $searchData)
+    {
+        $searchData['patientName'] = $request->session()->get('patientName');
+        $searchData['patientEmail'] = $request->session()->get('patientEmail');
+        $searchData['patientLocation'] = $request->session()->get('patientLocation');
+        $searchData['patientCreator'] = $request->session()->get('patientCreator');
+        $searchData['patientSort'] = $request->session()->get('patientSort');
+		$searchData['patientPages'] = $request->session()->get('patientPages');
+        return $searchData;
+    }
+
+    private function isRequestDataEmpty(Request $request)
+    {
+        if(!$request->has('patientName') && !$request->has('patientEmail')
+            && !$request->has('patientLocation') && !$request->has('patientCreator')
+            && !$request->has('patientSort') && !$request->has('patientPages')) {
+            return true;
+        }
+        return false;
     }
 }

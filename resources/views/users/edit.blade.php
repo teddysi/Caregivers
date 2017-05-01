@@ -72,7 +72,7 @@
 
         <div class="form-group">
             <button type="submit" class="btn btn-primary" name="save">Guardar</button>
-            <a class="btn btn-default" href="{{ url()->previous() }}">Cancelar</a>
+            <a class="btn btn-default" href="javascript:history.back()">Cancelar</a>
         </div>
     @include('layouts.errors')
     </form>

@@ -19,7 +19,7 @@
     @endif
     <h4><strong>Data da criação:</strong> {{ $user->created_at }}</h4>
     <h4><strong>Data da última atualização:</strong> {{ $user->updated_at }}</h4>
-    <p><a class="btn btn-default" href="{{ url()->previous() }}">Voltar a atrás</a></p>
+    <p><a class="btn btn-default" href="javascript:history.back()">Voltar a atrás</a></p>
 </div>
 
 @endsection

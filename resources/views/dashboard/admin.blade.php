@@ -142,13 +142,13 @@
 								<div class="input-group-addon">
 									<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
 								</div>
-								<input type="text" name="name" class="form-control" id="inputMaterialName" placeholder="Nome">
+								<input type="text" name="materialName" class="form-control" id="inputMaterialName" placeholder="Nome">
 							</div>
 						</div>
 						<div class="col-lg-3 col-md-3 col-sm-6">
 							<div class="form-group form-inline">
 								<label for="materialType">Tipo:</label>
-								<select name="type" class="form-control">
+								<select name="materialType" class="form-control">
 									<option value="all">Todos</option>
 									<option value="textFile">Ficheiro de Texto</option>
 									<option value="image">Imagem</option>
@@ -163,7 +163,7 @@
 								<div class="input-group-addon">
 									<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 								</div>
-								<input type="text" name="creator" class="form-control" id="inputCreator" placeholder="Criador">
+								<input type="text" name="materialCreator" class="form-control" id="inputCreator" placeholder="Criador">
 							</div>
 						</div>
 						<div class="col-lg-3 col-md-3 col-sm-6 pull-right">
