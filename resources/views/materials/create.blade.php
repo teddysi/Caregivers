@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="container">
-    <form action="{{url('/materials/create')}}" method="POST" class="form-group">
+    <form action="{{url('/materials/create')}}" method="POST" class="form-group" enctype="multipart/form-data">
         {{ csrf_field() }}
         <input name="type" type="hidden" value="{{ $type }}">
 
@@ -28,11 +28,8 @@
         @if ($type == 'textFile' || $type == 'image')
             <div class="form-group">
                 <label for="inputPath">Localização</label>
-                <input
-                    type="text" class="form-control"
-                    name="path" id="inputPath"
-                    placeholder="Localização" value="{{ old('path') }}" />
-            </div>
+                <input type="file" name="cenas"/>
+            </div> 
         @endif
 
         @if ($type == 'video')

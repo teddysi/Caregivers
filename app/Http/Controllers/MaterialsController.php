@@ -10,6 +10,8 @@ use App\Video;
 use App\Image;
 use App\EmergencyContact;
 use App\User;
+use Storage;
+use Response;
 
 class MaterialsController extends Controller
 {
@@ -135,7 +137,7 @@ class MaterialsController extends Controller
 			default:
 				break;
 		}
-
+		
 		$material->name = $request->input('name');
 		$material->description = $request->input('description');
 		$material->created_by = Auth::user()->id;
@@ -159,18 +161,31 @@ class MaterialsController extends Controller
 	public function update(Request $request, Material $material)
 	{
 		$this->validate($request, [
-			'name' => 'required|min:4',
-			'description' => 'required',
-			'path' => 'nullable',
-			'url' => 'nullable|url',
-			'number' => 'nullable',
+			'name' => 'required|min:4|unique:materials,name,'.$material->id,
+			'description' => 'required|min:4',
+			'path' => 'nullable|required_if:type,textFile|required_if:type,image',
+			'url' => 'nullable|url|required_if:type,video',
+			'number' => 'nullable|required_if:type,emergencyContact',
 		], $this->messages);
 
 		$material->name = $request->input('name');
 		$material->description = $request->input('description');
 		$material->path = $request->input('path');
+
+		if ($request->input('type') == 'textFile') {
+			$originalName = $request->cenas->getClientOriginalName();
+			$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
+			$material->path = $request->file('cenas')->storeAs('textFiles', $material->name . '.' . $whatIWant);
+
+		} elseif ($request->input('type') == 'image') {
+			$originalName = $request->cenas->getClientOriginalName();
+			$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
+			$material->path = $request->file('cenas')->storeAs('images', $material->name . '.' . $whatIWant);
+		}
+
 		$material->url = $request->input('url');
 		$material->number = $request->input('number');
+		$material->created_by = Auth::user()->id;
 
 		$material->save();
 
@@ -248,4 +263,12 @@ class MaterialsController extends Controller
         }
         return false;
     }
+
+	public function showMaterial(Material $material)
+	{
+		$content = Storage::get($material->path);
+		$whatIWant = substr($material->path, strpos($material->path, ".") + 1);
+		$var =  '.' . $whatIWant;
+		return response($content)->header('Content-Type', $var );
+	}
 }

@@ -8,10 +8,10 @@
     <h4><strong>Tipo:</strong> {{ $material->type }}</h4>
     <h4><strong>Descrição:</strong> {{ $material->description }}</h4>
     @if ($material->type == 'Ficheiro de Texto' || $material->type == 'Imagem')
-        <h4><strong>Localização:</strong> {{ $material->path }}</h4>
+        <h4><strong>Localização:</strong> <a href="{{ route('materials.showContent', ['material' => $material->id] )}}" target="_blank">{{ $material->path }}</a></h4>
     @endif
     @if ($material->type == 'Video')
-        <h4><strong>URL:</strong> {{ $material->url }}</h4>
+        <h4><strong>URL:</strong> <a href="{{ $material->url }}" target="_blank">{{ $material->url }}</a></h4>
     @endif
     @if ($material->type == 'Contacto de Emergência')
         <h4><strong>Número:</strong> {{ $material->number }}</h4>

@@ -185,13 +185,17 @@ Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
 		'as' => 'materials.toggleBlock',
 		'uses' =>'MaterialsController@toggleBlock'
 	]);
+
+	Route::get('{material}/showContent', [
+		'as' => 'materials.showContent',
+		'uses' =>'MaterialsController@showMaterial'
+	]);
 });
 
 Route::get('/healthcarepro{id}/caregivers', [
 	'as' => 'admin.admin_healthcarepro_caregivers',
 	'uses' =>'UserController@healthcareproCaregivers'
 ]);
-
 
 // Caregivers API
 Route::post('/caregiversAPI/login', 'CaregiversController@login');
