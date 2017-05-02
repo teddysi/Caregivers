@@ -18,65 +18,19 @@ class MaterialsController extends Controller
 	    'required' => ':attribute tem que ser preenchido.',
 	];
 
-	public function materials()
-	{
-		$materials = Material::all();
-
-		return view('materials.materials', compact('materials'));
-	}
-
-	public function show($id)
-	{
-		$material = Material::find($id);
-		$this->changeTypeFormat($material);
-		return view('materials.show', compact('material'));
-	}
-
-	private function saveDataFieldsToSession(Request $request)
-    {
-        $request->session()->put('name', $request->input('name'));
-        $request->session()->put('type', $request->input('type'));
-        $request->session()->put('creator', $request->input('creator'));
-		$request->session()->put('sort', $request->input('sort'));
-        $request->session()->put('pages', $request->input('pages'));
-        $request->session()->put('blocked', $request->input('blocked'));
-    }
-
-    private function retrieveDataFieldsFromSessionToArray(Request $request, $searchData)
-    {
-        $searchData['name'] = $request->session()->get('name');
-        $searchData['type'] = $request->session()->get('type');
-        $searchData['creator'] = $request->session()->get('creator');
-        $searchData['sort'] = $request->session()->get('sort');
-        $searchData['pages'] = $request->session()->get('pages');
-		$searchData['blocked'] = $request->session()->get('blocked');
-        return $searchData;
-    }
-
-    private function isRequestDataEmpty(Request $request)
-    {
-        if(!$request->has('name') && !$request->has('type')
-            && !$request->has('creator') && !$request->has('sort')
-            && !$request->has('pages') && !$request->has('blocked')) {
-            return true;
-        }
-        return false;
-    }
-
 	public function index(Request $request)
 	{
 		$where = [];
         $pages = '10';
         $col = 'created_at';
         $order = 'desc';
-        $searchData = ['name' => '', 'type' => '', 'creator' => '', 'sort' => '', 'pages' => '', 'blocked' => ''];
+        $searchData = ['materialName' => '', 'materialType' => '', 'materialCreator' => '', 'materialSort' => '', 'materialPages' => '', 'materialBlocked' => ''];
 
         if ($request->has('dashboard')) {
             $this->saveDataFieldsToSession($request);
             $searchData = $this->retrieveDataFieldsFromSessionToArray($request, $searchData);
         } else {
-            $url = $request->fullUrl();
-            if ($this->isRequestDataEmpty($request) && str_contains($url, 'materials?page=')) {
+            if ($this->isRequestDataEmpty($request)) {
                 $searchData = $this->retrieveDataFieldsFromSessionToArray($request, $searchData);
             } else {
                 $this->saveDataFieldsToSession($request);
@@ -84,53 +38,53 @@ class MaterialsController extends Controller
             }
         }
 
-		if (!empty($searchData['name'])) {
-           	$where[] = ['name', 'like', '%'.$searchData['name'].'%'];
+		if (!empty($searchData['materialName'])) {
+           	$where[] = ['name', 'like', '%'.$searchData['materialName'].'%'];
         }
 
-        if (!empty($searchData['type'])) {
-			if($searchData['type'] != 'all') {
-                $where[] = ['type', 'like', '%'.$searchData['type'].'%'];
+        if (!empty($searchData['materialType'])) {
+			if($searchData['materialType'] != 'all') {
+                $where[] = ['type', 'like', '%'.$searchData['materialType'].'%'];
             }
         }
 
-        if (!empty($searchData['creator'])) {
-			$user = User::where('username','like','%'.$searchData['creator'].'%')->first();
+        if (!empty($searchData['materialCreator'])) {
+			$user = User::where('username','like','%'.$searchData['materialCreator'].'%')->first();
            	$where[] = ['created_by', $user->id];
         }
 
-		if (!empty($searchData['blocked'])) {
-            if($searchData['blocked'] == 'just_blocked') {
+		if (!empty($searchData['materialBlocked'])) {
+            if($searchData['materialBlocked'] == 'just_blocked') {
                 $where[] = ['blocked', 1];
-            } elseif($searchData['blocked'] == 'just_unblocked') {
+            } elseif($searchData['materialBlocked'] == 'just_unblocked') {
                 $where[] = ['blocked', 0];
             }
         }
 
-		if (!empty($searchData['sort'])) {
-            if($searchData['sort'] == 'mrc') {
+		if (!empty($searchData['materialSort'])) {
+            if($searchData['materialSort'] == 'mrc') {
                 $col = 'created_at';
                 $order = 'desc';
-            } elseif($searchData['sort'] == 'lrc') {
+            } elseif($searchData['materialSort'] == 'lrc') {
                 $col = 'created_at';
                 $order = 'asc';
-            } elseif($searchData['sort'] == 'name_az') {
+            } elseif($searchData['materialSort'] == 'name_az') {
                 $col = 'name';
                 $order = 'asc';
-            } elseif($searchData['sort'] == 'name_za') {
+            } elseif($searchData['materialSort'] == 'name_za') {
                 $col = 'name';
                 $order = 'desc';
-            } elseif($searchData['sort'] == 'type_az') {
+            } elseif($searchData['materialSort'] == 'type_az') {
                 $col = 'type';
                 $order = 'asc';
-            } elseif($searchData['sort'] == 'type_za') {
+            } elseif($searchData['materialSort'] == 'type_za') {
                 $col = 'type';
                 $order = 'desc';
             }
         }
 
-		if (!empty($searchData['pages'])) {
-            $pages = $searchData['pages'];
+		if (!empty($searchData['materialPages'])) {
+            $pages = $searchData['materialPages'];
         }
 
 		$materials = Material::where($where)->orderBy($col, $order)->paginate((int)$pages);
@@ -140,9 +94,64 @@ class MaterialsController extends Controller
 
 		return view('materials.index', compact('materials','searchData'));
 	}
+	
+    public function create($type)
+	{	
+		return view('materials.create', compact('type'));
+	}
 
-	public function edit($id) {
-		$material = Material::find($id);
+	public function store(Request $request)
+	{	
+		$this->validate($request, [
+				'name' => 'required|min:4|unique:materials',
+				'description' => 'required|min:4',
+				'path' => 'nullable|required_if:type,textFile|required_if:type,image',
+				'url' => 'nullable|url|required_if:type,video',
+				'number' => 'nullable|required_if:type,emergencyContact',
+		], $this->messages);
+
+		$material;
+		switch ($request->input('type')) {
+			case 'textFile':
+				$material = new TextFile();
+				$material->path = $request->input('path');
+				break;
+
+			case 'image':
+				$material = new Image();
+				$material->path = $request->input('path');
+				break;
+
+			case 'video':
+				$material = new Video();
+				$material->url = $request->input('url');
+				break;
+
+			case 'emergencyContact':
+				$material = new EmergencyContact();
+				$material->number = $request->input('number');
+				break;
+
+			default:
+				break;
+		}
+
+		$material->name = $request->input('name');
+		$material->description = $request->input('description');
+		$material->created_by = Auth::user()->id;
+
+		$material->save();
+
+		return redirect('/');
+	}
+
+	public function show(Material $material)
+	{
+		$this->changeTypeFormat($material);
+		return view('materials.show', compact('material'));
+	}
+
+	public function edit(Material $material) {
 		$this->changeTypeFormat($material);
 		return view('materials.edit', compact('material'));
 	}
@@ -157,11 +166,11 @@ class MaterialsController extends Controller
 			'number' => 'nullable',
 		], $this->messages);
 
-		$material->name = $request->name;
-		$material->description = $request->description;
-		$material->path = $request->path;
-		$material->url = $request->url;
-		$material->number = $request->number;
+		$material->name = $request->input('name');
+		$material->description = $request->input('description');
+		$material->path = $request->input('path');
+		$material->url = $request->input('url');
+		$material->number = $request->input('number');
 
 		$material->save();
 
@@ -183,55 +192,6 @@ class MaterialsController extends Controller
         }
 
         return back();
-	}
-
-    public function create($type)
-	{	
-		return view('materials.create', compact('type'));
-	}
-
-	public function store(Request $request)
-	{	
-		$this->validate($request, [
-				'name' => 'required|min:4|unique:materials',
-				'description' => 'required|min:4',
-				'path' => 'nullable|required_if:type,textFile|required_if:type,image',
-				'url' => 'nullable|url|required_if:type,video',
-				'number' => 'nullable|required_if:type,emergencyContact',
-		], $this->messages);
-
-		$material;
-		switch ($request->input('type')) {
-			case 'textFile':
-				$material = new TextFile();
-				break;
-
-			case 'image':
-				$material = new Image();
-				break;
-
-			case 'video':
-				$material = new Video();
-				break;
-
-			case 'emergencyContact':
-				$material = new EmergencyContact();
-				break;
-
-			default:
-				break;
-		}
-
-		$material->name = $request->input('name');
-		$material->description = $request->input('description');
-		$material->path = $request->input('path');
-		$material->url = $request->input('url');
-		$material->number = $request->input('number');
-		$material->created_by = Auth::user()->id;
-
-		$material->save();
-
-		return redirect('/');
 	}
 
 	public static function changeTypeFormat($material)
@@ -257,4 +217,35 @@ class MaterialsController extends Controller
 				break;
 		}
 	}
+
+	private function saveDataFieldsToSession(Request $request)
+    {
+        $request->session()->put('materialName', $request->input('materialName'));
+        $request->session()->put('materialType', $request->input('materialType'));
+        $request->session()->put('materialCreator', $request->input('materialCreator'));
+		$request->session()->put('materialSort', $request->input('materialSort'));
+        $request->session()->put('materialPages', $request->input('materialPages'));
+        $request->session()->put('materialBlocked', $request->input('materialBlocked'));
+    }
+
+    private function retrieveDataFieldsFromSessionToArray(Request $request, $searchData)
+    {
+        $searchData['materialName'] = $request->session()->get('materialName');
+        $searchData['materialType'] = $request->session()->get('materialType');
+        $searchData['materialCreator'] = $request->session()->get('materialCreator');
+        $searchData['materialSort'] = $request->session()->get('materialSort');
+        $searchData['materialPages'] = $request->session()->get('materialPages');
+		$searchData['materialBlocked'] = $request->session()->get('materialBlocked');
+        return $searchData;
+    }
+
+    private function isRequestDataEmpty(Request $request)
+    {
+        if(!$request->has('materialName') && !$request->has('materialType')
+            && !$request->has('materialCreator') && !$request->has('materialSort')
+            && !$request->has('materialPages') && !$request->has('materialBlocked')) {
+            return true;
+        }
+        return false;
+    }
 }

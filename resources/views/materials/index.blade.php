@@ -32,18 +32,18 @@
 							<div class="input-group-addon">
 								<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
 							</div>
-							<input type="text" name="name" class="form-control" id="inputMaterialName" placeholder="Nome" value="{{ $searchData['name'] }}">
+							<input type="text" name="materialName" class="form-control" id="inputMaterialName" placeholder="Nome" value="{{ $searchData['materialName'] }}">
 						</div>
 					</div>
 					<div class="col-lg-4 col-md-4 col-sm-6">
 						<div class="form-group form-inline	">
 							<label for="materialType">Tipo:</label>
-							<select name="type" class="form-control">
-                                <option value="all" {{ $searchData['type'] == 'all' ? 'selected' : '' }}>Todos</option>
-								<option value="textFile" {{ $searchData['type'] == 'textFile' ? 'selected' : '' }}>Ficheiro de Texto</option>
-					    		<option value="image" {{ $searchData['type'] == 'image' ? 'selected' : '' }}>Imagem</option>
-								<option value="video" {{ $searchData['type'] == 'video' ? 'selected' : '' }}>Video</option>
-                                <option value="emergencyContact" {{ $searchData['type'] == 'emergencyContact' ? 'selected' : '' }}>Contacto de Emergência</option>
+							<select name="materialType" class="form-control">
+                                <option value="all" {{ $searchData['materialType'] == 'all' ? 'selected' : '' }}>Todos</option>
+								<option value="textFile" {{ $searchData['materialType'] == 'textFile' ? 'selected' : '' }}>Ficheiro de Texto</option>
+					    		<option value="image" {{ $searchData['materialType'] == 'image' ? 'selected' : '' }}>Imagem</option>
+								<option value="video" {{ $searchData['materialType'] == 'video' ? 'selected' : '' }}>Video</option>
+                                <option value="emergencyContact" {{ $searchData['materialType'] == 'emergencyContact' ? 'selected' : '' }}>Contacto de Emergência</option>
 							</select>
 						</div>
 					</div>
@@ -53,7 +53,7 @@
 							<div class="input-group-addon">
 								<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 							</div>
-							<input type="text" name="creator" class="form-control" id="inputCreator" placeholder="Criador"  value="{{ $searchData['creator'] }}">
+							<input type="text" name="materialCreator" class="form-control" id="inputCreator" placeholder="Criador"  value="{{ $searchData['materialCreator'] }}">
 						</div>
 					</div>
 				</div>
@@ -62,33 +62,33 @@
 					<div class="col-lg-3 col-md-3 col-sm-6">
 						<div class="form-group form-inline">
 							<label for="searchOrder">Ordenar por:</label>
-							<select name="sort" class="form-control">
-								<option value="mrc" {{ $searchData['sort'] == 'mrc' ? 'selected' : '' }}>Mais Recentes</option>
-								<option value="lrc" {{ $searchData['sort'] == 'lrc' ? 'selected' : '' }}>Menos Recentes</option>
-								<option value="name_az" {{ $searchData['sort'] == 'name_az' ? 'selected' : '' }}>Nome (A-Z)</option>
-								<option value="name_za" {{ $searchData['sort'] == 'name_za' ? 'selected' : '' }}>Nome (Z-A)</option>
-								<option value="type_az" {{ $searchData['sort'] == 'type_az' ? 'selected' : '' }}>Tipo (A-Z)</option>
-								<option value="type_za" {{ $searchData['sort'] == 'type_za' ? 'selected' : '' }}>Tipo (Z-A)</option>
+							<select name="materialSort" class="form-control">
+								<option value="mrc" {{ $searchData['materialSort'] == 'mrc' ? 'selected' : '' }}>Mais Recentes</option>
+								<option value="lrc" {{ $searchData['materialSort'] == 'lrc' ? 'selected' : '' }}>Menos Recentes</option>
+								<option value="name_az" {{ $searchData['materialSort'] == 'name_az' ? 'selected' : '' }}>Nome (A-Z)</option>
+								<option value="name_za" {{ $searchData['materialSort'] == 'name_za' ? 'selected' : '' }}>Nome (Z-A)</option>
+								<option value="type_az" {{ $searchData['materialSort'] == 'type_az' ? 'selected' : '' }}>Tipo (A-Z)</option>
+								<option value="type_za" {{ $searchData['materialSort'] == 'type_za' ? 'selected' : '' }}>Tipo (Z-A)</option>
 							</select>
 						</div>
 					</div>
 					<div class="col-lg-3 col-md-3 col-sm-6">
 						<div class="form-group form-inline	">
 							<label for="searchItemsPerPage">Nº materiais por página:</label>
-							<select name="pages" class="form-control">
-								<option value="10" {{ $searchData['pages'] == '10' ? 'selected' : '' }}>10</option>
-								<option value="20" {{ $searchData['pages'] == '20' ? 'selected' : '' }}>20</option>
-								<option value="30" {{ $searchData['pages'] == '30' ? 'selected' : '' }}>30</option>
+							<select name="materialPages" class="form-control">
+								<option value="10" {{ $searchData['materialPages'] == '10' ? 'selected' : '' }}>10</option>
+								<option value="20" {{ $searchData['materialPages'] == '20' ? 'selected' : '' }}>20</option>
+								<option value="30" {{ $searchData['materialPages'] == '30' ? 'selected' : '' }}>30</option>
 							</select>
 						</div>
 					</div>
 					<div class="col-lg-3 col-md-3 col-sm-6">
 						<div class="form-group form-inline	">
 							<label for="blockedItems">Materiais:</label>
-							<select name="blocked" class="form-control">
-								<option value="all" {{ $searchData['blocked'] == 'all' ? 'selected' : '' }}>Ver Todos</option>
-								<option value="just_blocked" {{ $searchData['blocked'] == 'just_blocked' ? 'selected' : '' }}>Só Bloqueados</option>
-								<option value="just_unblocked" {{ $searchData['blocked'] == 'just_unblocked' ? 'just_unblocked' : '' }}>Só Não Bloqueados</option>
+							<select name="materialBlocked" class="form-control">
+								<option value="all" {{ $searchData['materialBlocked'] == 'all' ? 'selected' : '' }}>Todos</option>
+								<option value="just_blocked" {{ $searchData['materialBlocked'] == 'just_blocked' ? 'selected' : '' }}>Bloqueados</option>
+								<option value="just_unblocked" {{ $searchData['materialBlocked'] == 'just_unblocked' ? 'selected' : '' }}>Não Bloqueados</option>
 							</select>
 						</div>
 					</div>

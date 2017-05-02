@@ -7,9 +7,111 @@ use Auth;
 use App\Caregiver;
 use App\Patient;
 use App\Need;
+use App\Material;
+use App\Http\Controllers\UsersController;
+use DB;
 
 class CaregiversController extends Controller
 {
+    public function patients(Caregiver $caregiver)
+    {
+        $patients = $caregiver->patients()->paginate(10);
+        $patients->setPageName('patients');
+
+        $notMyPatients = Patient::whereNull('caregiver_id')->paginate(10);
+        $notMyPatients->setPageName('notMyPatients');
+
+        return view('caregivers.patients',  compact('caregiver', 'patients', 'notMyPatients'));   
+    }
+
+    public function associatePatient(Caregiver $caregiver, Patient $patient)
+    {
+        $patient->caregiver_id = $caregiver->id;
+        $patient->save();
+
+        return redirect()->route('caregivers.patients', ['caregiver' => $caregiver->id]); 
+    }
+
+    public function diassociatePatient(Caregiver $caregiver, Patient $patient)
+    {
+        $patient->caregiver_id = null;
+        $patient->save();
+
+        return redirect()->route('caregivers.patients', ['caregiver' => $caregiver->id]);
+    }
+
+    public function materials(Caregiver $caregiver)
+    {
+        $patients = $caregiver->patients;
+        $patientsNeeds = [];
+        
+        foreach ($patients as $patient) {
+            foreach ($patient->needs as $need) {
+                $needAlreadyExists = false;
+                foreach ($patientsNeeds as $patientsNeed) {
+                    if ($need->id == $patientsNeed->id) {
+                        $needAlreadyExists = true;
+                    }
+                }
+
+                if (!$needAlreadyExists) {
+                    array_push($patientsNeeds, $need);
+                }
+            }
+        }
+        usort($patientsNeeds, array($this, 'cmp'));
+
+        $materials = $caregiver->materials()->paginate(10);
+        UsersController::changeTypeFormat($materials);
+
+        $allMaterials = Material::all();
+
+        return view('caregivers.materials',  compact('caregiver', 'materials', 'allMaterials', 'patientsNeeds'));   
+    }
+
+    public function associateMaterial(Request $request, Caregiver $caregiver)
+    {
+        if (count($caregiver->materials()->where('material_id', $request->input('material'))->get()) == 0) {
+            $caregiver->materials()->attach($request->input('material'));
+        }
+
+        $need = Need::find($request->input('need'));
+        if (count($need->materials()->where('material_id', $request->input('material'))->get()) == 0) {
+            $need->materials()->attach($request->input('material'));
+        }
+
+        return redirect()->route('caregivers.materials', ['caregiver' => $caregiver->id]); 
+    }
+
+    public function diassociateMaterial(Caregiver $caregiver, Material $material)
+    {
+        $caregiver->materials()->detach($material->id);
+
+        return redirect()->route('caregivers.materials', ['caregiver' => $caregiver->id]); 
+    }
+
+    public function rate(Caregiver $caregiver)
+    {
+        $countedProceedings = DB::table('proceedings')
+                                ->join('materials', 'proceedings.material_id', 'materials.id')
+                                ->select('material_id', 'name', DB::raw('count(*) as total'))
+                                ->groupBy('caregiver_id', 'material_id', 'name')
+                                ->where('caregiver_id', $caregiver->id)
+                                ->get();
+                                
+        $rates = array('Mau', 'Normal', 'Bom', 'Muito Bom', 'Excelente');
+
+        return view('caregivers.rate',  compact('caregiver', 'countedProceedings', 'rates')); 
+    }
+
+    public function evaluate(Request $request, Caregiver $caregiver)
+    {
+        $caregiver->rate = $request->input('rate');
+        $caregiver->save();
+
+        return redirect('/'); 
+    }
+
     public function login(Request $request)
     {
         $username = $request->input('username');
@@ -35,7 +137,7 @@ class CaregiversController extends Controller
         return response('Não Autorizado', 401);
     }
 
-    public function patients(Request $request, $id)
+    public function patientsAPI(Request $request, $id)
     {
         $caregiver_token = $request->header('Authorization');
         $user = Caregiver::find($id);
@@ -51,7 +153,7 @@ class CaregiversController extends Controller
         return response()->json($user->patients);      
     }
 
-    public function caregiversMaterials(Request $request, $id)
+    public function caregiversMaterialsAPI(Request $request, $id)
     {
         $caregiver_token = $request->header('Authorization');
         $caregiver = Caregiver::find($id);
@@ -210,5 +312,10 @@ class CaregiversController extends Controller
         }
 
         return $material_exists;
+    }
+
+    private function cmp($a, $b)
+    {
+        return $a->id > $b->id ? 1 : -1;
     }
 }

@@ -1,27 +1,29 @@
 @extends('layouts.master')
 
-@section('tittle', 'Update user')
+@section('tittle', 'Editar Paciente')
 
 @section('content')
 
 <div class="container">
-    <form action="{{url('/patients/update', ['id' => $updatePatient->id])}}" method="post" class="form-group">
+    <h2>Editar Paciente:</h2>
+    <form action="{{ url('/patients', ['patient' => $patient->id]) }}" method="POST" class="form-group">
+        {{ method_field('PATCH') }}
         {{ csrf_field() }}
 
         <div class="form-group">
-            <label for="inputFullname">Nome</label>
+            <label for="inputName">Nome</label>
             <input
                 type="text" class="form-control"
                 name="name" id="inputName"
-                placeholder="Name" value="{{ $updatePatient->name }}" />
+                placeholder="Name" value="{{ $patient->name }}" />
         </div>
 
         <div class="form-group">
-        <label for="inputEmail">Email</label>
-        <input
-            type="email" class="form-control"
-            name="email" id="inputEmail"
-            placeholder="Email address" value="{{ $updatePatient->email }}"/>
+            <label for="inputEmail">Email</label>
+            <input
+                type="email" class="form-control"
+                name="email" id="inputEmail"
+                placeholder="Email" value="{{ $patient->email }}"/>
         </div>
 
         <div class="form-group">
@@ -29,15 +31,15 @@
             <input
                 type="text" class="form-control"
                 name="location" id="inputLocation"
-                placeholder="Porto" value="{{ $updatePatient->location }}" />
+                placeholder="Localização" value="{{ $patient->location }}" />
         </div>
 
         <div class="form-group">
             <button type="submit" class="btn btn-primary" name="save">Guardar</button>
-            <a class="btn btn-default" href="{{url('/patients')}}">Cancelar</a>
+            <a class="btn btn-default" href="javascript:history.back()">Cancelar</a>
         </div>
     @include('layouts.errors')
     </form>
-   </div>
+</div>
 
 @endsection
