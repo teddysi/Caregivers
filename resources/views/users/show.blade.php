@@ -14,6 +14,7 @@
     @endif
     @if ($user->role == 'Cuidador')
         <h4><strong>Localização:</strong> {{ $user->location }}</h4>
+        <h4><strong>Nº Profissionais de Saúde:</strong> {{ count($user->healthcarePros) }}/2</h4>
         <h4><strong>Classificação:</strong> {{ $user->rate }}</h4>
         <h4><strong>Criador:</strong> {{ $user->creator->username }}</h4>
     @endif

@@ -44,7 +44,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'users'], function () {
 	]);
 });
 
-Route::group(['middleware' => 'auth', 'prefix' => 'caregivers'], function () {
+Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'caregivers'], function () {
     Route::get('{caregiver}/patients', [
 		'as' => 'caregivers.patients',
 		'uses' =>'CaregiversController@patients'
@@ -52,21 +52,37 @@ Route::group(['middleware' => 'auth', 'prefix' => 'caregivers'], function () {
 
 	Route::post('{caregiver}/patients/{patient}/associate', [
 		'as' => 'caregivers.associatePatient',
-		'uses' =>'CaregiversController@associate'
+		'uses' =>'CaregiversController@associatePatient'
 	]);
 
 	Route::post('{caregiver}/patients/{patient}/diassociate', [
 		'as' => 'caregivers.diassociatePatient',
-		'uses' =>'CaregiversController@diassociate'
+		'uses' =>'CaregiversController@diassociatePatient'
 	]);
 
 	Route::get('{caregiver}/materials', [
 		'as' => 'caregivers.materials',
 		'uses' =>'CaregiversController@materials'
 	]);
+
+	Route::post('{caregiver}/materials/associate', [
+		'as' => 'caregivers.associateMaterial',
+		'uses' =>'CaregiversController@associateMaterial'
+	]);
+
+	Route::post('{caregiver}/materials/{material}/diassociate', [
+		'as' => 'caregivers.diassociateMaterial',
+		'uses' =>'CaregiversController@diassociateMaterial'
+	]);
+
+	Route::get('{caregiver}/rate', [
+		'as' => 'caregivers.rate',
+		'uses' =>'CaregiversController@rate'
+	]);
+	Route::patch('{caregiver}', 'CaregiversController@evaluate');
 });
 
-Route::group(['middleware' => 'auth', 'prefix' => 'patients'], function () {
+Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'patients'], function () {
     Route::get('/', [
 		'as' => 'patients',
 		'uses' =>'PatientsController@index'
@@ -106,7 +122,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'patients'], function () {
 	]);
 });
 
-Route::group(['middleware' => 'auth', 'prefix' => 'needs'], function () {
+Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'needs'], function () {
     Route::get('/', [
 		'as' => 'needs',
 		'uses' =>'NeedsController@index'
@@ -133,6 +149,11 @@ Route::group(['middleware' => 'auth', 'prefix' => 'needs'], function () {
 	Route::get('{need}/materials', [
 		'as' => 'needs.materials',
 		'uses' =>'NeedsController@materials'
+	]);
+
+	Route::post('{need}/materials/{material}/diassociate', [
+		'as' => 'needs.diassociateMaterial',
+		'uses' =>'NeedsController@diassociateMaterial'
 	]);
 });
 

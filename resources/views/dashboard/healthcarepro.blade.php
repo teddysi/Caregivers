@@ -21,7 +21,6 @@
 			            <tr>
 							<th>Nome</th>
 							<th>Email</th>
-							<th>Profissionais de Saúde</th>
 							<th>Ações</th>
 			            </tr>
 			        </thead>
@@ -30,29 +29,31 @@
 							<tr>
 					        	<td>{{ $caregiver->name }}</td>
 								<td>{{ $caregiver->email }}</td>
-								<td>{{ count($caregiver->healthcarePros) }}/2</td>
-								<td style="width:50%">
+								<td style="width:62%">
 									<div class="row">
-										<div class="col-sm-6 col-md-3 col-lg-3">
-											<a class="btn btn-xs btn-block btn-primary" href="{{ route('users.show', ['user' => $caregiver->id]) }}">Detalhes</a>
+										<div class="col-sm-6 col-md-2 col-lg-2">
+											<a class="btn btn-sm btn-block btn-primary" href="{{ route('users.show', ['user' => $caregiver->id]) }}">Detalhes</a>
 										</div>
 										<div class="col-sm-6 col-md-2 col-lg-2">
-											<a class="btn btn-xs btn-block btn-primary" href="{{ route('caregivers.patients', ['caregiver' => $caregiver->id]) }}">Pacientes</a>
+											<a class="btn btn-sm btn-block btn-primary" href="{{ route('caregivers.patients', ['caregiver' => $caregiver->id]) }}">Pacientes</a>
 										</div>
 										<div class="col-sm-6 col-md-2 col-lg-2">
-											<a class="btn btn-xs btn-block btn-primary" href="{{ route('caregivers.materials', ['caregiver' => $caregiver->id]) }}">Materiais</a>
+											<a class="btn btn-sm btn-block btn-primary" href="{{ route('caregivers.materials', ['caregiver' => $caregiver->id]) }}">Materiais</a>
 										</div>
 										<div class="col-sm-6 col-md-2 col-lg-2">
-											<a class="btn btn-xs btn-block btn-warning" href="{{ route('users.edit', ['user' => $caregiver->id]) }}">Editar</a>
+											<a class="btn btn-sm btn-block btn-warning" href="{{ route('users.edit', ['user' => $caregiver->id]) }}">Editar</a>
 										</div>
-										<div class="col-sm-6 col-md-3 col-lg-3">
+										<div class="col-sm-6 col-md-2 col-lg-2">
+											<a class="btn btn-sm btn-block btn-primary" href="{{ route('caregivers.rate', ['caregiver' => $caregiver->id]) }}">Avaliar</a>
+										</div>
+										<div class="col-sm-6 col-md-2 col-lg-2">
 											<form action="{{ route('users.toggleBlock', ['users' => $caregiver->id]) }}" method="POST" class="form-group">
 												{{ csrf_field() }}
 												<div class="form-group">
 													@if ($caregiver->blocked == 0)
-														<button type="submit" class="btn btn-xs btn-block btn-danger" name="block">Bloquear</button>
+														<button type="submit" class="btn btn-sm btn-block btn-danger" name="block">Bloquear</button>
 													@elseif ($caregiver->blocked == 1)
-														<button type="submit" class="btn btn-xs btn-block btn-success" name="unblock">Desbloquear</button>
+														<button type="submit" class="btn btn-sm btn-block btn-success" name="unblock">Desbloquear</button>
 													@endif
 												</div>
 											</form>

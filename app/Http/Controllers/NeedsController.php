@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Need;
 use App\User;
+use App\Material;
 use App\Http\Controllers\UsersController;
 use Auth;
 
@@ -119,6 +120,13 @@ class NeedsController extends Controller
 
         return view('needs.materials',  compact('need', 'materials')); 
 	}
+
+    public function diassociateMaterial(Need $need, Material $material)
+    {
+        $need->materials()->detach($material->id);
+
+        return redirect()->route('needs.materials', ['need' => $need->id]); 
+    }
 
 	private function saveDataFieldsToSession(Request $request)
     {

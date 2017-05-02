@@ -26,13 +26,26 @@
 					        	<td>{{ $patient->name }}</td>
 								<td>{{ $patient->email }}</td>
                                 <td>{{ $patient->location }}</td>
-								<td>
-									<form action="{{ route('caregivers.diassociatePatient', ['caregiver' => $caregiver->id, 'patient' => $patient->id]) }}" method="POST" class="form-group">
-										{{ csrf_field() }}
-										<div class="form-group">
-											<button type="submit" class="btn btn-block btn-danger" name="diassociate">Diassociate</button>
+								<td style="width:50%">
+									<div class="row">
+										<div class="col-sm-6 col-md-3 col-lg-3">
+											<a class="btn btn-block btn-primary" href="{{ route('patients.show', ['patient' => $patient->id]) }}">Detalhes</a>
 										</div>
-									</form>
+										<div class="col-sm-6 col-md-3 col-lg-3">
+											<a class="btn btn-block btn-primary" href="{{ route('patients.needs', ['patient' => $patient->id]) }}">Necessidades</a>
+										</div>
+										<div class="col-sm-6 col-md-3 col-lg-3">
+											<a class="btn btn-block btn-warning" href="{{ route('patients.edit', ['patient' => $patient->id]) }}">Editar</a>
+										</div>
+										<div class="col-sm-6 col-md-3 col-lg-3">
+											<form action="{{ route('caregivers.diassociatePatient', ['caregiver' => $caregiver->id, 'patient' => $patient->id]) }}" method="POST" class="form-group">
+												{{ csrf_field() }}
+												<div class="form-group">
+													<button type="submit" class="btn btn-block btn-danger" name="diassociate">Desassociar</button>
+												</div>
+											</form>
+										</div>
+									</div>
 								</td>
 					        </tr>
 				        @endforeach
@@ -67,13 +80,26 @@
 					        	<td>{{ $patient->name }}</td>
 								<td>{{ $patient->email }}</td>
                                 <td>{{ $patient->location }}</td>
-								<td>
-									<form action="{{ route('caregivers.associatePatient', ['caregiver' => $caregiver->id, 'patient' => $patient->id]) }}" method="POST" class="form-group">
-										{{ csrf_field() }}
-										<div class="form-group">
-											<button type="submit" class="btn btn-block btn-success" name="associate">Associate</button>
+								<td style="width:50%">
+									<div class="row">
+										<div class="col-sm-6 col-md-3 col-lg-3">
+											<a class="btn btn-block btn-primary" href="{{ route('patients.show', ['patient' => $patient->id]) }}">Detalhes</a>
 										</div>
-									</form>
+										<div class="col-sm-6 col-md-3 col-lg-3">
+											<a class="btn btn-block btn-primary" href="{{ route('patients.needs', ['patient' => $patient->id]) }}">Necessidades</a>
+										</div>
+										<div class="col-sm-6 col-md-3 col-lg-3">
+											<a class="btn btn-block btn-warning" href="{{ route('patients.edit', ['patient' => $patient->id]) }}">Editar</a>
+										</div>
+										<div class="col-sm-6 col-md-3 col-lg-3">
+											<form action="{{ route('caregivers.associatePatient', ['caregiver' => $caregiver->id, 'patient' => $patient->id]) }}" method="POST" class="form-group">
+												{{ csrf_field() }}
+												<div class="form-group">
+													<button type="submit" class="btn btn-block btn-success" name="associate">Associar</button>
+												</div>
+											</form>
+										</div>
+									</div>
 								</td>
 					        </tr>
 				        @endforeach
@@ -87,6 +113,7 @@
 			</div>
         </div>
 	</div>
+	<p><a class="btn btn-default" href="javascript:history.back()">Voltar a atrás</a></p>
 </div>
 
 @endsection
