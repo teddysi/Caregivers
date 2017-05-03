@@ -48,11 +48,26 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        //Materials ids: 1 - 20
+        //Materials ids: 1 - 23
         factory(App\TextFile::class, 5)->create();
         factory(App\Image::class, 5)->create();
         factory(App\Video::class, 5)->create();
         factory(App\EmergencyContact::class, 5)->create();
+        factory(App\Composite::class, 3)->create();
+
+        $cm_m = [
+            [21, 1, 1], [21, 20, 2], [21, 14, 3],
+            [22, 1, 1], [22, 18, 2], [22, 10, 3],
+            [23, 1, 1], [23, 2, 2], [23, 8, 3], [23, 10, 4]
+        ]; 
+      
+        for($i = 0; $i < count($cm_m); $i++) {
+            DB::table('composite_material')->insert([
+                'composite_id' => $cm_m[$i][0],
+                'material_id' => $cm_m[$i][1],
+                'order' => $cm_m[$i][2],
+            ]);
+        }
 
         $n_m = [
             [1, 1], [1, 20], [1, 14],

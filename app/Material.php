@@ -16,8 +16,8 @@ class Material extends Model
 
     protected static $persisted = ['description', 'name', 'created_by', 'blocked'];
 
-    protected static $singleTableSubclasses = [EmergencyContact::class,TextFile::class, Video::class, 
-        Image::class];
+    protected static $singleTableSubclasses = [EmergencyContact::class, TextFile::class, Video::class, 
+        Image::class, Composite::class];
 
     protected $fillable = [
         'description', 'name', 'created_by', 'blocked',
@@ -41,6 +41,16 @@ class Material extends Model
     public function proceedings()
     {
         return $this->hasMany('App\Proceeding', 'material_id', 'id');
+    }
+
+    public function materials()
+    {
+        return $this->belongsToMany('App\Material', 'composite_material', 'composite_id', 'material_id');
+    }
+
+    public function composites()
+    {
+        return $this->belongsToMany('App\Material', 'composite_material', 'material_id', 'composite_id');
     }
 
 }
