@@ -49,6 +49,7 @@
                                 <li><a href="{{ route('users') }}">Utilizadores</a></li>
                                 <li><a href="{{ route('materials') }}">Materiais</a></li>
                             @elseif (Auth::user()->role == 'healthcarepro')
+                                <li><a href="{{ route('users') }}">Cuidadores</a></li>
                                 <li><a href="{{ route('patients') }}">Pacientes</a></li>
                                 <li><a href="{{ route('needs') }}">Necessidades</a></li>
                                 <li><a href="{{ route('materials') }}">Materiais</a></li>

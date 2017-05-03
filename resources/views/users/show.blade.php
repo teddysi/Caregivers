@@ -20,7 +20,13 @@
     @endif
     <h4><strong>Data da criação:</strong> {{ $user->created_at }}</h4>
     <h4><strong>Data da última atualização:</strong> {{ $user->updated_at }}</h4>
-    <p><a class="btn btn-default" href="javascript:history.back()">Voltar a atrás</a></p>
+    
+    <p>
+        @if (Auth::user()->role == 'healthcarepro' && $user->role == 'Cuidador' && $isMyCaregiver)
+            <a class="btn btn-primary" href="{{ route('caregivers.rate', ['caregiver' => $user->id]) }}">Avaliar</a>
+        @endif
+        <a class="btn btn-default" href="javascript:history.back()">Voltar a atrás</a>
+    </p>
 </div>
 
 @endsection

@@ -16,6 +16,36 @@
 			@if (count($caregivers))
 				<br /><br />
 				<legend>Listar</legend>
+				<form class="form" method="POST" action="{{ route('users') }}">
+					{{ csrf_field() }}
+					<input name="dashboard" type="hidden" value="true">
+					<div class="row">
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<label class="sr-only" for="inputUserName">Nome</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+								</div>
+								<input type="text" name="userName" class="form-control" id="inputUserName" placeholder="Nome">
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<label class="sr-only" for="inputEmail">Email</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+								</div>
+								<input type="text" name="userEmail" class="form-control" id="inputEmail" placeholder="Email">
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6 pull-right">
+							<button type="submit" class="btn btn-default btn-block">
+								<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Procurar
+							</button>
+						</div>
+					</div>
+				</form>
+				<br />
 		        <table class="table table-striped">
 			        <thead>
 			            <tr>
@@ -29,9 +59,9 @@
 							<tr>
 					        	<td>{{ $caregiver->name }}</td>
 								<td>{{ $caregiver->email }}</td>
-								<td style="width:62%">
+								<td style="width:55%">
 									<div class="row">
-										<div class="col-sm-6 col-md-2 col-lg-2">
+										<div class="col-sm-6 col-md-3 col-lg-3">
 											<a class="btn btn-sm btn-block btn-primary" href="{{ route('users.show', ['user' => $caregiver->id]) }}">Detalhes</a>
 										</div>
 										<div class="col-sm-6 col-md-2 col-lg-2">
@@ -43,10 +73,7 @@
 										<div class="col-sm-6 col-md-2 col-lg-2">
 											<a class="btn btn-sm btn-block btn-warning" href="{{ route('users.edit', ['user' => $caregiver->id]) }}">Editar</a>
 										</div>
-										<div class="col-sm-6 col-md-2 col-lg-2">
-											<a class="btn btn-sm btn-block btn-primary" href="{{ route('caregivers.rate', ['caregiver' => $caregiver->id]) }}">Avaliar</a>
-										</div>
-										<div class="col-sm-6 col-md-2 col-lg-2">
+										<div class="col-sm-6 col-md-3 col-lg-3">
 											<form action="{{ route('users.toggleBlock', ['users' => $caregiver->id]) }}" method="POST" class="form-group">
 												{{ csrf_field() }}
 												<div class="form-group">

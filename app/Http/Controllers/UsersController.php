@@ -75,7 +75,11 @@ class UsersController extends Controller
         $pages = '10';
         $col = 'created_at';
         $order = 'desc';
-        $searchData = ['name' => '', 'email' => '', 'role' => '', 'sort' => '', 'pages' => '', 'blocked' => ''];
+        $searchData = ['userName' => '', 'userEmail' => '', 'userRole' => '', 'userCaregivers' => '', 'userSort' => '', 'userPages' => '', 'userBlocked' => ''];
+
+		if (Auth::user()->role == 'healthcarepro') {
+			$request->session()->put('userRole', 'caregiver');
+		}
 
         if ($request->has('dashboard')) {
             $this->saveDataFieldsToSession($request);
@@ -89,58 +93,69 @@ class UsersController extends Controller
             }
         }
 
-		if (!empty($searchData['name'])) {
-           	$where[] = ['name', 'like', '%'.$searchData['name'].'%'];
+		if (!empty($searchData['userName'])) {
+           	$where[] = ['name', 'like', '%'.$searchData['userName'].'%'];
         }
 
-        if (!empty($searchData['email'])) {
-        	$where[] = ['email', 'like', '%'.$searchData['email'].'%'];
+        if (!empty($searchData['userEmail'])) {
+        	$where[] = ['email', 'like', '%'.$searchData['userEmail'].'%'];
         }
 
-		if (!empty($searchData['role'])) {
-			if($searchData['role'] != 'all') {
-                $where[] = ['role', 'like', '%'.$searchData['role'].'%'];
+		if (!empty($searchData['userRole'])) {
+			if($searchData['userRole'] != 'all') {
+                $where[] = ['role', 'like', '%'.$searchData['userRole'].'%'];
             }
         }
 
-		if (!empty($searchData['blocked'])) {
-            if($searchData['blocked'] == 'just_blocked') {
+		if (!empty($searchData['userBlocked'])) {
+            if($searchData['userBlocked'] == 'just_blocked') {
                 $where[] = ['blocked', 1];
-            } elseif($searchData['blocked'] == 'just_unblocked') {
+            } elseif($searchData['userBlocked'] == 'just_unblocked') {
                 $where[] = ['blocked', 0];
             }
         }
 
-		if (!empty($searchData['sort'])) {
-            if($searchData['sort'] == 'mrc') {
+		if (!empty($searchData['userSort'])) {
+            if($searchData['userSort'] == 'mrc') {
                 $col = 'created_at';
                 $order = 'desc';
-            } elseif($searchData['sort'] == 'lrc') {
+            } elseif($searchData['userSort'] == 'lrc') {
                 $col = 'created_at';
                 $order = 'asc';
-            } elseif($searchData['sort'] == 'name_az') {
+            } elseif($searchData['userSort'] == 'name_az') {
                 $col = 'name';
                 $order = 'asc';
-            } elseif($searchData['sort'] == 'name_za') {
+            } elseif($searchData['userSort'] == 'name_za') {
                 $col = 'name';
                 $order = 'desc';
-            } elseif($searchData['sort'] == 'email_az') {
+            } elseif($searchData['userSort'] == 'email_az') {
                 $col = 'email';
                 $order = 'asc';
-            } elseif($searchData['sort'] == 'email_za') {
+            } elseif($searchData['userSort'] == 'email_za') {
                 $col = 'email';
                 $order = 'desc';
-            } elseif($searchData['sort'] == 'role_az') {
+            } elseif($searchData['userSort'] == 'role_az') {
                 $col = 'role';
                 $order = 'asc';
-            } elseif($searchData['sort'] == 'role_za') {
+            } elseif($searchData['userSort'] == 'role_za') {
                 $col = 'role';
                 $order = 'desc';
             }
         }
 
-		if (!empty($searchData['pages'])) {
-            $pages = $searchData['pages'];
+		if (!empty($searchData['userPages'])) {
+            $pages = $searchData['userPages'];
+        }
+
+		if (!empty($searchData['userCaregivers'])) {
+			if ($searchData['userCaregivers'] == 'mine') {
+				$users = Auth::user()->caregivers()->where($where)->orderBy($col, $order)->paginate((int)$pages);
+				foreach ($users as $user) {
+					$this->roleToFullWord($user);
+				}
+
+				return view('users.index', compact('users','searchData'));
+			}
         }
 
 		$users = User::where($where)->orderBy($col, $order)->paginate((int)$pages);
@@ -153,9 +168,21 @@ class UsersController extends Controller
 
 	public function show(User $user)
 	{
+		if (Auth::user()->role == 'healthcarepro' && $user->role != 'caregiver') {
+			abort(401);
+		}
+
 		$this->roleToFullWord($user);
 
-		return view('users.show', compact('user'));
+		$isMyCaregiver = false;
+		$healthcarepros = $user->healthcarePros;
+		if (Auth::user()->role == 'healthcarepro' && $healthcarepros != null) {
+			if ($healthcarepros->contains('id', Auth::user()->id)) {
+				$isMyCaregiver = true;
+			}
+		}
+
+		return view('users.show', compact('user', 'isMyCaregiver'));
 	}
 
 	public function create($role)
@@ -288,30 +315,35 @@ class UsersController extends Controller
 
 	private function saveDataFieldsToSession(Request $request)
     {
-        $request->session()->put('name', $request->input('name'));
-        $request->session()->put('email', $request->input('email'));
-        $request->session()->put('role', $request->input('role'));
-		$request->session()->put('sort', $request->input('sort'));
-        $request->session()->put('pages', $request->input('pages'));
-        $request->session()->put('blocked', $request->input('blocked'));
+        $request->session()->put('userName', $request->input('userName'));
+        $request->session()->put('userEmail', $request->input('userEmail'));
+		if (Auth::user()->role == 'admin') {
+        	$request->session()->put('userRole', $request->input('userRole'));
+		}
+		$request->session()->put('userCaregivers', $request->input('userCaregivers'));
+		$request->session()->put('userSort', $request->input('userSort'));
+        $request->session()->put('userPages', $request->input('userPages'));
+        $request->session()->put('userBlocked', $request->input('userBlocked'));
     }
 
     private function retrieveDataFieldsFromSessionToArray(Request $request, $searchData)
     {
-        $searchData['name'] = $request->session()->get('name');
-        $searchData['email'] = $request->session()->get('email');
-        $searchData['role'] = $request->session()->get('role');
-        $searchData['sort'] = $request->session()->get('sort');
-        $searchData['pages'] = $request->session()->get('pages');
-		$searchData['blocked'] = $request->session()->get('blocked');
+        $searchData['userName'] = $request->session()->get('userName');
+        $searchData['userEmail'] = $request->session()->get('userEmail');
+        $searchData['userRole'] = $request->session()->get('userRole');
+		$searchData['userCaregivers'] = $request->session()->get('userCaregivers');
+        $searchData['userSort'] = $request->session()->get('userSort');
+        $searchData['userPages'] = $request->session()->get('userPages');
+		$searchData['userBlocked'] = $request->session()->get('userBlocked');
         return $searchData;
     }
 
     private function isRequestDataEmpty(Request $request)
     {
-        if(!$request->has('name') && !$request->has('email')
-            && !$request->has('role') && !$request->has('sort')
-            && !$request->has('pages') && !$request->has('blocked')) {
+        if(!$request->has('userName') && !$request->has('userEmail')
+            && !$request->has('userRole') && !$request->has('userCaregivers')
+			&& !$request->has('userSort') && !$request->has('userPages') 
+			&& !$request->has('userBlocked')) {
             return true;
         }
         return false;

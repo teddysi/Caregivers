@@ -92,6 +92,10 @@ class CaregiversController extends Controller
 
     public function rate(Caregiver $caregiver)
     {
+        if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
+			abort(401);
+		}
+
         $countedProceedings = DB::table('proceedings')
                                 ->join('materials', 'proceedings.material_id', 'materials.id')
                                 ->select('material_id', 'name', DB::raw('count(*) as total'))

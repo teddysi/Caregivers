@@ -31,7 +31,7 @@
 								<div class="input-group-addon">
 									<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
 								</div>
-								<input type="text" name="name" class="form-control" id="inputUserName" placeholder="Nome">
+								<input type="text" name="userName" class="form-control" id="inputUserName" placeholder="Nome">
 							</div>
 						</div>
 						<div class="col-lg-3 col-md-3 col-sm-6">
@@ -40,13 +40,13 @@
 								<div class="input-group-addon">
 									<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 								</div>
-								<input type="text" name="email" class="form-control" id="inputEmail" placeholder="Email">
+								<input type="text" name="userEmail" class="form-control" id="inputEmail" placeholder="Email">
 							</div>
 						</div>
 						<div class="col-lg-3 col-md-3 col-sm-6">
 							<div class="form-group form-inline">
 								<label for="userRole">Função:</label>
-								<select name="role" class="form-control">
+								<select name="userRole" class="form-control">
 									<option value="all">Todos</option>
 									<option value="admin">Administrador</option>
 									<option value="healthcarepro">Profissional de Saúde</option>
