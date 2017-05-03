@@ -12,6 +12,7 @@ use App\EmergencyContact;
 use App\User;
 use Storage;
 use Response;
+use DB;
 
 class MaterialsController extends Controller
 {
@@ -207,6 +208,105 @@ class MaterialsController extends Controller
         }
 
         return back();
+	}
+
+	public function addMaterials(Request $request)
+	{
+		$this->validate($request, [
+				'name' => 'required|min:4|unique:materials',
+				'description' => 'required|min:4',
+		], $this->messages);
+
+		$composite = new Composite();		
+		$composite->name = $request->input('name');
+		$composite->description = $request->input('description');
+		$composite->created_by = Auth::user()->id;
+
+		$composite->save();
+
+		$compositeMaterials = $composite->materials()->withPivot('order')->orderBy('pivot_order', 'asc')->paginate(10);
+		$compositeMaterials->setPageName('compositeMaterials');
+
+		$notCompositeMaterials = Material::whereNotIn('id', $composite->materials->modelKeys())
+									->where('type', '<>', 'composite')
+									->paginate(10);
+		$notCompositeMaterials->setPageName('notCompositeMaterials');
+
+		return view('materials.addMaterials', compact('composite', 'compositeMaterials', 'notCompositeMaterials'));
+	}
+
+	public function addMaterial(Material $composite, Material $material)
+	{
+		$count = count($composite->materials()->get());
+		$composite->materials()->attach([$material->id => ['order'=> $count + 1]]);
+
+        $compositeMaterials = $composite->materials()->withPivot('order')->orderBy('pivot_order', 'asc')->paginate(10);
+		$compositeMaterials->setPageName('compositeMaterials');
+
+		$notCompositeMaterials = Material::whereNotIn('id', $composite->materials->modelKeys())
+									->where('type', '<>', 'composite')
+									->paginate(10);
+		$notCompositeMaterials->setPageName('notCompositeMaterials');
+
+		return view('materials.addMaterials', compact('composite', 'compositeMaterials', 'notCompositeMaterials'));
+	}
+
+	public function removeMaterial(Material $composite, Material $material)
+	{
+		// TO DO: Quando removo um material falta atualizar a ordem na BD
+		$orderOfMaterial = DB::table('composite_material')->select('order')->where([['composite_id', $composite->id], ['material_id', $material->id]])->first()->order;
+		$composite->materials()->detach($material->id);
+		$materialsToUpdateOrder = $composite->materials()->where('order', '>', $orderOfMaterial)->get();
+		foreach ($materialsToUpdateOrder as $materialToUpdate) {
+			$orderOfMaterialToUpdate = DB::table('composite_material')->select('order')->where([['composite_id', $composite->id], ['material_id', $materialToUpdate->id]])->first()->order;
+			$composite->materials()->updateExistingPivot($materialToUpdate->id, ['order' => $orderOfMaterialToUpdate - 1]);
+		}
+
+        $compositeMaterials = $composite->materials()->withPivot('order')->orderBy('pivot_order', 'asc')->paginate(10);
+		$compositeMaterials->setPageName('compositeMaterials');
+
+		$notCompositeMaterials = Material::whereNotIn('id', $composite->materials->modelKeys())
+									->where('type', '<>', 'composite')
+									->paginate(10);
+		$notCompositeMaterials->setPageName('notCompositeMaterials');
+
+		return view('materials.addMaterials', compact('composite', 'compositeMaterials', 'notCompositeMaterials'));
+	}
+
+	public function upMaterial(Material $composite, Material $material)
+	{
+		$orderOfMaterial = DB::table('composite_material')->select('order')->where([['composite_id', $composite->id], ['material_id', $material->id]])->first()->order;
+		$aboveMaterial = $composite->materials()->where('order', $orderOfMaterial - 1)->first();
+		$composite->materials()->updateExistingPivot($material->id, ['order' => $orderOfMaterial - 1]);
+		$composite->materials()->updateExistingPivot($aboveMaterial->id, ['order' => $orderOfMaterial]);
+
+        $compositeMaterials = $composite->materials()->withPivot('order')->orderBy('pivot_order', 'asc')->paginate(10);
+		$compositeMaterials->setPageName('compositeMaterials');
+
+		$notCompositeMaterials = Material::whereNotIn('id', $composite->materials->modelKeys())
+									->where('type', '<>', 'composite')
+									->paginate(10);
+		$notCompositeMaterials->setPageName('notCompositeMaterials');
+
+		return view('materials.addMaterials', compact('composite', 'compositeMaterials', 'notCompositeMaterials'));
+	}
+
+	public function downMaterial(Material $composite, Material $material)
+	{
+		$orderOfMaterial = DB::table('composite_material')->select('order')->where([['composite_id', $composite->id], ['material_id', $material->id]])->first()->order;
+		$aboveMaterial = $composite->materials()->where('order', $orderOfMaterial + 1)->first();
+		$composite->materials()->updateExistingPivot($material->id, ['order' => $orderOfMaterial + 1]);
+		$composite->materials()->updateExistingPivot($aboveMaterial->id, ['order' => $orderOfMaterial]);
+
+        $compositeMaterials = $composite->materials()->paginate(10);
+		$compositeMaterials->setPageName('compositeMaterials');
+
+		$notCompositeMaterials = Material::whereNotIn('id', $composite->materials->modelKeys())
+									->where('type', '<>', 'composite')
+									->paginate(10);
+		$notCompositeMaterials->setPageName('notCompositeMaterials');
+
+		return view('materials.addMaterials', compact('composite', 'compositeMaterials', 'notCompositeMaterials'));
 	}
 
 	public static function changeTypeFormat($material)
