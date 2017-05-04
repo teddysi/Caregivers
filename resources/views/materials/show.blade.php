@@ -76,9 +76,11 @@
             </div>
         </div>
     @endif
-
+    
     <p>
-        <a class="btn btn-primary" href="{{ route('materials.materials', ['material' => $material->id]) }}">Modificar materiais associados</a>
+        @if ($material->type == 'Composto')
+            <a class="btn btn-primary" href="{{ route('materials.materials', ['material' => $material->id]) }}">Modificar materiais associados</a>
+        @endif
         <a class="btn btn-default" href="javascript:history.back()">Voltar a atrás</a>
     </p>
 </div>
