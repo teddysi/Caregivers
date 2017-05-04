@@ -119,14 +119,17 @@
 				<div class="col-3 col-sm-3 col-md-3">
 					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'textFile']) }}">Ficheiro de Texto</a>
 				</div>
-				<div class="col-3 col-sm-3 col-md-3">
+				<div class="col-2 col-sm-2 col-md-2">
 					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'image']) }}">Imagem</a>
 				</div>
-				<div class="col-3 col-sm-3 col-md-3">
+				<div class="col-2 col-sm-2 col-md-2">
 					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'video']) }}">Video</a>
 				</div>
 				<div class="col-3 col-sm-3 col-md-3">
 					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'emergencyContact']) }}">Contacto de Emergência</a>
+				</div>
+				<div class="col-2 col-sm-2 col-md-2">
+					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'composite']) }}">Composto</a>
 				</div>
 			</fieldset>
 			@if (count($materials))

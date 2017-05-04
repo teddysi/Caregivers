@@ -191,6 +191,10 @@ Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
 		'uses' =>'MaterialsController@showMaterial'
 	]);
 
+	Route::get('{material}/materials', [
+		'as' => 'materials.materials',
+		'uses' =>'MaterialsController@materials'
+	]);
 	Route::post('add', 'MaterialsController@addMaterials');
 
 	Route::post('{composite}/add/{material}/add', [

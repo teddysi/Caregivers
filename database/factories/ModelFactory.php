@@ -14,7 +14,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(App\Caregiver::class, function (Faker\Generator $faker) {
     static $password;
-    $users = App\User::all();
+    $users = App\User::where('role', '<>', 'caregiver')->get();
 
     return [
         'username' => $faker->unique()->userName,
