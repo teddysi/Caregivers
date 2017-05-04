@@ -190,12 +190,33 @@ Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
 		'as' => 'materials.showContent',
 		'uses' =>'MaterialsController@showMaterial'
 	]);
-});
 
-Route::get('/healthcarepro{id}/caregivers', [
-	'as' => 'admin.admin_healthcarepro_caregivers',
-	'uses' =>'UserController@healthcareproCaregivers'
-]);
+	Route::get('{material}/materials', [
+		'as' => 'materials.materials',
+		'uses' =>'MaterialsController@materials'
+	]);
+	Route::post('add', 'MaterialsController@addMaterials');
+
+	Route::post('{composite}/add/{material}/add', [
+		'as' => 'materials.addMaterial',
+		'uses' =>'MaterialsController@addMaterial'
+	]);
+
+	Route::post('{composite}/add/{material}/remove', [
+		'as' => 'materials.removeMaterial',
+		'uses' =>'MaterialsController@removeMaterial'
+	]);
+
+	Route::post('{composite}/add/{material}/up', [
+		'as' => 'materials.upMaterial',
+		'uses' =>'MaterialsController@upMaterial'
+	]);
+
+	Route::post('{composite}/add/{material}/down', [
+		'as' => 'materials.downMaterial',
+		'uses' =>'MaterialsController@downMaterial'
+	]);
+});
 
 // Caregivers API
 Route::post('/caregiversAPI/login', 'CaregiversController@login');

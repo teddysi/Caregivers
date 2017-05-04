@@ -17,7 +17,7 @@ class CreateMaterialsTable extends Migration
             $table->increments('id');
             $table->string('type');
             $table->text('description');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('path')->nullable();
             $table->string('url')->nullable();
             $table->string('number')->nullable();

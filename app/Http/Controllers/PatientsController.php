@@ -154,24 +154,12 @@ class PatientsController extends Controller
     {
 		$patient->needs()->attach($need->id);
 
-        $needs = $patient->needs()->paginate(10);
-		$needs->setPageName('needs');
-
-		$notMyNeeds = Need::whereNotIn('id', $patient->needs->modelKeys())->paginate(10);
-		$notMyNeeds->setPageName('notMyNeeds');
-
         return redirect()->route('patients.needs', ['patient' => $patient->id]); 
     }
 
     public function diassociate(Patient $patient, Need $need)
     {
         $patient->needs()->detach($need->id);
-
-        $needs = $patient->needs()->paginate(10);
-		$needs->setPageName('needs');
-
-		$notMyNeeds = Need::whereNotIn('id', $patient->needs->modelKeys())->paginate(10);
-		$notMyNeeds->setPageName('notMyNeeds');
 
         return redirect()->route('patients.needs', ['patient' => $patient->id]);
     }

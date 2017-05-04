@@ -14,7 +14,7 @@
 /** @var \Illuminate\Database\Eloquent\Factory $factory */
 $factory->define(App\Caregiver::class, function (Faker\Generator $faker) {
     static $password;
-    $users = App\User::all();
+    $users = App\User::where('role', '<>', 'caregiver')->get();
 
     return [
         'username' => $faker->unique()->userName,
@@ -84,7 +84,7 @@ $factory->define(App\TextFile::class, function (Faker\Generator $faker) {
     $healthcare_pros = App\HealthcarePro::all();
     
     return [
-        'name' => $faker->randomElement($array = array('Texto', 'Tutorial', 'FAQ')) . ' - ' . $faker->randomDigitNotNull,
+        'name' => $faker->randomElement($array = array('Texto', 'Tutorial', 'FAQ')) . ' - ' . $faker->randomNumber,
         'description' => $faker->randomElement($array = array('Texto', 'Tutorial', 'FAQ')) . ' de ' . $faker->name,
         'type' => 'textFile',
         'path' => 'C:\\',
@@ -96,7 +96,7 @@ $factory->define(App\Image::class, function (Faker\Generator $faker) {
     $healthcare_pros = App\HealthcarePro::all();
     
     return [
-        'name' => 'Imagem ' . $faker->randomDigitNotNull,
+        'name' => 'Imagem ' . $faker->randomNumber,
         'description' => 'Imagem de ' . $faker->name,
         'type' => 'image',
         'path' => $faker->imageUrl($width = 304, $height = 228),
@@ -108,7 +108,7 @@ $factory->define(App\Video::class, function (Faker\Generator $faker) {
     $healthcare_pros = App\HealthcarePro::all();
     
     return [
-        'name' => $faker->randomElement($array = array('Video - Mudar Penso 1', 'Video - Fazer Endoscopia 1')),
+        'name' => $faker->unique()->randomElement($array = array('Video - Mudar Penso 1', 'Video - Fazer Endoscopia 1', 'Video 2', 'Video 3', 'Video 4')),
         'description' => $faker->randomElement($array = array('Video sobre como mudar o penso', 'Video sobre como fazer endoscopia')),
         'type' => 'video',
         'url' => $faker->randomElement($array = array('https://www.youtube.com/watch?v=-vSXINtEPpE', 'https://www.youtube.com/watch?v=RoXmMD1rVP0')),
@@ -120,10 +120,21 @@ $factory->define(App\EmergencyContact::class, function (Faker\Generator $faker) 
     $healthcare_pros = App\HealthcarePro::all();
     
     return [
-        'name' => 'Contacto de Emergência ' . $faker->randomDigitNotNull,
+        'name' => 'Contacto de Emergência ' . $faker->randomNumber,
         'description' => 'Contacto de Emergência de ' . $faker->name,
         'type' => 'emergencyContact',
         'number' => $faker->phoneNumber,
+        'created_by' => $healthcare_pros->random()->id,
+    ];
+});
+
+$factory->define(App\Composite::class, function (Faker\Generator $faker) {
+    $healthcare_pros = App\HealthcarePro::all();
+    
+    return [
+        'name' => 'Composto ' . $faker->randomNumber,
+        'description' => 'Composto de ' . $faker->name,
+        'type' => 'composite',
         'created_by' => $healthcare_pros->random()->id,
     ];
 });

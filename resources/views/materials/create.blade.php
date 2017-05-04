@@ -5,7 +5,11 @@
 @section('content')
 
 <div class="container">
-    <form action="{{url('/materials/create')}}" method="POST" class="form-group" enctype="multipart/form-data">
+    @if ($type == 'composite')
+        <form action="{{url('/materials/add')}}" method="POST" class="form-group" enctype="multipart/form-data">
+    @else
+        <form action="{{url('/materials/create')}}" method="POST" class="form-group" enctype="multipart/form-data">
+    @endif
         {{ csrf_field() }}
         <input name="type" type="hidden" value="{{ $type }}">
 
@@ -53,7 +57,11 @@
         @endif
 
         <div class="form-group">
-            <button type="submit" class="btn btn-primary" name="save">Criar</button>
+            @if ($type == 'composite')
+                <button type="submit" class="btn btn-primary" name="save">Adicionar Materiais</button>
+            @else
+                <button type="submit" class="btn btn-primary" name="save">Criar</button>
+            @endif
             <a class="btn btn-default" href="javascript:history.back()">Cancelar</a>
         </div>
     @include('layouts.errors')

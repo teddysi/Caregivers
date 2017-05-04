@@ -11,10 +11,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {        
-        //Users ids: 1 - 12
+        //Users ids: 1 - 15
         factory(App\Admin::class, 2)->create();
         factory(App\HealthcarePro::class, 5)->create();
         factory(App\Caregiver::class, 5)->create();
+        $this->buildCustomUsers();
 
         $hp_care = [
             [3, 8], [3, 9], [3, 12],
@@ -48,11 +49,26 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        //Materials ids: 1 - 20
+        //Materials ids: 1 - 23
         factory(App\TextFile::class, 5)->create();
         factory(App\Image::class, 5)->create();
         factory(App\Video::class, 5)->create();
         factory(App\EmergencyContact::class, 5)->create();
+        factory(App\Composite::class, 3)->create();
+
+        $cm_m = [
+            [21, 1, 1], [21, 20, 2], [21, 14, 3],
+            [22, 1, 1], [22, 18, 2], [22, 10, 3],
+            [23, 1, 1], [23, 2, 2], [23, 8, 3], [23, 10, 4]
+        ]; 
+      
+        for($i = 0; $i < count($cm_m); $i++) {
+            DB::table('composite_material')->insert([
+                'composite_id' => $cm_m[$i][0],
+                'material_id' => $cm_m[$i][1],
+                'order' => $cm_m[$i][2],
+            ]);
+        }
 
         $n_m = [
             [1, 1], [1, 20], [1, 14],
@@ -100,6 +116,42 @@ class DatabaseSeeder extends Seeder
        factory(App\Proceeding::class, 10)->create();
 
        factory(App\Log::class, 20)->create();
+    }
+
+    private function buildCustomUsers()
+    {
+        //Admin
+        $admin = new App\Admin();
+        $admin->username = 'admin';
+        $admin->name = 'Admin';
+        $admin->email = 'admin@mail.com';
+        $admin->password = bcrypt('adminpw');
+        $admin->remember_token = str_random(10);
+        $admin->save();
+
+        //HealthcarePro
+        $healthcarePro = new App\HealthcarePro();
+        $healthcarePro->username = 'healthcarePro';
+        $healthcarePro->name = 'HealthcarePro';
+        $healthcarePro->email = 'healthcarePro@mail.com';
+        $healthcarePro->facility = 'Hospital de Leiria';
+        $healthcarePro->job = 'Médico';
+        $healthcarePro->password = bcrypt('propw');
+        $healthcarePro->remember_token = str_random(10);
+        $healthcarePro->save();
+
+        //Caregiver
+        $users = App\User::where('role', '<>', 'caregiver')->get();
+        $caregiver = new App\Caregiver();
+        $caregiver->username = 'caregiver';
+        $caregiver->name = 'Caregiver';
+        $caregiver->email = 'caregiver@mail.com';
+        $caregiver->rate = 'Normal';
+        $caregiver->location = 'Leiria';
+        $caregiver->password = bcrypt('carepw');
+        $caregiver->remember_token = str_random(10);
+        $caregiver->created_by = $users->random()->id;
+        $caregiver->save();
     }
     
 }
