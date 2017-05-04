@@ -154,7 +154,25 @@ class CaregiversController extends Controller
             return response('Não Autorizado', 401);
         }
 
-        return response()->json($user->patients);      
+        $patients = $user->patients;
+        $patients->materials = $this->patientMaterials($patients);
+
+        return response()->json($patients);      
+    }
+
+    public function patientMaterials($patients)
+    {
+
+        foreach ($patients as $patient) {
+            $materials = [];
+            foreach ($patient->needs as $need) {
+                foreach ($need->materials as $material) {
+                    array_push($materials, $material);
+                }
+            }
+            $patient->materials = $materials;
+        }
+        return $materials;
     }
 
     public function caregiversMaterialsAPI(Request $request, $id)

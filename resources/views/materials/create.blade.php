@@ -32,7 +32,7 @@
         @if ($type == 'textFile' || $type == 'image')
             <div class="form-group">
                 <label for="inputPath">Localização</label>
-                <input type="file" name="cenas"/>
+                <input type="file" name="path"/>
             </div> 
         @endif
 

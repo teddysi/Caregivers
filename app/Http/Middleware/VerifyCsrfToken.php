@@ -12,6 +12,6 @@ class VerifyCsrfToken extends BaseVerifier
      * @var array
      */
     protected $except = [
-        'caregivers/login', '/proceedings*'
+        'caregiversAPI/login', '/proceedings*'
     ];
 }

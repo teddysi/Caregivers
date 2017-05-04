@@ -118,12 +118,16 @@ class MaterialsController extends Controller
 		switch ($request->input('type')) {
 			case 'textFile':
 				$material = new TextFile();
-				$material->path = $request->input('path');
+				$originalName = $request->path->getClientOriginalName();
+				$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
+				$material->path = $request->file('path')->storeAs('textFiles', $material->name . '.' . $whatIWant);
 				break;
 
 			case 'image':
 				$material = new Image();
-				$material->path = $request->input('path');
+				$originalName = $request->path->getClientOriginalName();
+				$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
+				$material->path = $request->file('path')->storeAs('images', $material->name . '.' . $whatIWant);
 				break;
 
 			case 'video':
@@ -181,23 +185,7 @@ class MaterialsController extends Controller
 
 		$material->name = $request->input('name');
 		$material->description = $request->input('description');
-		$material->path = $request->input('path');
-
-		if ($request->input('type') == 'textFile') {
-			$originalName = $request->cenas->getClientOriginalName();
-			$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
-			$material->path = $request->file('cenas')->storeAs('textFiles', $material->name . '.' . $whatIWant);
-
-		} elseif ($request->input('type') == 'image') {
-			$originalName = $request->cenas->getClientOriginalName();
-			$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
-			$material->path = $request->file('cenas')->storeAs('images', $material->name . '.' . $whatIWant);
-		}
-
-		$material->url = $request->input('url');
-		$material->number = $request->input('number');
-		$material->created_by = Auth::user()->id;
-
+		
 		$material->save();
 
 		return redirect('/');
