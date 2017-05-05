@@ -229,8 +229,11 @@ class UsersController extends Controller
 		$user->name = $request->input('name');
 		$user->email = $request->input('email');
 		$user->password = bcrypt($request->input('password'));
-
 		$user->save();
+
+		if (Auth::user()->role == 'healthcarepro') {
+			Auth::user()->caregivers()->attach(User::where('username', $user->username)->firstOrFail()->id);
+		}
 
 		return redirect('/');
 	}

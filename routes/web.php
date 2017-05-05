@@ -42,6 +42,23 @@ Route::group(['middleware' => 'auth', 'prefix' => 'users'], function () {
 		'as' => 'users.toggleBlock',
 		'uses' =>'UsersController@toggleBlock'
 	]);
+
+	Route::group(['middleware' => 'healthcarepro'], function () {
+		Route::get('{user}/caregivers', [
+			'as' => 'users.caregivers',
+			'uses' =>'UsersController@caregivers'
+		]);
+
+		Route::post('{user}/caregivers/{caregiver}/associate', [
+			'as' => 'users.associateCaregiver',
+			'uses' =>'UsersController@associateCaregiver'
+		]);
+
+		Route::post('{user}/caregivers/{caregiver}/diassociate', [
+			'as' => 'users.diassociateCaregiver',
+			'uses' =>'UsersController@diassociateCaregiver'
+		]);
+	});
 });
 
 Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'caregivers'], function () {
@@ -221,10 +238,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
 // Caregivers API
 Route::post('/caregiversAPI/login', 'CaregiversController@login');
 Route::get('/caregiversAPI/{caregiver}/patients', 'CaregiversController@patientsAPI');
-Route::get('/caregiversAPI/{caregiver}/materials', 'CaregiversController@caregiversMaterialsAPI');
-Route::get('/caregiversAPI/{caregiver}/patients/{patient}/needs', 'CaregiversController@patientsNeeds');
-Route::get('/caregiversAPI/{caregiver}/patients/{patient}/materials', 'CaregiversController@patientsMaterials');
-Route::get('/caregiversAPI/{caregiver}/patients/{patient}/needs/{need}/materials', 'CaregiversController@patientsNeedsMaterials');
 Route::get('/caregiversAPI/{caregiver}/proceedings', 'CaregiversController@proceedings');
 
 Route::post('/proceedingsAPI/create', 'ProceedingsController@create');

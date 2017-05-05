@@ -159,22 +159,16 @@ class CaregiversController extends Controller
         foreach ($patients as $patient) {
             foreach ($patient->needs as $need) {
                 foreach ($need->materials as $index => $material) {
-                    if ($material->type == 'composite') {
-                        $compositeMaterials = $material->materials()->withPivot('order')->orderBy('pivot_order', 'asc')->get();
-                        foreach ($compositeMaterials as $compositeMaterial) {
-                            $need->materials->push($compositeMaterial);
-                        }
-                        $need->materials->forget($index);
-                    }
-                }
-            }
-        }
-
-        foreach ($patients as $patient) {
-            foreach ($patient->needs as $need) {
-                foreach ($need->materials as $index => $material) {
                     if ($material->blocked == 1) {
                         $need->materials->forget($index);
+                    } else {
+                        if ($material->type == 'composite') {
+                            $compositeMaterials = $material->materials()->withPivot('order')->orderBy('pivot_order', 'asc')->get();
+                            foreach ($compositeMaterials as $compositeMaterial) {
+                                $need->materials->push($compositeMaterial);
+                            }
+                            $need->materials->forget($index);
+                        }
                     }
                 }
             }
