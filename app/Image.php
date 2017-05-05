@@ -8,7 +8,7 @@ class Image extends Material
 {
     protected static $singleTableType = 'image';
 
-    protected static $persisted = ['path'];
+    protected static $persisted = ['url', 'path', 'mime'];
 
     /**
      * The attributes that are mass assignable.
@@ -16,6 +16,6 @@ class Image extends Material
      * @var array
      */
     protected $fillable = [
-        'path',
+        'url', 'path', 'mime',
     ];
 }

@@ -7,10 +7,13 @@
     <h2><strong>Material:</strong> {{ $material->name }}</h2>
     <h4><strong>Tipo:</strong> {{ $material->type }}</h4>
     <h4><strong>Descrição:</strong> {{ $material->description }}</h4>
-    @if ($material->type == 'Ficheiro de Texto' || $material->type == 'Imagem')
-        <h4><strong>Localização:</strong> <a href="{{ route('materials.showContent', ['material' => $material->id] )}}" target="_blank">{{ $material->path }}</a></h4>
+    @if ($material->type == 'Texto')
+        <h4><strong>Texto:</strong>{{ $material->body }}</h4>
     @endif
-    @if ($material->type == 'Video')
+    @if ($material->type == 'Imagem' || $material->type == 'Video' || ($material->type == 'Anexo' && $material->path))
+        <h4><strong>Ficheiro:</strong> <a href="{{ route('materials.showContent', ['material' => $material->id] )}}" target="_blank">{{ $material->name.$material->mime }}</a></h4>
+    @endif
+    @if ($material->type == 'Anexo' && !$material->path)
         <h4><strong>URL:</strong> <a href="{{ $material->url }}" target="_blank">{{ $material->url }}</a></h4>
     @endif
     @if ($material->type == 'Contacto de Emergência')

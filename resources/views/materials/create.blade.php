@@ -6,7 +6,7 @@
 
 <div class="container">
     @if ($type == 'composite')
-        <form action="{{url('/materials/add')}}" method="POST" class="form-group" enctype="multipart/form-data">
+        <form action="{{url('/materials/add')}}" method="POST" class="form-group">
     @else
         <form action="{{url('/materials/create')}}" method="POST" class="form-group" enctype="multipart/form-data">
     @endif
@@ -29,20 +29,47 @@
                 placeholder="Descrição" value="{{ old('description') }}" />
         </div>
 
-        @if ($type == 'textFile' || $type == 'image')
+        @if ($type == 'text')
             <div class="form-group">
-                <label for="inputPath">Localização</label>
-                <input type="file" name="path"/>
-            </div> 
+                <label for="inputBody">Texto</label>
+                <textarea class="form-control" rows="5" 
+                    type="text" name="body" 
+                    id="body" placeholder="Texto" value="{{ old('body') }}">
+                </textarea>
+            </div>
         @endif
 
-        @if ($type == 'video')
+        @if ($type == 'video' || $type == 'image')
             <div class="form-group">
+                <label for="inputFile">Ficheiro</label>
+                <input type="file" name="path"/>
+            </div>
+        @endif
+
+        @if ($type == 'annex')
+            <div class="form-group">
+                <label for="selectType">Tipo</label>
+                <select name="selectType" id="selectType" class="form-control selectpicker" onchange="selectTypeChange()">
+                    <option value="--">Escolha um Tipo</option>
+                    <optgroup label="Anexo Externo">
+                        <option value="0">Video Externo</option>
+                        <option value="1">Link para Website</option>
+                    </optgroup>
+                    <optgroup label="Anexo Interno">
+                        <option value="2">Ficheiro (PDF, docx, ...)</option>
+                    </optgroup>
+                </select>
+            </div>
+            <div class="form-group" id="inputURL" style="display:none">
                 <label for="inputURL">URL</label>
                 <input
-                    type="text" class="form-control"
+                    type="url" class="form-control"
                     name="url" id="inputURL"
                     placeholder="URL" value="{{ old('url') }}" />
+            </div>
+            <div class="form-group" id="inputFile" style="display:none">
+                <label for="inputFile">Ficheiro</label>
+                <input type="file" name="path"/>
             </div>
         @endif
 
@@ -70,3 +97,6 @@
 
 @endsection
 
+@section('custom_js')
+    <script src="{{ asset('js/annex_select.js') }}"></script>
+@endsection 

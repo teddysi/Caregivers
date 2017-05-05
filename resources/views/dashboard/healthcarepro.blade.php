@@ -9,8 +9,10 @@
             <h1>Cuidadores</h1>
 			<fieldset>
 				<legend>Criar</legend>
-				<div class="col-4 col-sm-4 col-md-4">
-					<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'caregiver']) }}">Cuidador</a>
+				<div class="row">
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'caregiver']) }}">Cuidador</a>
+					</div>
 				</div>
 			</fieldset>
 			@if (count($caregivers))
@@ -104,8 +106,10 @@
             <h1>Pacientes</h1>
 			<fieldset>
 				<legend>Criar</legend>
-				<div class="col-4 col-sm-4 col-md-4">
-					<a class="btn btn-block btn-primary" href="{{ route('patients.create') }}">Paciente</a>
+				<div class="row">
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('patients.create') }}">Paciente</a>
+					</div>
 				</div>
 			</fieldset>
 			@if (count($patients))
@@ -197,8 +201,10 @@
             <h1>Necessidades</h1>
 			<fieldset>
 				<legend>Criar</legend>
-				<div class="col-4 col-sm-4 col-md-4">
-					<a class="btn btn-block btn-primary" href="{{ route('needs.create') }}">Necessidade</a>
+				<div class="row">
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('needs.create') }}">Necessidade</a>
+					</div>
 				</div>
 			</fieldset>
 			@if (count($needs))
@@ -277,17 +283,28 @@
             <h1>Materiais</h1>
 			<fieldset>
 				<legend>Criar</legend>
-				<div class="col-3 col-sm-3 col-md-3">
-					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'textFile']) }}">Ficheiro de Texto</a>
+				<div class="row">
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'text']) }}">Texto</a>
+					</div>
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'image']) }}">Imagem</a>
+					</div>
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'video']) }}">Video</a>
+					</div>
 				</div>
-				<div class="col-3 col-sm-3 col-md-3">
-					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'image']) }}">Imagem</a>
-				</div>
-				<div class="col-3 col-sm-3 col-md-3">
-					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'video']) }}">Video</a>
-				</div>
-				<div class="col-3 col-sm-3 col-md-3">
-					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'emergencyContact']) }}">Contacto de Emergência</a>
+				<br />
+				<div class="row">
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'emergencyContact']) }}">Contacto de Emergência</a>
+					</div>
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'annex']) }}">Anexo</a>
+					</div>
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'composite']) }}">Composto</a>
+					</div>
 				</div>
 			</fieldset>
 			@if (count($materials))
@@ -311,10 +328,12 @@
 								<label for="materialType">Tipo:</label>
 								<select name="materialType" class="form-control">
 									<option value="all">Todos</option>
-									<option value="textFile">Ficheiro de Texto</option>
+									<option value="text">Texto</option>
 									<option value="image">Imagem</option>
 									<option value="video">Video</option>
 									<option value="emergencyContact">Contacto de Emergência</option>
+									<option value="annex">Anexo</option>
+									<option value="composite">Composto</option>
 								</select>
 							</div>
 						</div>

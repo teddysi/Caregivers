@@ -8,17 +8,28 @@
             <h1>Materiais</h1>
 			<fieldset>
 				<legend>Criar</legend>
-				<div class="col-3 col-sm-3 col-md-3">
-					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'textFile']) }}">Ficheiro de Texto</a>
+				<div class="row">
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'text']) }}">Texto</a>
+					</div>
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'image']) }}">Imagem</a>
+					</div>
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'video']) }}">Video</a>
+					</div>
 				</div>
-				<div class="col-3 col-sm-3 col-md-3">
-					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'image']) }}">Imagem</a>
-				</div>
-				<div class="col-3 col-sm-3 col-md-3">
-					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'video']) }}">Video</a>
-				</div>
-				<div class="col-3 col-sm-3 col-md-3">
-					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'emergencyContact']) }}">Contacto de Emergência</a>
+				<br />
+				<div class="row">
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'emergencyContact']) }}">Contacto de Emergência</a>
+					</div>
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'annex']) }}">Anexo</a>
+					</div>
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'composite']) }}">Composto</a>
+					</div>
 				</div>
 			</fieldset>
 			<br /><br />
@@ -40,10 +51,12 @@
 							<label for="materialType">Tipo:</label>
 							<select name="materialType" class="form-control">
                                 <option value="all" {{ $searchData['materialType'] == 'all' ? 'selected' : '' }}>Todos</option>
-								<option value="textFile" {{ $searchData['materialType'] == 'textFile' ? 'selected' : '' }}>Ficheiro de Texto</option>
+								<option value="text" {{ $searchData['materialType'] == 'text' ? 'selected' : '' }}>Texto</option>
 					    		<option value="image" {{ $searchData['materialType'] == 'image' ? 'selected' : '' }}>Imagem</option>
 								<option value="video" {{ $searchData['materialType'] == 'video' ? 'selected' : '' }}>Video</option>
                                 <option value="emergencyContact" {{ $searchData['materialType'] == 'emergencyContact' ? 'selected' : '' }}>Contacto de Emergência</option>
+								<option value="annex" {{ $searchData['materialType'] == 'annex' ? 'selected' : '' }}>Anexo</option>
+								<option value="composite" {{ $searchData['materialType'] == 'composite' ? 'selected' : '' }}>Composto</option>
 							</select>
 						</div>
 					</div>

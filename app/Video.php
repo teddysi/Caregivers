@@ -8,7 +8,7 @@ class Video extends Material
 {
     protected static $singleTableType = 'video';
 
-    protected static $persisted = ['url'];
+    protected static $persisted = ['url', 'path', 'mime'];
 
     /**
      * The attributes that are mass assignable.
@@ -16,6 +16,6 @@ class Video extends Material
      * @var array
      */
     protected $fillable = [
-        'url',
+        'url', 'path', 'mime',
     ];
 }

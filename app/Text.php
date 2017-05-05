@@ -4,11 +4,11 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class TextFile extends Material
+class Text extends Material
 {
-    protected static $singleTableType = 'textFile';
+    protected static $singleTableType = 'text';
 
-    protected static $persisted = ['path'];
+    protected static $persisted = ['body'];
 
     /**
      * The attributes that are mass assignable.
@@ -16,6 +16,6 @@ class TextFile extends Material
      * @var array
      */
     protected $fillable = [
-        'path',
+        'body',
     ];
 }

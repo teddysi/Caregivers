@@ -8,8 +8,10 @@
             <h1>Necessidades</h1>
 			<fieldset>
 				<legend>Criar</legend>
-				<div class="col-4 col-sm-4 col-md-4">
-					<a class="btn btn-block btn-primary" href="{{ route('needs.create') }}">Necessidade</a>
+				<div class="row">
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('needs.create') }}">Necessidade</a>
+					</div>
 				</div>
 			</fieldset>
 			<br /><br />

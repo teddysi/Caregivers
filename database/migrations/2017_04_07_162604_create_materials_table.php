@@ -18,8 +18,10 @@ class CreateMaterialsTable extends Migration
             $table->string('type');
             $table->text('description');
             $table->string('name')->unique();
-            $table->string('path')->nullable();
+            $table->longText('body')->nullable();
             $table->string('url')->nullable();
+            $table->string('path')->nullable();
+            $table->string('mime')->nullable();
             $table->string('number')->nullable();
             $table->boolean('blocked')->default(false);
             $table->integer('created_by')->unsigned()->index();

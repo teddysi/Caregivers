@@ -49,11 +49,12 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        //Materials ids: 1 - 23
-        factory(App\TextFile::class, 5)->create();
-        factory(App\Image::class, 5)->create();
-        factory(App\Video::class, 5)->create();
+        //Materials ids: 1 - 28
+        factory(App\Text::class, 5)->create();
+        $this->buildImages();
+        $this->buildVideos();
         factory(App\EmergencyContact::class, 5)->create();
+        $this->buildAnnexs();
         factory(App\Composite::class, 3)->create();
 
         $cm_m = [
@@ -153,5 +154,71 @@ class DatabaseSeeder extends Seeder
         $caregiver->created_by = $users->random()->id;
         $caregiver->save();
     }
+
+    private function buildImages()
+    {
+        $countMaterials = count(App\Material::all());
+        $healthcare_pros = App\HealthcarePro::all();
+        $images_name = [
+            'Imagem-1', 'Imagem-2', 'Imagem-3', 'Imagem-4', 'Imagem-5'
+        ]; 
+      
+        foreach ($images_name as $name) {
+            $image = new App\Image();
+            $image->name = $name;
+            $image->description = $name.' description';
+            $image->type = 'image';
+            $image->url = 'http://192.168.99.100/healthmanagement/public/materials/'.($countMaterials+1).'/showContent';
+            $image->path = 'images/'.$name.'.jpg';
+            $image->mime = '.jpg';
+            $image->created_by = $healthcare_pros->random()->id;
+            $image->save();
+        }
+    }
     
+    private function buildVideos()
+    {
+        $countMaterials = count(App\Material::all());
+        $healthcare_pros = App\HealthcarePro::all();
+        $videos_name = [
+            'Video-1', 'Video-2', 'Video-3', 'Video-4', 'Video-5'
+        ]; 
+      
+        foreach ($videos_name as $name) {
+            $video = new App\Video();
+            $video->name = $name;
+            $video->description = $name.' description';
+            $video->type = 'video';
+            $video->url = 'http://192.168.99.100/healthmanagement/public/materials/'.($countMaterials+1).'/showContent';
+            $video->path = 'videos/'.$name.'.mp4';
+            $video->mime = '.mp4';
+            $video->created_by = $healthcare_pros->random()->id;
+            $video->save();
+        }
+    }
+
+    private function buildAnnexs()
+    {
+        $countMaterials = count(App\Material::all());
+        $healthcare_pros = App\HealthcarePro::all();
+        $annexs_name = [
+            'Anexo-1', 'Anexo-2', 'Anexo-3', 'Anexo-4', 'Anexo-5'
+        ]; 
+      
+        foreach ($annexs_name as $name) {
+            $annex = new App\Annex();
+            $annex->name = $name;
+            $annex->description = $name.' description';
+            $annex->type = 'annex';
+            if ($annex->name != 'Anexo-4' && $annex->name != 'Anexo-5') {
+                $annex->url = 'http://192.168.99.100/healthmanagement/public/materials/'.($countMaterials+1).'/showContent';
+                $annex->path = 'annexs/'.$name.'.pdf';
+                $annex->mime = '.pdf';
+            } else {
+                $annex->url = 'https://www.youtube.com/watch?v=RoXmMD1rVP0';
+            }
+            $annex->created_by = $healthcare_pros->random()->id;
+            $annex->save();
+        }
+    }
 }

@@ -9,6 +9,7 @@ use App\TextFile;
 use App\Video;
 use App\Image;
 use App\EmergencyContact;
+use App\Annex;
 use App\Composite;
 use App\User;
 use Storage;
@@ -105,34 +106,53 @@ class MaterialsController extends Controller
 	}
 
 	public function store(Request $request)
-	{	
+	{
 		$this->validate($request, [
 				'name' => 'required|min:4|unique:materials',
 				'description' => 'required|min:4',
-				'path' => 'nullable|required_if:type,textFile|required_if:type,image',
-				'url' => 'nullable|url|required_if:type,video',
+				'body' => 'nullable|required_if:type,text',
+				'path' => 'nullable|required_if:type,image|required_if:type,video',
+				'url' => 'nullable|url',
+				'mime' => 'nullable',
 				'number' => 'nullable|required_if:type,emergencyContact',
 		], $this->messages);
 
 		$material;
 		switch ($request->input('type')) {
-			case 'textFile':
-				$material = new TextFile();
-				$originalName = $request->path->getClientOriginalName();
-				$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
-				$material->path = $request->file('path')->storeAs('textFiles', $material->name . '.' . $whatIWant);
+			case 'text':
+				$material = new Text();
+				$material->body = $request->input('body');
 				break;
 
 			case 'image':
 				$material = new Image();
 				$originalName = $request->path->getClientOriginalName();
 				$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
-				$material->path = $request->file('path')->storeAs('images', $material->name . '.' . $whatIWant);
+				$material->url = $request->root() . '/materials/'.$material->id.'/showContent';
+				$material->path = $request->file('path')->storeAs('images', $request->input('name') . '.' . $whatIWant);
+				$material->mime = '.' . $whatIWant;
 				break;
 
 			case 'video':
 				$material = new Video();
-				$material->url = $request->input('url');
+				$originalName = $request->path->getClientOriginalName();
+				$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
+				$material->url = $request->root() . '/materials/'.$material->id.'/showContent';
+				$material->path = $request->file('path')->storeAs('videos', $request->input('name') . '.' . $whatIWant);
+				$material->mime = '.' . $whatIWant;
+				break;
+
+			case 'annex':
+				$material = new Annex();
+				if ($request->path) {
+					$originalName = $request->path->getClientOriginalName();
+					$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
+					$material->url = $request->root() . '/materials/'.$material->id.'/showContent';
+					$material->path = $request->file('path')->storeAs('annexs', $request->input('name') . '.' . $whatIWant);
+					$material->mime = '.' . $whatIWant;
+				} else {
+					$material->url = $request->input('url');
+				}
 				break;
 
 			case 'emergencyContact':
@@ -178,8 +198,8 @@ class MaterialsController extends Controller
 		$this->validate($request, [
 			'name' => 'required|min:4|unique:materials,name,'.$material->id,
 			'description' => 'required|min:4',
-			'path' => 'nullable|required_if:type,textFile|required_if:type,image',
-			'url' => 'nullable|url|required_if:type,video',
+			'path' => 'nullable|required_if:type,text',
+			'url' => 'nullable|required_if:type,image|required_if:type,video|required_if:type,annex',
 			'number' => 'nullable|required_if:type,emergencyContact',
 		], $this->messages);
 
@@ -283,8 +303,8 @@ class MaterialsController extends Controller
 	public static function changeTypeFormat($material)
 	{
 		switch ($material->type) {
-			case 'textFile':
-				$material->type = 'Ficheiro de Texto';
+			case 'text':
+				$material->type = 'Texto';
 				break;
 
 			case 'image':
@@ -297,6 +317,10 @@ class MaterialsController extends Controller
 
 			case 'emergencyContact':
 				$material->type = 'Contacto de Emergência';
+				break;
+
+			case 'annex':
+				$material->type = 'Anexo';
 				break;
 
 			case 'composite':

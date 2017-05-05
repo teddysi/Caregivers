@@ -16,7 +16,7 @@ class Material extends Model
 
     protected static $persisted = ['description', 'name', 'created_by', 'blocked'];
 
-    protected static $singleTableSubclasses = [EmergencyContact::class, TextFile::class, Video::class, 
+    protected static $singleTableSubclasses = [EmergencyContact::class, Text::class, Video::class, 
         Image::class, Annex::class, Composite::class];
 
     protected $fillable = [

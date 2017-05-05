@@ -8,16 +8,18 @@
             <h1>Utilizadores</h1>
 			<fieldset>
 				<legend>Criar</legend>
-				@if (Auth::user()->role == 'admin')
+				<div class="row">
+					@if (Auth::user()->role == 'admin')
+						<div class="col-4 col-sm-4 col-md-4">
+							<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'admin']) }}">Administrador</a>
+						</div>
+						<div class="col-4 col-sm-4 col-md-4">
+							<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'healthcarepro']) }}">Profissional de Saúde</a>
+						</div>
+					@endif
 					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'admin']) }}">Administrador</a>
+						<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'caregiver']) }}">Cuidador</a>
 					</div>
-					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'healthcarepro']) }}">Profissional de Saúde</a>
-					</div>
-				@endif
-				<div class="col-4 col-sm-4 col-md-4">
-					<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'caregiver']) }}">Cuidador</a>
 				</div>
 			</fieldset>
 			<br /><br />

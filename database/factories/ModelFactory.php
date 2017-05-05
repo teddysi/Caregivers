@@ -80,38 +80,46 @@ $factory->define(App\Need::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\TextFile::class, function (Faker\Generator $faker) {
+$factory->define(App\Text::class, function (Faker\Generator $faker) {
     $healthcare_pros = App\HealthcarePro::all();
     
     return [
-        'name' => $faker->randomElement($array = array('Texto', 'Tutorial', 'FAQ')) . ' - ' . $faker->randomNumber,
-        'description' => $faker->randomElement($array = array('Texto', 'Tutorial', 'FAQ')) . ' de ' . $faker->name,
-        'type' => 'textFile',
-        'path' => 'C:\\',
+        'name' => $faker->randomElement($array = array('Texto', 'Tutorial')) . ' - ' . $faker->randomNumber,
+        'description' => $faker->randomElement($array = array('Texto', 'Tutorial')) . ' de ' . $faker->name,
+        'type' => 'text',
+        'body' => 'É um facto estabelecido de que um leitor é distraído pelo conteúdo legível de uma página quando analisa a sua mancha gráfica. Logo, o uso de Lorem Ipsum leva a uma distribuição mais ou menos normal de letras, ao contrário do uso de "Conteúdo aqui, conteúdo aqui", tornando-o texto             legível. Muitas ferramentas de publicação electrónica e editores de páginas web usam actualmente o Lorem Ipsum como o modelo de texto usado por omissão, e uma pesquisa por "lorem ipsum" irá encontrar muitos websites ainda na sua infância. Várias versões têm evoluído ao longo dos             anos, por vezes por acidente, por vezes propositadamente (como no caso do humor).',
         'created_by' => $healthcare_pros->random()->id,
     ];
 });
 
 $factory->define(App\Image::class, function (Faker\Generator $faker) {
+    $countMaterials = count(App\Material::all());
     $healthcare_pros = App\HealthcarePro::all();
+    $rndNumber = $faker->randomNumber;
     
     return [
-        'name' => 'Imagem ' . $faker->randomNumber,
+        'name' => 'Imagem ' . $rndNumber,
         'description' => 'Imagem de ' . $faker->name,
         'type' => 'image',
-        'path' => $faker->imageUrl($width = 304, $height = 228),
+        'url' => 'http://192.168.99.100/healthmanagement/public/materials/'.($countMaterials+1).'/showContent',
+        'path' => 'images/Imagem ' . $rndNumber,
+        'mime' => '.jpg',
         'created_by' => $healthcare_pros->random()->id,
     ];
 });
 
 $factory->define(App\Video::class, function (Faker\Generator $faker) {
+    $countMaterials = count(App\Material::all());
     $healthcare_pros = App\HealthcarePro::all();
+    $rndNumber = $faker->randomNumber;
     
     return [
-        'name' => $faker->unique()->randomElement($array = array('Video - Mudar Penso 1', 'Video - Fazer Endoscopia 1', 'Video 2', 'Video 3', 'Video 4')),
-        'description' => $faker->randomElement($array = array('Video sobre como mudar o penso', 'Video sobre como fazer endoscopia')),
+        'name' => 'Video ' . $rndNumber,
+        'description' => 'Video de ' . $faker->name,
         'type' => 'video',
-        'url' => $faker->randomElement($array = array('https://www.youtube.com/watch?v=-vSXINtEPpE', 'https://www.youtube.com/watch?v=RoXmMD1rVP0')),
+        'url' => 'http://192.168.99.100/healthmanagement/public/materials/'.($countMaterials+1).'/showContent',
+        'path' => 'videos/'.'Video ' . $rndNumber,
+        'mime' => '.mp4',
         'created_by' => $healthcare_pros->random()->id,
     ];
 });
@@ -124,6 +132,18 @@ $factory->define(App\EmergencyContact::class, function (Faker\Generator $faker) 
         'description' => 'Contacto de Emergência de ' . $faker->name,
         'type' => 'emergencyContact',
         'number' => $faker->phoneNumber,
+        'created_by' => $healthcare_pros->random()->id,
+    ];
+});
+
+$factory->define(App\Annex::class, function (Faker\Generator $faker) {
+    $healthcare_pros = App\HealthcarePro::all();
+    
+    return [
+        'name' => 'Anexo ' . $faker->randomNumber,
+        'description' => 'Anexo de ' . $faker->name,
+        'type' => 'annex',
+        'url' => 'https://www.youtube.com/watch?v=RoXmMD1rVP0',
         'created_by' => $healthcare_pros->random()->id,
     ];
 });
