@@ -39,10 +39,17 @@
             </div>
         @endif
 
-        @if ($type == 'video' || $type == 'image')
+        @if ($type == 'image')
             <div class="form-group">
                 <label for="inputFile">Ficheiro</label>
-                <input type="file" name="path"/>
+                <input type="file" name="pathImage" accept="image/*"/>
+            </div>
+        @endif
+
+        @if ($type == 'video')
+            <div class="form-group">
+                <label for="inputFile">Ficheiro</label>
+                <input type="file" name="pathVideo" accept="video/mp4"/>
             </div>
         @endif
 
@@ -69,7 +76,7 @@
             </div>
             <div class="form-group" id="inputFile" style="display:none">
                 <label for="inputFile">Ficheiro</label>
-                <input type="file" name="path"/>
+                <input type="file" name="pathAnnex"/>
             </div>
         @endif
 

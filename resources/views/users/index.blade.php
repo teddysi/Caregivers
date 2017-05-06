@@ -133,58 +133,29 @@
 								<td>{{ $user->email }}</td>
 								@if (Auth::user()->role != 'healthcarepro')
 									<td>{{ $user->role }}</td>
-									<td style="width:35%">
-										<div class="row">
-											<div class="col-sm-6 col-md-4 col-lg-4">
-												<a class="btn btn-block btn-primary" href="{{ route('users.show', ['user' => $user->id]) }}">Detalhes</a>
-											</div>
-											<div class="col-sm-6 col-md-4 col-lg-4">
-												<a class="btn btn-block btn-warning" href="{{ route('users.edit', ['user' => $user->id]) }}">Editar</a>
-											</div>
-											<div class="col-sm-6 col-md-4 col-lg-4">
-												<form action="{{ route('users.toggleBlock', ['users' => $user->id]) }}" method="POST" class="form-group">
-													{{ csrf_field() }}
-													<div class="form-group">
-														@if ($user->blocked == 0)
-															<button type="submit" class="btn btn-block btn-danger" name="block">Bloquear</button>
-														@elseif ($user->blocked == 1)
-															<button type="submit" class="btn btn-block btn-success" name="unblock">Desbloquear</button>
-														@endif
-													</div>
-												</form>
-											</div>
-										</div>
-									</td>
-								@else
-									<td style="width:55%">
-										<div class="row">
-											<div class="col-sm-6 col-md-3 col-lg-3">
-												<a class="btn btn-sm btn-block btn-primary" href="{{ route('users.show', ['user' => $user->id]) }}">Detalhes</a>
-											</div>
-											<div class="col-sm-6 col-md-2 col-lg-2">
-												<a class="btn btn-sm btn-block btn-primary" href="{{ route('caregivers.patients', ['caregiver' => $user->id]) }}">Pacientes</a>
-											</div>
-											<div class="col-sm-6 col-md-2 col-lg-2">
-												<a class="btn btn-sm btn-block btn-primary" href="{{ route('caregivers.materials', ['caregiver' => $user->id]) }}">Materiais</a>
-											</div>
-											<div class="col-sm-6 col-md-2 col-lg-2">
-												<a class="btn btn-sm btn-block btn-warning" href="{{ route('users.edit', ['user' => $user->id]) }}">Editar</a>
-											</div>
-											<div class="col-sm-6 col-md-3 col-lg-3">
-												<form action="{{ route('users.toggleBlock', ['users' => $user->id]) }}" method="POST" class="form-group">
-													{{ csrf_field() }}
-													<div class="form-group">
-														@if ($user->blocked == 0)
-															<button type="submit" class="btn btn-sm btn-block btn-danger" name="block">Bloquear</button>
-														@elseif ($user->blocked == 1)
-															<button type="submit" class="btn btn-sm btn-block btn-success" name="unblock">Desbloquear</button>
-														@endif
-													</div>
-												</form>
-											</div>
-										</div>
-									</td>
 								@endif
+								<td style="width:35%">
+									<div class="row">
+										<div class="col-sm-6 col-md-4 col-lg-4">
+											<a class="btn btn-block btn-primary" href="{{ route('users.show', ['user' => $user->id]) }}">Detalhes</a>
+										</div>
+										<div class="col-sm-6 col-md-4 col-lg-4">
+											<a class="btn btn-block btn-warning" href="{{ route('users.edit', ['user' => $user->id]) }}">Editar</a>
+										</div>
+										<div class="col-sm-6 col-md-4 col-lg-4">
+											<form action="{{ route('users.toggleBlock', ['users' => $user->id]) }}" method="POST" class="form-group">
+												{{ csrf_field() }}
+												<div class="form-group">
+													@if ($user->blocked == 0)
+														<button type="submit" class="btn btn-block btn-danger" name="block">Bloquear</button>
+													@elseif ($user->blocked == 1)
+														<button type="submit" class="btn btn-block btn-success" name="unblock">Desbloquear</button>
+													@endif
+												</div>
+											</form>
+										</div>
+									</div>
+								</td>
 					        </tr>
 				        @endforeach
                     </tbody>

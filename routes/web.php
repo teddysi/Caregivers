@@ -51,12 +51,12 @@ Route::group(['middleware' => 'auth', 'prefix' => 'users'], function () {
 
 		Route::post('{user}/caregivers/{caregiver}/associate', [
 			'as' => 'users.associateCaregiver',
-			'uses' =>'UsersController@associateCaregiver'
+			'uses' =>'UsersController@associate'
 		]);
 
 		Route::post('{user}/caregivers/{caregiver}/diassociate', [
 			'as' => 'users.diassociateCaregiver',
-			'uses' =>'UsersController@diassociateCaregiver'
+			'uses' =>'UsersController@diassociate'
 		]);
 	});
 });

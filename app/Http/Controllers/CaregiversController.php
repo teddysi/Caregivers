@@ -15,6 +15,10 @@ class CaregiversController extends Controller
 {
     public function patients(Caregiver $caregiver)
     {
+        if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
+			abort(401);
+		}
+
         $patients = $caregiver->patients()->paginate(10);
         $patients->setPageName('patients');
 
@@ -42,6 +46,10 @@ class CaregiversController extends Controller
 
     public function materials(Caregiver $caregiver)
     {
+        if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
+			abort(401);
+		}
+
         $patients = $caregiver->patients;
         $patientsNeeds = [];
         

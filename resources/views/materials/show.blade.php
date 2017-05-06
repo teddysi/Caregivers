@@ -8,7 +8,7 @@
     <h4><strong>Tipo:</strong> {{ $material->type }}</h4>
     <h4><strong>Descrição:</strong> {{ $material->description }}</h4>
     @if ($material->type == 'Texto')
-        <h4><strong>Texto:</strong>{{ $material->body }}</h4>
+        <h4><strong>Texto:</strong> {{ $material->body }}</h4>
     @endif
     @if ($material->type == 'Imagem' || $material->type == 'Video' || ($material->type == 'Anexo' && $material->path))
         <h4><strong>Ficheiro:</strong> <a href="{{ route('materials.showContent', ['material' => $material->id] )}}" target="_blank">{{ $material->name.$material->mime }}</a></h4>

@@ -14,6 +14,7 @@ use App\Patient;
 use App\Need;
 use App\Material;
 use App\Http\Controllers\MaterialsController;
+use DB;
 
 class UsersController extends Controller
 {
@@ -288,6 +289,36 @@ class UsersController extends Controller
 
         return back();
 	}
+
+	public function caregivers(User $user)
+	{
+		$caregivers = $user->caregivers()->paginate(10);
+		$caregivers->setPageName('caregivers');
+
+		$otherCaregivers = Caregiver::whereNotIn('id', $user->caregivers->modelKeys())->paginate(10);
+		foreach ($otherCaregivers as $index => $otherCaregiver) {
+			if (count($otherCaregiver->healthcarePros) >= 2) {
+				$otherCaregivers->forget($index);
+			}
+		}
+		$otherCaregivers->setPageName('otherCaregivers');
+
+		return view('users.caregivers', compact('user', 'caregivers', 'otherCaregivers'));
+	}
+
+	public function associate(User $user, Caregiver $caregiver)
+    {
+		$user->caregivers()->attach($caregiver->id);
+
+        return redirect()->route('users.caregivers', ['user' => $user->id]); 
+    }
+
+    public function diassociate(User $user, Caregiver $caregiver)
+    {
+        $user->caregivers()->detach($caregiver->id);
+
+        return redirect()->route('users.caregivers', ['user' => $user->id]); 
+    }
 
 	private function roleToFullWord($user)
 	{

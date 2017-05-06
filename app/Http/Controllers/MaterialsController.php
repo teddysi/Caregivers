@@ -111,7 +111,9 @@ class MaterialsController extends Controller
 				'name' => 'required|min:4|unique:materials',
 				'description' => 'required|min:4',
 				'body' => 'nullable|required_if:type,text',
-				'path' => 'nullable|required_if:type,image|required_if:type,video',
+				'pathImage' => 'nullable|required_if:type,image|mimes:jpeg,png,jpg,gif,svg',
+				'pathVideo' => 'nullable|required_if:type,video|mimes:mp4',
+				'pathAnnex' => 'nullable',
 				'url' => 'nullable|url',
 				'mime' => 'nullable',
 				'number' => 'nullable|required_if:type,emergencyContact',
@@ -126,29 +128,29 @@ class MaterialsController extends Controller
 
 			case 'image':
 				$material = new Image();
-				$originalName = $request->path->getClientOriginalName();
+				$originalName = $request->pathImage->getClientOriginalName();
 				$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
 				$material->url = $request->root() . '/materials/'.$material->id.'/showContent';
-				$material->path = $request->file('path')->storeAs('images', $request->input('name') . '.' . $whatIWant);
+				$material->path = $request->file('pathImage')->storeAs('images', $request->input('name') . '.' . $whatIWant);
 				$material->mime = '.' . $whatIWant;
 				break;
 
 			case 'video':
 				$material = new Video();
-				$originalName = $request->path->getClientOriginalName();
+				$originalName = $request->pathVideo->getClientOriginalName();
 				$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
 				$material->url = $request->root() . '/materials/'.$material->id.'/showContent';
-				$material->path = $request->file('path')->storeAs('videos', $request->input('name') . '.' . $whatIWant);
+				$material->path = $request->file('pathVideo')->storeAs('videos', $request->input('name') . '.' . $whatIWant);
 				$material->mime = '.' . $whatIWant;
 				break;
 
 			case 'annex':
 				$material = new Annex();
-				if ($request->path) {
-					$originalName = $request->path->getClientOriginalName();
+				if ($request->pathAnnex) {
+					$originalName = $request->pathAnnex->getClientOriginalName();
 					$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
 					$material->url = $request->root() . '/materials/'.$material->id.'/showContent';
-					$material->path = $request->file('path')->storeAs('annexs', $request->input('name') . '.' . $whatIWant);
+					$material->path = $request->file('pathAnnex')->storeAs('annexs', $request->input('name') . '.' . $whatIWant);
 					$material->mime = '.' . $whatIWant;
 				} else {
 					$material->url = $request->input('url');

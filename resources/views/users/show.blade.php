@@ -23,6 +23,8 @@
     
     <p>
         @if (Auth::user()->role == 'healthcarepro' && $user->role == 'Cuidador' && $isMyCaregiver)
+            <a class="btn btn-primary" href="{{ route('caregivers.patients', ['caregiver' => $user->id]) }}">Pacientes</a>
+            <a class="btn btn-primary" href="{{ route('caregivers.materials', ['caregiver' => $user->id]) }}">Materiais</a>
             <a class="btn btn-primary" href="{{ route('caregivers.rate', ['caregiver' => $user->id]) }}">Avaliar</a>
         @endif
         <a class="btn btn-default" href="javascript:history.back()">Voltar a atrás</a>
