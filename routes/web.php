@@ -238,6 +238,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
 // Caregivers API
 Route::post('/caregiversAPI/login', 'CaregiversController@login');
 Route::get('/caregiversAPI/{caregiver}/patients', 'CaregiversController@patientsAPI');
+Route::get('/materialsAPI/{material}/showContent', 'MaterialsController@showMaterialAPI');
 Route::get('/caregiversAPI/{caregiver}/proceedings', 'CaregiversController@proceedings');
 
 Route::post('/proceedingsAPI/create', 'ProceedingsController@create');

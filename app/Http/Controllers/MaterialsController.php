@@ -365,11 +365,35 @@ class MaterialsController extends Controller
         return false;
     }
 
+	//autenticado pelo laravel
 	public function showMaterial(Material $material)
 	{
 		$content = Storage::get($material->path);
 		$whatIWant = substr($material->path, strpos($material->path, ".") + 1);
-		$var =  '.' . $whatIWant;
-		return response($content)->header('Content-Type', $var );
+		if ($material->type == 'image') {
+			$contentType = 'image/'.$whatIWant;
+		} else if ($material->type == 'video') {
+			$contentType = 'video/'.$whatIWant;
+		} else if ($material->type == 'annex') {
+			$contentType = 'application/'.$whatIWant;
+		}
+
+		return response($content)->header('Content-Type', $contentType);
+	}
+
+	//nao autenticado pelo laravel
+	public function showMaterialAPI(Material $material)
+	{
+		$content = Storage::get($material->path);
+		$whatIWant = substr($material->path, strpos($material->path, ".") + 1);
+		if ($material->type == 'image') {
+			$contentType = 'image/'.$whatIWant;
+		} else if ($material->type == 'video') {
+			$contentType = 'video/'.$whatIWant;
+		} else if ($material->type == 'annex') {
+			$contentType = 'application/'.$whatIWant;
+		}
+		 
+		return response($content)->header('Content-Type', $contentType);
 	}
 }

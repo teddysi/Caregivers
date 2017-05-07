@@ -10,7 +10,17 @@
     @if ($material->type == 'Texto')
         <h4><strong>Texto:</strong> {{ $material->body }}</h4>
     @endif
-    @if ($material->type == 'Imagem' || $material->type == 'Video' || ($material->type == 'Anexo' && $material->path))
+    @if ($material->type == 'Imagem')
+        <h4><strong>Ficheiro:</strong></h4> 
+        <img src="{{ route('materials.showContent', ['material' => $material->id] )}}" alt="{{ $material->name}}">
+    @endif
+    @if ($material->type == 'Video')
+        <h4><strong>Ficheiro:</strong></h4> 
+        <video controls autoplay name="video">
+            <source src="{{ route('materials.showContent', ['material' => $material->id] )}}" type="video/mp4">
+        </video>
+    @endif
+    @if ($material->type == 'Anexo' && $material->path)
         <h4><strong>Ficheiro:</strong> <a href="{{ route('materials.showContent', ['material' => $material->id] )}}" target="_blank">{{ $material->name.$material->mime }}</a></h4>
     @endif
     @if ($material->type == 'Anexo' && !$material->path)
