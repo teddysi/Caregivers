@@ -16,7 +16,7 @@
     @endif
     @if ($material->type == 'Video')
         <h4><strong>Ficheiro:</strong></h4> 
-        <video controls autoplay name="video">
+        <video controls autoplay name="video" loop>
             <source src="{{ route('materials.showContent', ['material' => $material->id] )}}" type="video/mp4">
         </video>
     @endif
