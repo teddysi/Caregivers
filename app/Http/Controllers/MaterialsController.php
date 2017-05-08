@@ -374,7 +374,7 @@ class MaterialsController extends Controller
 			$contentType = 'image/'.$whatIWant;
 		} else if ($material->type == 'video') {
 			$contentType = 'video/'.$whatIWant;
-			return response()->file($material->name.$material->mime, ['Content-Type: '.$contentType]);
+			return response()->file(storage_path().'/app/videos/'.$material->name.$material->mime, ['Content-Type: '.$contentType]);
 		} else if ($material->type == 'annex') {
 			$contentType = 'application/'.$whatIWant;
 		}
@@ -391,7 +391,7 @@ class MaterialsController extends Controller
 			$contentType = 'image/'.$whatIWant;
 		} else if ($material->type == 'video') {
 			$contentType = 'video/'.$whatIWant;
-			return response()->file($material->name.$material->mime, ['Content-Type: '.$contentType]);
+			return response()->file(storage_path().'/app/videos/'.$material->name.$material->mime, ['Content-Type: '.$contentType]);
 		} else if ($material->type == 'annex') {
 			$contentType = 'application/'.$whatIWant;
 		}
