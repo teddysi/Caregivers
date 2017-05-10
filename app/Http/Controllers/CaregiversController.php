@@ -162,22 +162,20 @@ class CaregiversController extends Controller
             return response('Não Autorizado', 401);
         }
 
-        //falta tirar os composites k estao bloqueados
+        //erro k aparecia era por causa de perder o array caso faça forget
         $patients = $user->patients;
         foreach ($patients as $patient) {
             foreach ($patient->needs as $need) {
                 foreach ($need->materials as $index => $material) {
                     if ($material->blocked == 1) {
                         $need->materials->forget($index);
-                    } else {
-                        if ($material->type == 'composite') {
-                            $compositeMaterials = $material->materials()->withPivot('order')->orderBy('pivot_order', 'asc')->get();
-                            foreach ($compositeMaterials as $compositeMaterial) {
-                                $need->materials->push($compositeMaterial);
-                            }
-                            $need->materials->forget($index);
+                    } 
+                    if ($material->type == 'composite') {
+                        $compositeMaterials = $material->materials()->withPivot('order')->orderBy('pivot_order', 'asc')->get();
+                        foreach ($material->materials as $compositeMaterial) {
                         }
                     }
+                    
                 }
             }
         }

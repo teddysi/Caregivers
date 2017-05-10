@@ -58,6 +58,7 @@ $factory->define(App\HealthcarePro::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Patient::class, function (Faker\Generator $faker) {
+    $countPatients = count(App\Patient::all());
     $caregivers = App\Caregiver::all();
     $healthcare_pros = App\HealthcarePro::all();
 
@@ -66,7 +67,7 @@ $factory->define(App\Patient::class, function (Faker\Generator $faker) {
         'email' => $faker->unique()->safeEmail,
         'location' => $faker->randomElement($array = array('Lisboa', 'Porto', 'Leiria', 'Coimbra', 'Faro')),
         'caregiver_id' => $caregivers->random()->id,
-        'created_by' => $healthcare_pros->random()->id,
+        'created_by' => $countPatients == 9 ? 15 :$healthcare_pros->random()->id,
     ];
 });
 

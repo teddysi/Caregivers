@@ -73,7 +73,7 @@ class DatabaseSeeder extends Seeder
 
         $n_m = [
             [1, 1], [1, 20], [1, 14],
-            [2, 1], [2, 18], [2, 10],
+            [2, 1], [2, 18], [2, 26],
             [3, 2], [3, 8],
             [4, 8], [4, 18],
             [5, 10], [5, 12], [5, 17]
@@ -168,7 +168,7 @@ class DatabaseSeeder extends Seeder
             $image->name = $name;
             $image->description = $name.' description';
             $image->type = 'image';
-            $image->url = 'http://35.184.17.4/caregivers/public/materialsAPI/'.($countMaterials+1).'/showContent';
+            $image->url = 'http://192.168.99.100/caregivers/public/materialsAPI/'.($countMaterials+1).'/showContent';
             $image->path = 'images/'.$name.'.jpg';
             $image->mime = '.jpg';
             $image->created_by = $healthcare_pros->random()->id;
@@ -189,7 +189,7 @@ class DatabaseSeeder extends Seeder
             $video->name = $name;
             $video->description = $name.' description';
             $video->type = 'video';
-            $video->url = 'http://35.184.17.4/caregivers/public/materialsAPI/'.($countMaterials+1).'/showContent';
+            $video->url = 'http://192.168.99.100/caregivers/public/materialsAPI/'.($countMaterials+1).'/showContent';
             $video->path = 'videos/'.$name.'.mp4';
             $video->mime = '.mp4';
             $video->created_by = $healthcare_pros->random()->id;
@@ -211,7 +211,7 @@ class DatabaseSeeder extends Seeder
             $annex->description = $name.' description';
             $annex->type = 'annex';
             if ($annex->name != 'Anexo-4' && $annex->name != 'Anexo-5') {
-                $annex->url = 'http://35.184.17.4/caregivers/public/materialsAPI/'.($countMaterials+1).'/showContent';
+                $annex->url = 'http://192.168.99.100/caregivers/public/materialsAPI/'.($countMaterials+1).'/showContent';
                 $annex->path = 'annexs/'.$name.'.pdf';
                 $annex->mime = '.pdf';
             } else {
