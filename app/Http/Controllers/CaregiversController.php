@@ -163,24 +163,137 @@ class CaregiversController extends Controller
         }
 
         //erro k aparecia era por causa de perder o array caso faça forget
+        $c = collect();
         $patients = $user->patients;
         foreach ($patients as $patient) {
+            $objectP = new \stdClass();
+            $objectP->id = $patient->id;
+            $objectP->email = $patient->email;
+            $objectP->name = $patient->name;
+            $objectP->location = $patient->location;
+            $objectP->caregiver_id = $patient->caregiver_id;
+            $objectP->created_by = $patient->created_by;
+            $objectP->created_at = (string)$patient->created_at;
+            $objectP->updated_at = (string)$patient->updated_at;
+            $objectP->needs = [];
             foreach ($patient->needs as $need) {
-                foreach ($need->materials as $index => $material) {
-                    if ($material->blocked == 1) {
-                        $need->materials->forget($index);
-                    } 
-                    if ($material->type == 'composite') {
-                        $compositeMaterials = $material->materials()->withPivot('order')->orderBy('pivot_order', 'asc')->get();
-                        foreach ($material->materials as $compositeMaterial) {
+                $objectN = new \stdClass();
+                $objectN->id = $need->id;
+                $objectN->description = $need->description;
+                $objectN->created_by = $need->created_by;
+                $objectN->created_at = (string)$need->created_at;
+                $objectN->updated_at = (string)$need->updated_at;
+                $objectN->materials = [];
+                foreach ($need->materials as $material) {
+                    if ($material->blocked != 1) {
+                        $objectM = new \stdClass();
+                        $objectM->id = $material->id;
+                        $objectM->type = $material->type;
+                        $objectM->description = $material->description;
+                        $objectM->name = $material->name;
+
+                        switch ($material->type) {
+                            case 'text':
+                                $objectM->body = $material->body;
+                                break;
+
+                            case 'image':
+                                $objectM->url = $material->url;
+                                $objectM->path = $material->path;
+                                $objectM->mime = $material->mime;
+                                break;
+
+                            case 'video':
+                                $objectM->url = $material->url;
+                                $objectM->path = $material->path;
+                                $objectM->mime = $material->mime;
+                                break;
+
+                            case 'annex':
+                                if ($material->url != null) {
+                                    $objectM->url = $material->url;
+                                }
+
+                                if ($material->path != null && $material->mime != null) {
+                                    $objectM->path = $material->path;
+                                    $objectM->mime = $material->mime;
+                                }
+                                break;
+
+                            case 'emergencyContact':
+                                $objectM->number = $material->number;
+                                break;
+
+                            default:
+                                break;
                         }
+
+                        $objectM->created_by = $material->created_by;
+                        $objectM->created_at = (string)$material->created_at;
+                        $objectM->updated_at = (string)$material->updated_at;
+
+                        if ($material->type == 'composite') {
+                            $objectM->materials = [];
+                            $compositeMaterials = $material->materials()->withPivot('order')->orderBy('pivot_order', 'asc')->get();
+                            foreach ($compositeMaterials as $compositeMaterial) {
+                                $objectCM = new \stdClass();
+                                $objectCM->id = $compositeMaterial->id;
+                                $objectCM->type = $compositeMaterial->type;
+                                $objectCM->description = $compositeMaterial->description;
+                                $objectCM->name = $compositeMaterial->name;
+
+                                switch ($compositeMaterial->type) {
+                                    case 'text':
+                                        $objectCM->body = $compositeMaterial->body;
+                                        break;
+
+                                    case 'image':
+                                        $objectCM->url = $compositeMaterial->url;
+                                        $objectCM->path = $compositeMaterial->path;
+                                        $objectCM->mime = $compositeMaterial->mime;
+                                        break;
+
+                                    case 'video':
+                                        $objectCM->url = $compositeMaterial->url;
+                                        $objectCM->path = $compositeMaterial->path;
+                                        $objectCM->mime = $compositeMaterial->mime;
+                                        break;
+
+                                    case 'annex':
+                                        if ($compositeMaterial->url != null) {
+                                            $objectCM->url = $compositeMaterial->url;
+                                        }
+
+                                        if ($compositeMaterial->path != null && $compositeMaterial->mime != null) {
+                                            $objectCM->path = $compositeMaterial->path;
+                                            $objectCM->mime = $compositeMaterial->mime;
+                                        }
+                                        break;
+
+                                    case 'emergencyContact':
+                                        $objectCM->number = $compositeMaterial->number;
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+
+                                $objectCM->created_by = $compositeMaterial->created_by;
+                                $objectCM->created_at = (string)$compositeMaterial->created_at;
+                                $objectCM->updated_at = (string)$compositeMaterial->updated_at;
+
+                                array_push($objectM->materials, $objectCM);
+                            }
+                        }
+                        array_push($objectN->materials, $objectM);
                     }
-                    
                 }
+                array_push($objectP->needs, $objectN);
             }
+            $c->push($objectP);
         }
 
-        return response()->json($patients);      
+        return response()->json($c);      
     }
 
     public function caregiversMaterialsAPI(Request $request, $id)
