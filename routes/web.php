@@ -96,6 +96,17 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'caregivers
 		'as' => 'caregivers.rate',
 		'uses' =>'CaregiversController@rate'
 	]);
+
+	Route::get('{id}/evaluation/create', [
+		'as' => 'caregivers.evaluations.create',
+		'uses' =>'EvaluationsController@create'
+	]);
+
+	Route::post('{id}/evaluation', [
+		'as' => 'evaluations.createForCaregiver',
+		'uses' =>'EvaluationsController@store'
+	]);
+
 	Route::patch('{caregiver}', 'CaregiversController@evaluate');
 });
 
@@ -136,6 +147,16 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'patients']
 	Route::post('{patient}/needs/{need}/diassociate', [
 		'as' => 'patients.diassociateNeed',
 		'uses' =>'PatientsController@diassociate'
+	]);
+
+	Route::get('{id}/evaluation/create', [
+		'as' => 'patients.evaluations.create',
+		'uses' =>'EvaluationsController@create'
+	]);
+
+	Route::post('{id}/evaluation', [
+		'as' => 'evaluations.createForPatient',
+		'uses' =>'EvaluationsController@store'
 	]);
 });
 

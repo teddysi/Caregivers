@@ -44,4 +44,9 @@ class Caregiver extends User
         return $this->hasMany('App\Proceeding');
     }
 
+    public function evaluations()
+    {
+        return $this->hasMany('App\Evaluation');
+    }
+
 }
