@@ -123,6 +123,10 @@ class NeedsController extends Controller
 
     public function diassociateMaterial(Need $need, Material $material)
     {
+        if (!$need->materials->contains('id', $material->id)) {
+            abort(403);
+        }
+
         $need->materials()->detach($material->id);
 
         return redirect()->route('needs.materials', ['need' => $need->id]); 

@@ -192,6 +192,11 @@ Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
 		'uses' =>'MaterialsController@show'
 	]);
 
+	Route::get('{material}/showContent', [
+		'as' => 'materials.showContent',
+		'uses' =>'MaterialsController@showMaterial'
+	]);
+
 	Route::get('{material}/edit', [
 		'as' => 'materials.edit',
 		'uses' =>'MaterialsController@edit'
@@ -201,11 +206,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
 	Route::post('{material}/toggleBlock', [
 		'as' => 'materials.toggleBlock',
 		'uses' =>'MaterialsController@toggleBlock'
-	]);
-
-	Route::get('{material}/showContent', [
-		'as' => 'materials.showContent',
-		'uses' =>'MaterialsController@showMaterial'
 	]);
 
 	Route::get('{material}/materials', [
@@ -235,7 +235,7 @@ Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
 	]);
 });
 
-// Caregivers API
+// Caregivers API: missing authorization on showContent
 Route::post('/caregiversAPI/login', 'CaregiversController@login');
 Route::get('/caregiversAPI/{caregiver}/patients', 'CaregiversController@patientsAPI');
 Route::get('/materialsAPI/{material}/showContent', 'MaterialsController@showMaterialAPI');

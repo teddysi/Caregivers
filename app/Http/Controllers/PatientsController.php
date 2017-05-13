@@ -118,7 +118,8 @@ class PatientsController extends Controller
 		return view('patients.show', compact('patient'));
 	}
 
-	public function edit(Patient $patient) {
+	public function edit(Patient $patient)
+    {
 		return view('patients.edit', compact('patient'));
 	}
 
@@ -152,6 +153,10 @@ class PatientsController extends Controller
 
 	public function associate(Patient $patient, Need $need)
     {
+        if ($patient->needs->contains('id', $need->id)) {
+            abort(403);
+        }
+
 		$patient->needs()->attach($need->id);
 
         return redirect()->route('patients.needs', ['patient' => $patient->id]); 
@@ -159,6 +164,10 @@ class PatientsController extends Controller
 
     public function diassociate(Patient $patient, Need $need)
     {
+        if (!$patient->needs->contains('id', $need->id)) {
+            abort(403);
+        }
+
         $patient->needs()->detach($need->id);
 
         return redirect()->route('patients.needs', ['patient' => $patient->id]);

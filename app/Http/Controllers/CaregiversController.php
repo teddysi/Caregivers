@@ -30,6 +30,13 @@ class CaregiversController extends Controller
 
     public function associatePatient(Caregiver $caregiver, Patient $patient)
     {
+        if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
+			abort(401);
+		}
+
+        if ($patient->caregiver_id != null) {
+            abort(403);
+		}
         $patient->caregiver_id = $caregiver->id;
         $patient->save();
 
@@ -38,6 +45,14 @@ class CaregiversController extends Controller
 
     public function diassociatePatient(Caregiver $caregiver, Patient $patient)
     {
+        if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
+			abort(401);
+		}
+
+        if ($patient->caregiver_id != $caregiver->id) {
+            abort(403);
+        }
+
         $patient->caregiver_id = null;
         $patient->save();
 
@@ -79,12 +94,16 @@ class CaregiversController extends Controller
 
     public function associateMaterial(Request $request, Caregiver $caregiver)
     {
-        if (count($caregiver->materials()->where('material_id', $request->input('material'))->get()) == 0) {
-            $caregiver->materials()->attach($request->input('material'));
+        if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
+			abort(401);
+		}
+
+        if (!$caregiver->materials->contains('id', $request->input('material'))) {
+             $caregiver->materials()->attach($request->input('material'));
         }
 
         $need = Need::find($request->input('need'));
-        if (count($need->materials()->where('material_id', $request->input('material'))->get()) == 0) {
+        if ($need->materials->contains('id', $request->input('material'))) {
             $need->materials()->attach($request->input('material'));
         }
 
@@ -93,6 +112,14 @@ class CaregiversController extends Controller
 
     public function diassociateMaterial(Caregiver $caregiver, Material $material)
     {
+        if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
+			abort(401);
+		}
+
+        if (!$caregiver->materials->contains('id', $material->id)) {
+            abort(403);
+        }
+
         $caregiver->materials()->detach($material->id);
 
         return redirect()->route('caregivers.materials', ['caregiver' => $caregiver->id]); 
@@ -118,6 +145,10 @@ class CaregiversController extends Controller
 
     public function evaluate(Request $request, Caregiver $caregiver)
     {
+        if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
+			abort(401);
+		}
+
         $caregiver->rate = $request->input('rate');
         $caregiver->save();
 

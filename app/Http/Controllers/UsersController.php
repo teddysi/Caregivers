@@ -188,11 +188,19 @@ class UsersController extends Controller
 
 	public function create($role)
 	{	
+		if (Auth::user()->role == 'healthcarepro' && $role != 'caregiver') {
+			abort(401);
+		}
+
 		return view('users.create', compact('role'));
 	}
 
 	public function store(Request $request)
 	{	
+		if (Auth::user()->role == 'healthcarepro' && $request->input('role') != 'caregiver') {
+			abort(401);
+		}
+
 		$this->validate($request, [
 			'username' => 'required|min:4|unique:users',
 			'name' => 'required|min:4',
@@ -240,12 +248,20 @@ class UsersController extends Controller
 	}
 
 	public function edit(User $user) {
+		if (Auth::user()->role == 'healthcarepro' && $user->role != 'caregiver') {
+			abort(401);
+		}
+
 		$this->roleToFullWord($user);
 		return view('users.edit', compact('user'));
 	}
 
 	public function update(Request $request, User $user)
 	{
+		if (Auth::user()->role == 'healthcarepro' && $user->role != 'caregiver') {
+			abort(401);
+		}
+
 		$this->validate($request, [
 			'name' => 'required',
 			'email' => 'required|email|unique:users,email,'.$user->id,
@@ -275,6 +291,10 @@ class UsersController extends Controller
 	
 	public function toggleBlock(Request $request, User $user)
 	{
+		if (Auth::user()->role == 'healthcarepro' && $user->role != 'caregiver') {
+			abort(401);
+		}
+
 		if ($user->blocked == 0) {
             $user->blocked = 1;
             $user->save();
@@ -308,6 +328,9 @@ class UsersController extends Controller
 
 	public function associate(User $user, Caregiver $caregiver)
     {
+		if (count($caregiver->healthcarePros) >= 2 || $caregiver->healthcarePros->contains('id', $user->id)) {
+			abort(403);
+		}
 		$user->caregivers()->attach($caregiver->id);
 
         return redirect()->route('users.caregivers', ['user' => $user->id]); 
@@ -315,7 +338,10 @@ class UsersController extends Controller
 
     public function diassociate(User $user, Caregiver $caregiver)
     {
-        $user->caregivers()->detach($caregiver->id);
+		if (count($caregiver->healthcarePros) <= 0 || !$caregiver->healthcarePros->contains('id', $user->id)) {
+        	abort(403);
+		}
+		$user->caregivers()->detach($caregiver->id);
 
         return redirect()->route('users.caregivers', ['user' => $user->id]); 
     }
