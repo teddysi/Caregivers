@@ -18,14 +18,12 @@ use DB;
 
 class UsersController extends Controller
 {
-
 	private $messages = [
 	    'unique' =>  ':attribute já existe. Escolha outro.',
 	    'required' => ':attribute tem que ser preenchido.',
 	    'min'    => ':attribute tem que ter pelo menos 4 letras/digitos.',
 	    'confirmed' => 'As passwords têm que ser iguais nos dois campos',
 	];
-    
 
 	public function dashboard()
 	{

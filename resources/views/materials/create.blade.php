@@ -34,7 +34,8 @@
                 <label for="inputBody">Texto</label>
                 <textarea class="form-control" rows="5" 
                     type="text" name="body" 
-                    id="body" placeholder="Texto" value="{{ old('body') }}">
+                    id="body" placeholder="Texto">
+                    {{ old('body') }}
                 </textarea>
             </div>
         @endif

@@ -200,13 +200,54 @@ class MaterialsController extends Controller
 		$this->validate($request, [
 			'name' => 'required|min:4|unique:materials,name,'.$material->id,
 			'description' => 'required|min:4',
-			'path' => 'nullable|required_if:type,text',
-			'url' => 'nullable|required_if:type,image|required_if:type,video|required_if:type,annex',
+			'body' => 'nullable|required_if:type,text',
+			'pathImage' => 'nullable|required_if:type,image|mimes:jpeg,png,jpg,gif,svg',
+			'pathVideo' => 'nullable|required_if:type,video|mimes:mp4',
+			'pathAnnex' => 'nullable',
+			'url' => 'nullable|url',
+			'mime' => 'nullable',
 			'number' => 'nullable|required_if:type,emergencyContact',
 		], $this->messages);
 
 		$material->name = $request->input('name');
 		$material->description = $request->input('description');
+		switch ($material->type) {
+			case 'text':
+				$material->body = $request->input('body');
+				break;
+
+			case 'image':
+				$originalName = $request->pathImage->getClientOriginalName();
+				$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
+				$material->path = $request->file('pathImage')->storeAs('images', $request->input('name') . '.' . $whatIWant);
+				$material->mime = '.' . $whatIWant;
+				break;
+
+			case 'video':
+				$originalName = $request->pathVideo->getClientOriginalName();
+				$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
+				$material->path = $request->file('pathVideo')->storeAs('videos', $request->input('name') . '.' . $whatIWant);
+				$material->mime = '.' . $whatIWant;
+				break;
+
+			case 'annex':
+				if ($request->pathAnnex) {
+					$originalName = $request->pathAnnex->getClientOriginalName();
+					$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
+					$material->path = $request->file('pathAnnex')->storeAs('annexs', $request->input('name') . '.' . $whatIWant);
+					$material->mime = '.' . $whatIWant;
+				} else {
+					$material->url = $request->input('url');
+				}
+				break;
+
+			case 'emergencyContact':
+				$material->number = $request->input('number');
+				break;
+
+			default:
+				break;
+		}
 		
 		$material->save();
 
