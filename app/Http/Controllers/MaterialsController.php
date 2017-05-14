@@ -12,6 +12,7 @@ use App\EmergencyContact;
 use App\Annex;
 use App\Composite;
 use App\User;
+use App\Log;
 use Storage;
 use Response;
 use DB;
@@ -169,8 +170,12 @@ class MaterialsController extends Controller
 		$material->name = $request->input('name');
 		$material->description = $request->input('description');
 		$material->created_by = Auth::user()->id;
-
 		$material->save();
+
+		$log = new Log();
+		$log->performed_task = 'Criou o Material: ' . $material->name;
+		$log->user_id = Auth::user()->id;
+		$log->save();
 
 		return redirect('/');
 	}
@@ -248,8 +253,12 @@ class MaterialsController extends Controller
 			default:
 				break;
 		}
-		
 		$material->save();
+
+		$log = new Log();
+		$log->performed_task = 'Atualizou o Material: ' . $material->name;
+		$log->user_id = Auth::user()->id;
+		$log->save();
 
 		return redirect('/');
 	}
@@ -260,12 +269,24 @@ class MaterialsController extends Controller
             $material->blocked = 1;
             $material->save();
 
-            //$request->session()->flash('blockedStatus', "Material $material->name blocked.");
+			$log = new Log();
+			$log->performed_task = 'Bloqueou o Material: ' . $material->name;
+			$log->user_id = Auth::user()->id;
+			$log->save();
+
+			$this->changeTypeFormat($material);
+            $request->session()->flash('blockedStatus', "$material->type $material->name foi bloqueado.");
         } elseif ($material->blocked == 1) {
             $material->blocked = 0;
             $material->save();
 
-            //$request->session()->flash('blockedStatus', "Material $material->name unblocked.");
+			$log = new Log();
+			$log->performed_task = 'Desbloqueou o Material: ' . $material->name;
+			$log->user_id = Auth::user()->id;
+			$log->save();
+
+			$this->changeTypeFormat($material);
+            $request->session()->flash('blockedStatus', "$material->type $material->name foi desbloqueado.");
         }
 
         return back();
@@ -295,8 +316,12 @@ class MaterialsController extends Controller
 		$composite->name = $request->input('name');
 		$composite->description = $request->input('description');
 		$composite->created_by = Auth::user()->id;
-
 		$composite->save();
+
+		$log = new Log();
+        $log->performed_task = 'Criou o Material Composto: ' . $composite->name;
+        $log->user_id = Auth::user()->id;
+        $log->save();
 
 		return redirect()->route('materials.materials', ['material' => $composite->id]); 
 	}
@@ -306,12 +331,16 @@ class MaterialsController extends Controller
 		$count = count($composite->materials()->get());
 		$composite->materials()->attach([$material->id => ['order'=> $count + 1]]);
 
+		$log = new Log();
+        $log->performed_task = 'Adicionou o Material: ' . $material->name. 'ao Material Composto: ' . $composite->name;
+        $log->user_id = Auth::user()->id;
+        $log->save();
+
         return redirect()->route('materials.materials', ['composite' => $composite->id]); 
 	}
 
 	public function removeMaterial(Material $composite, Material $material)
 	{
-		// TO DO: Quando removo um material falta atualizar a ordem na BD
 		$orderOfMaterial = DB::table('composite_material')->select('order')->where([['composite_id', $composite->id], ['material_id', $material->id]])->first()->order;
 		$composite->materials()->detach($material->id);
 		$materialsToUpdateOrder = $composite->materials()->where('order', '>', $orderOfMaterial)->get();
@@ -319,6 +348,11 @@ class MaterialsController extends Controller
 			$orderOfMaterialToUpdate = DB::table('composite_material')->select('order')->where([['composite_id', $composite->id], ['material_id', $materialToUpdate->id]])->first()->order;
 			$composite->materials()->updateExistingPivot($materialToUpdate->id, ['order' => $orderOfMaterialToUpdate - 1]);
 		}
+
+		$log = new Log();
+        $log->performed_task = 'Removeu o Material: ' . $material->name. 'ao Material Composto: ' . $composite->name;
+        $log->user_id = Auth::user()->id;
+        $log->save();
 
         return redirect()->route('materials.materials', ['composite' => $composite->id]); 
 	}
@@ -330,6 +364,11 @@ class MaterialsController extends Controller
 		$composite->materials()->updateExistingPivot($material->id, ['order' => $orderOfMaterial - 1]);
 		$composite->materials()->updateExistingPivot($aboveMaterial->id, ['order' => $orderOfMaterial]);
 
+		$log = new Log();
+        $log->performed_task = 'Colocou o Material: ' . $material->name. ' uma posição acima na lista de materiais do Material Composto: ' . $composite->name;
+        $log->user_id = Auth::user()->id;
+        $log->save();
+
         return redirect()->route('materials.materials', ['composite' => $composite->id]); 
 	}
 
@@ -339,6 +378,11 @@ class MaterialsController extends Controller
 		$aboveMaterial = $composite->materials()->where('order', $orderOfMaterial + 1)->first();
 		$composite->materials()->updateExistingPivot($material->id, ['order' => $orderOfMaterial + 1]);
 		$composite->materials()->updateExistingPivot($aboveMaterial->id, ['order' => $orderOfMaterial]);
+
+		$log = new Log();
+        $log->performed_task = 'Colocou o Material: ' . $material->name. ' uma posição abaixo na lista de materiais do Material Composto: ' . $composite->name;
+        $log->user_id = Auth::user()->id;
+        $log->save();
 
         return redirect()->route('materials.materials', ['composite' => $composite->id]); 
 	}

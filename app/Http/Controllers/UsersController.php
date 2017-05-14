@@ -13,6 +13,7 @@ use App\Caregiver;
 use App\Patient;
 use App\Need;
 use App\Material;
+use App\Log;
 use App\Http\Controllers\MaterialsController;
 use DB;
 
@@ -242,6 +243,13 @@ class UsersController extends Controller
 			Auth::user()->caregivers()->attach(User::where('username', $user->username)->firstOrFail()->id);
 		}
 
+		$this->roleToFullWord($user);
+
+		$log = new Log();
+		$log->performed_task = 'Criou o ' . $user->role . ': ' . $user->username;
+		$log->user_id = Auth::user()->id;
+		$log->save(); 
+
 		return redirect('/');
 	}
 
@@ -284,6 +292,13 @@ class UsersController extends Controller
 
 		$user->save();
 
+		$this->roleToFullWord($user);
+
+		$log = new Log();
+		$log->performed_task = 'Atualizou o ' . $user->role. ': ' . $user->username;
+		$log->user_id = Auth::user()->id;
+		$log->save();
+
 		return redirect('/');
 	}
 	
@@ -293,16 +308,28 @@ class UsersController extends Controller
 			abort(401);
 		}
 
+		$this->roleToFullWord($user);
+
 		if ($user->blocked == 0) {
             $user->blocked = 1;
             $user->save();
 
-            //$request->session()->flash('blockedStatus', "User $user->name blocked.");
+			$log = new Log();
+			$log->performed_task = 'Bloqueou o ' . $user->role. ': ' . $user->username;
+			$log->user_id = Auth::user()->id;
+			$log->save();
+
+            $request->session()->flash('blockedStatus', "$user->role $user->username foi bloqueado.");
         } elseif ($user->blocked == 1) {
             $user->blocked = 0;
             $user->save();
 
-            //$request->session()->flash('blockedStatus', "User $user->name unblocked.");
+			$log = new Log();
+			$log->performed_task = 'Desbloqueou o ' . $user->role. ': ' . $user->username;
+			$log->user_id = Auth::user()->id;
+			$log->save();
+
+            $request->session()->flash('blockedStatus', "$user->role $user->username foi desbloqueado.");
         }
 
         return back();
@@ -331,6 +358,14 @@ class UsersController extends Controller
 		}
 		$user->caregivers()->attach($caregiver->id);
 
+		$this->roleToFullWord($user);
+		$this->roleToFullWord($caregiver);
+
+		$log = new Log();
+		$log->performed_task = 'Associou o ' . $caregiver->role. ': ' . $caregiver->username . 'ao ' . $user->role . ': ' . $user->username;
+		$log->user_id = Auth::user()->id;
+		$log->save();
+
         return redirect()->route('users.caregivers', ['user' => $user->id]); 
     }
 
@@ -340,6 +375,14 @@ class UsersController extends Controller
         	abort(403);
 		}
 		$user->caregivers()->detach($caregiver->id);
+
+		$this->roleToFullWord($user);
+		$this->roleToFullWord($caregiver);
+
+		$log = new Log();
+		$log->performed_task = 'Desassociou o ' . $caregiver->role. ': ' . $caregiver->username . 'do ' . $user->role . ': ' . $user->username;
+		$log->user_id = Auth::user()->id;
+		$log->save();
 
         return redirect()->route('users.caregivers', ['user' => $user->id]); 
     }

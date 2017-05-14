@@ -40,6 +40,11 @@ class CaregiversController extends Controller
         $patient->caregiver_id = $caregiver->id;
         $patient->save();
 
+        $log = new Log();
+		$log->performed_task = 'Associou o Paciente: ' . $patient->name. 'ao Cuidador: ' . $caregiver->username;
+		$log->user_id = Auth::user()->id;
+		$log->save();
+
         return redirect()->route('caregivers.patients', ['caregiver' => $caregiver->id]); 
     }
 
@@ -52,9 +57,13 @@ class CaregiversController extends Controller
         if ($patient->caregiver_id != $caregiver->id) {
             abort(403);
         }
-
         $patient->caregiver_id = null;
         $patient->save();
+
+        $log = new Log();
+		$log->performed_task = 'Desassociou o Paciente: ' . $patient->name. 'do Cuidador: ' . $caregiver->username;
+		$log->user_id = Auth::user()->id;
+		$log->save();
 
         return redirect()->route('caregivers.patients', ['caregiver' => $caregiver->id]);
     }
@@ -98,13 +107,24 @@ class CaregiversController extends Controller
 			abort(401);
 		}
 
+        $material = Material::find($request->input('material'));
         if (!$caregiver->materials->contains('id', $request->input('material'))) {
-             $caregiver->materials()->attach($request->input('material'));
+            $caregiver->materials()->attach($request->input('material'));
+
+            $log = new Log();
+            $log->performed_task = 'Associou o Material: ' . $material->name. 'ao Cuidador: ' . $caregiver->username;
+            $log->user_id = Auth::user()->id;
+            $log->save();
         }
 
         $need = Need::find($request->input('need'));
         if ($need->materials->contains('id', $request->input('material'))) {
             $need->materials()->attach($request->input('material'));
+
+            $log = new Log();
+            $log->performed_task = 'Associou o Material: ' . $material->name. 'à Necessidade: ' . $need->description;
+            $log->user_id = Auth::user()->id;
+            $log->save();
         }
 
         return redirect()->route('caregivers.materials', ['caregiver' => $caregiver->id]); 
@@ -119,8 +139,12 @@ class CaregiversController extends Controller
         if (!$caregiver->materials->contains('id', $material->id)) {
             abort(403);
         }
-
         $caregiver->materials()->detach($material->id);
+
+        $log = new Log();
+        $log->performed_task = 'Desassociou o Material: ' . $material->name. 'do Cuidador: ' . $caregiver->username;
+        $log->user_id = Auth::user()->id;
+        $log->save();
 
         return redirect()->route('caregivers.materials', ['caregiver' => $caregiver->id]); 
     }
@@ -148,9 +172,13 @@ class CaregiversController extends Controller
         if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
 			abort(401);
 		}
-
         $caregiver->rate = $request->input('rate');
         $caregiver->save();
+
+        $log = new Log();
+        $log->performed_task = 'Atribuiu uma classificação ao Cuidador: ' . $caregiver->username;
+        $log->user_id = Auth::user()->id;
+        $log->save();
 
         return redirect('/'); 
     }

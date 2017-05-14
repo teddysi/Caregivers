@@ -1,7 +1,15 @@
 @extends ('layouts.master')
 
 @section ('content')
-
+@if(Session::has('blockedStatus'))
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="alert alert-success"><em> {!! session('blockedStatus') !!}</em></div>
+			</div>
+		</div>
+	</div>
+@endif
 <div class="container">
 	<div class="row">
 		<div class="col-lg-12">
