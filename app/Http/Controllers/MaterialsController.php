@@ -19,9 +19,22 @@ use DB;
 class MaterialsController extends Controller
 {
     private $messages = [
-	    'unique' =>  ':attribute já existe. Escolha outro.',
-	    'required' => ':attribute tem que ser preenchido.',
-	];
+	    'name.unique' =>  'Esse nome já existe. Escolha outro.',
+	    'name.required' => 'O nome tem que ser preenchido.',
+	    'name.min' => 'O nome tem que ser maior que 4 letras.',
+	    'description.required' => 'A descrição tem que ser preenchida.',
+	    'description.min' => 'A descrição tem que ser maior que 4 letras.',
+	    'body.required_if' => 'O campo texto não pode ser vazio.',
+	    'pathImage.required_if' => 'Introduza uma image com um dos seguintes formatos: jpeg, png, jpg, gif, svg.',
+	    'pathImage.mimes' => 'A imagem tem que estar num dos seguintes formatos: jpeg, png, jpg, gif, svg.',
+	    'pathVideo.required_if' => 'Introduza um video em formato mp4.',
+	    'pathVideo.mimes' => 'O video tem que ser em formato mp4.',
+	    'number.required' => 'Introduza um número de contacto.',
+	    'pathAnnex.required_if' => 'Introduza um anexo.',
+	    'url.required_if' => 'Introduza um url.',
+	    'url.url' => 'Introduza um url válido.',
+	    'selectType.required_if' => 'Escolha um tipo de anexo.'
+ 	];
 
 	public function index(Request $request)
 	{
@@ -113,10 +126,11 @@ class MaterialsController extends Controller
 				'body' => 'nullable|required_if:type,text',
 				'pathImage' => 'nullable|required_if:type,image|mimes:jpeg,png,jpg,gif,svg',
 				'pathVideo' => 'nullable|required_if:type,video|mimes:mp4',
-				'pathAnnex' => 'nullable',
-				'url' => 'nullable|url',
+				'pathAnnex' => 'nullable|required_if:selectType,2',
+				'url' => 'nullable|url|required_if:selectType,0|required_if:selectType,1',
 				'mime' => 'nullable',
 				'number' => 'nullable|required_if:type,emergencyContact',
+				'selectType' => 'required_if:type,annex',
 		], $this->messages);
 
 		$material;

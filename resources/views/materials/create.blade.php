@@ -57,13 +57,13 @@
             <div class="form-group">
                 <label for="selectType">Tipo</label>
                 <select name="selectType" id="selectType" class="form-control selectpicker" onchange="selectTypeChange()">
-                    <option value="--">Escolha um Tipo</option>
+                    <option value="">Escolha um Tipo</option>
                     <optgroup label="Anexo Externo">
-                        <option value="0">Video Externo</option>
-                        <option value="1">Link para Website</option>
+                        <option value="0" {{ old('selectType') == 0 ? 'selected' : '' }}>Video Externo</option>
+                        <option value="1" {{ old('selectType') == 1 ? 'selected' : '' }}>Link para Website</option>
                     </optgroup>
                     <optgroup label="Anexo Interno">
-                        <option value="2">Ficheiro (PDF, docx, ...)</option>
+                        <option value="2"{{ old('selectType') == 2 ? 'selected' : '' }}>Ficheiro (PDF, docx, ...)</option>
                     </optgroup>
                 </select>
             </div>

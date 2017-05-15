@@ -22,14 +22,19 @@ class UsersController extends Controller
 	private $messages = [
 	    'unique' =>  ':Attribute já existente. Escolha outro.',
 	    'username.required' => 'O username tem que ser preenchido.',
+	    'username.min' => 'O username tem que ter pelo menos 4 letras ou dígitos.',
 	    'email.email' => 'O email tem que ser válido.',
 	    'email.required' => 'O email tem que ser preenchido.',
 	    'name.required' => 'O nome tem que ser preenchido.',
-	    'location.required_if' => 'A localização tem que ser preenchida',
-	    'facility.required_if' => 'O local de trabalho tem que ser preenchido',
-	    'job.required_if' => 'A profissão tem que ser preenchida',
+	    'name.min' => 'O nome tem que ter pelo menos 4 letras.',
+	    'location.required_if' => 'A localização tem que ser preenchida.',
+	    'location.min' => 'A localização tem que ter pelo menos 4 letras.',
+	    'facility.required_if' => 'O local de trabalho tem que ser preenchido.',
+	    'facility.min' => 'O local de trabalho tem que ter pelo menos 4 letras.',
+	    'job.required_if' => 'A profissão tem que ser preenchida.',
+	    'job.min' => 'A profissão tem que ter pelo menos 4 letras.',
 	    'password.required' => 'A password tem que ser preenchida.',
-	    'password.min' => 'A password tem que ter pelo menos 4 letras ou digitos.',
+	    'password.min' => 'A password tem que ter pelo menos 6 letras ou digitos.',
 	    'confirmed' => 'As passwords têm que ser iguais nos dois campos.',
 	];    
 

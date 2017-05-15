@@ -11,8 +11,12 @@ Use Response;
 class EvaluationsController extends Controller
 {
 	private $messages = [
-	    'unique' =>  ':attribute já existe. Escolha outro.',
-	    'required' => ':attribute tem que ser preenchido.',
+	    'name.unique' =>  'Esse nome já existe. Escolha outro.',
+	    'name.required' => 'O nome tem que ser preenchido.',
+	    'name.min' => 'O nome tem que ter pelo menos 4 letras.',
+	    'description.required' => 'A descrição tem que ser preenchida.',
+	    'description.min' => 'A descrição tem que ter pelo menos 4 letras.',
+	    'path.required' => 'Introduza um ficheiro de avaliação.',
 	];
 
 	public function show(Evaluation $evaluation)
