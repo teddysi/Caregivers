@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Patient;
 use App\Need;
 use App\User;
+use App\Log;
 use Auth;
 
 class PatientsController extends Controller

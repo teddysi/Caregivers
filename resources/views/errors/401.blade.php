@@ -4,8 +4,10 @@
 
 <div class="container">
 	<div class="row">
-		<div class="col-lg-12">
+		<div class="col-lg-12 jumbotron" style="text-align: center">
 			<h1>(401) Não Autorizado.</h1>
+			<br />
+			<a class="btn btn-block btn-default" href="javascript:history.back()">Voltar a atrás</a>
 		</div>
 	</div>
 </div>

@@ -8,6 +8,7 @@ use App\Caregiver;
 use App\Patient;
 use App\Need;
 use App\Material;
+use App\Log;
 use App\Http\Controllers\UsersController;
 use DB;
 
@@ -110,7 +111,7 @@ class CaregiversController extends Controller
         }
 
         $need = Need::find($request->input('need'));
-        if ($need->materials->contains('id', $request->input('material'))) {
+        if (!$need->materials->contains('id', $request->input('material'))) {
             $need->materials()->attach($request->input('material'));
 
             $log = new Log();

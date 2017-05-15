@@ -72,7 +72,7 @@ $factory->define(App\Patient::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Need::class, function (Faker\Generator $faker) {
-    $array = array('Fazer Endoscopia', 'Mudar penso', 'Dar Comprimido', 'Mudar Sonda', 'Analisar Sangue');
+    $array = array('Fazer Endoscopia', 'Mudar penso', 'Dar Comprimido', 'Mudar Sonda', 'Analisar Sangue', 'Acamado', 'Paralisado', 'Dermatologia', 'Cardiologia');
     $healthcare_pros = App\HealthcarePro::all();
 
     return [
