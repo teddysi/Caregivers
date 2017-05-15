@@ -337,10 +337,10 @@ class UsersController extends Controller
 
 	public function caregivers(User $user)
 	{
-		$caregivers = $user->caregivers()->paginate(10);
+		$caregivers = $user->caregivers()->paginate(10, ['*'], 'caregivers');
 		$caregivers->setPageName('caregivers');
 
-		$otherCaregivers = Caregiver::whereNotIn('id', $user->caregivers->modelKeys())->paginate(10);
+		$otherCaregivers = Caregiver::whereNotIn('id', $user->caregivers->modelKeys())->paginate(10, ['*'], 'otherCaregivers');
 		foreach ($otherCaregivers as $index => $otherCaregiver) {
 			if (count($otherCaregiver->healthcarePros) >= 2) {
 				$otherCaregivers->forget($index);

@@ -151,10 +151,10 @@ class PatientsController extends Controller
 
 	public function needs(Patient $patient)
     {
-        $needs = $patient->needs()->paginate(10);
+        $needs = $patient->needs()->paginate(10, ['*'], 'needs');
 		$needs->setPageName('needs');
 
-		$notMyNeeds = Need::whereNotIn('id', $patient->needs->modelKeys())->paginate(10);
+		$notMyNeeds = Need::whereNotIn('id', $patient->needs->modelKeys())->paginate(10, ['*'], 'notMyNeeds');
 		$notMyNeeds->setPageName('notMyNeeds');
 
         return view('patients.needs',  compact('patient', 'needs', 'notMyNeeds'));   

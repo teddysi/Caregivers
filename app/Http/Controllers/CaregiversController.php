@@ -19,10 +19,10 @@ class CaregiversController extends Controller
 			abort(403);
 		}
 
-        $patients = $caregiver->patients()->paginate(10);
+        $patients = $caregiver->patients()->paginate(10, ['*'], 'patients');
         $patients->setPageName('patients');
 
-        $notMyPatients = Patient::whereNull('caregiver_id')->paginate(10);
+        $notMyPatients = Patient::whereNull('caregiver_id')->paginate(10, ['*'], 'notMyPatients');
         $notMyPatients->setPageName('notMyPatients');
 
         return view('caregivers.patients',  compact('caregiver', 'patients', 'notMyPatients'));   

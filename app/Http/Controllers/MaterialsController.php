@@ -294,12 +294,12 @@ class MaterialsController extends Controller
 
 	public function materials(Material $material)
 	{
-		$compositeMaterials = $material->materials()->withPivot('order')->orderBy('pivot_order', 'asc')->paginate(10);
+		$compositeMaterials = $material->materials()->withPivot('order')->orderBy('pivot_order', 'asc')->paginate(10, ['*'], 'compositeMaterials');
 		$compositeMaterials->setPageName('compositeMaterials');
 
 		$notCompositeMaterials = Material::whereNotIn('id', $material->materials->modelKeys())
 									->where('type', '<>', 'composite')
-									->paginate(10);
+									->paginate(10, ['*'], 'notCompositeMaterials');
 		$notCompositeMaterials->setPageName('notCompositeMaterials');
 
 		return view('materials.materials', compact('material', 'compositeMaterials', 'notCompositeMaterials'));
