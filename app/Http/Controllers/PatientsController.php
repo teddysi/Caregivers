@@ -12,8 +12,13 @@ use Auth;
 class PatientsController extends Controller
 {
     private $messages = [
-	    'unique' =>  ':attribute já existe. Escolha outro.',
-	    'required' => ':attribute tem que ser preenchido.',
+	    'unique' =>  ':Attribute já existente. Escolha outro.',
+        'email.email' => 'O email tem que ser válido.',
+	    'email.required' => 'O email tem que ser preenchido.',
+        'name.required' => 'O nome tem que ser preenchido.',
+        'name.min' => 'O nome tem que ter pelo menos 4 letras.',
+        'location.required' => 'A localização tem que ser preenchida.',
+        'location.min' => 'A localização tem que ter pelo menos 4 letras.',
 	];
 
 	public function index(Request $request)
@@ -98,9 +103,9 @@ class PatientsController extends Controller
 	public function store(Request $request)
 	{
 		$this->validate($request, [
-			'name' => 'required',
+			'name' => 'required|min:4',
 			'email' => 'email|required|unique:patients', 
-			'location' => 'required',
+			'location' => 'required|min:4',
 		], $this->messages);
 
 		$patient = new Patient();
@@ -120,7 +125,8 @@ class PatientsController extends Controller
 
 	public function show(Patient $patient)
 	{
-		return view('patients.show', compact('patient'));
+        $evaluations = $patient->evaluations;
+		return view('patients.show', compact('patient', 'evaluations'));
 	}
 
 	public function edit(Patient $patient)

@@ -10,6 +10,8 @@
         {{ method_field('PATCH') }}
         {{ csrf_field() }}
 
+        <input name="role" type="hidden" value="{{ $user->role }}">
+
         <div class="form-group">
             <label for="inputName">Nome</label>
             <input
@@ -28,7 +30,7 @@
 
         @if($user->role == 'Profissional de Saúde')
             <div class="form-group">
-                <label for="inputJob">Trabalho/Estatuto</label>
+                <label for="inputJob">Profissão</label>
                 <input
                     type="text" class="form-control"
                     name="job" id="inputJob"

@@ -52,6 +52,11 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Log', 'user_id', 'id');
     }
+
+    public function evaluations_created()
+    {
+        return $this->hasMany('App\Evaluation', 'created_by', 'id');
+    }
     
 }
 

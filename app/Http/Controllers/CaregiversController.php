@@ -143,6 +143,9 @@ class CaregiversController extends Controller
 			abort(403);
 		}
 
+        $evaluations = $caregiver->evaluations()->paginate(10, ['*'], 'evaluations');
+        $evaluations->setPageName('evaluations');
+
         $countedProceedings = DB::table('proceedings')
                                 ->join('materials', 'proceedings.material_id', 'materials.id')
                                 ->select('material_id', 'name', DB::raw('count(*) as total'))
@@ -150,9 +153,10 @@ class CaregiversController extends Controller
                                 ->where('caregiver_id', $caregiver->id)
                                 ->get();
                                 
+                                
         $rates = array('Mau', 'Normal', 'Bom', 'Muito Bom', 'Excelente');
 
-        return view('caregivers.rate',  compact('caregiver', 'countedProceedings', 'rates')); 
+        return view('caregivers.rate',  compact('caregiver', 'evaluations', 'countedProceedings', 'rates')); 
     }
 
     public function evaluate(Request $request, Caregiver $caregiver)

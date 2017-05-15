@@ -12,8 +12,9 @@ use Auth;
 class NeedsController extends Controller
 {
 	private $messages = [
-	    'unique' =>  ':attribute já existe. Escolha outro.',
-	    'required' => ':attribute tem que ser preenchido.',
+	    'unique' =>  'Já existe uma necessidade com essa descrição. Escolha outra.',
+	    'required' => 'A descrição tem que ser preenchida.',
+        'description.min' => 'A descrição tem que ter pelo menos 5 letras.',
 	];
 
 	public function index(Request $request)

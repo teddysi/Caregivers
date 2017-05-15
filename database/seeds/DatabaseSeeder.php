@@ -118,6 +118,9 @@ class DatabaseSeeder extends Seeder
        factory(App\Proceeding::class, 10)->create();
 
        factory(App\Log::class, 20)->create();
+
+       $this->buildEvaluations();
+
     }
 
     private function buildCustomUsers()
@@ -220,6 +223,39 @@ class DatabaseSeeder extends Seeder
             }
             $annex->created_by = $healthcare_pros->random()->id;
             $annex->save();
+        }
+    }
+
+    private function buildEvaluations()
+    {
+        $patients = App\Patient::all();
+        $i = 0;
+        $evaluations_name = [
+            'Evaluation-1', 'Evaluation-2', 'Evaluation-3', 'Evaluation-4', 'Evaluation-5'
+        ]; 
+      
+        foreach ($evaluations_name as $name) {
+            $healthcare_pro;
+            do {
+                $healthcare_pro = App\HealthcarePro::all()->random();
+            } while (count($healthcare_pro->caregivers) == 0);
+            
+            $caregiver = $healthcare_pro->caregivers->random();
+            $evaluation = new App\Evaluation();
+            $evaluation->name = $name;
+            $evaluation->description = $name.' description';
+            $evaluation->path = 'evaluations/'.$name.'.pdf';
+            $evaluation->mime = '.pdf';
+            $evaluation->created_by = $healthcare_pro->id;
+            if($i < 2) {
+                $evaluation->caregiver_id = $caregiver->id;
+                $i++;
+            } else {
+                $evaluation->patient_id = $patients->random()->id;
+            }
+
+
+            $evaluation->save();
         }
     }
 }

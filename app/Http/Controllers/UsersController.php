@@ -20,11 +20,23 @@ use DB;
 class UsersController extends Controller
 {
 	private $messages = [
-	    'unique' =>  ':attribute já existe. Escolha outro.',
-	    'required' => ':attribute tem que ser preenchido.',
-	    'min'    => ':attribute tem que ter pelo menos 4 letras/digitos.',
-	    'confirmed' => 'As passwords têm que ser iguais nos dois campos',
-	];
+	    'unique' =>  ':Attribute já existente. Escolha outro.',
+	    'username.required' => 'O username tem que ser preenchido.',
+	    'username.min' => 'O username tem que ter pelo menos 4 letras ou dígitos.',
+	    'email.email' => 'O email tem que ser válido.',
+	    'email.required' => 'O email tem que ser preenchido.',
+	    'name.required' => 'O nome tem que ser preenchido.',
+	    'name.min' => 'O nome tem que ter pelo menos 4 letras.',
+	    'location.required_if' => 'A localização tem que ser preenchida.',
+	    'location.min' => 'A localização tem que ter pelo menos 4 letras.',
+	    'facility.required_if' => 'O local de trabalho tem que ser preenchido.',
+	    'facility.min' => 'O local de trabalho tem que ter pelo menos 4 letras.',
+	    'job.required_if' => 'A profissão tem que ser preenchida.',
+	    'job.min' => 'A profissão tem que ter pelo menos 4 letras.',
+	    'password.required' => 'A password tem que ser preenchida.',
+	    'password.min' => 'A password tem que ter pelo menos 6 letras ou digitos.',
+	    'confirmed' => 'As passwords têm que ser iguais nos dois campos.',
+	]; 
 
 	public function dashboard()
 	{
@@ -271,9 +283,9 @@ class UsersController extends Controller
 		$this->validate($request, [
 			'name' => 'required',
 			'email' => 'required|email|unique:users,email,'.$user->id,
-			'job' => 'nullable|min:4|required_if:role,healthcarepro',
-			'facility' => 'nullable|min:4|required_if:role,healthcarepro',
-			'location' => 'nullable|min:4|required_if:role,caregiver',
+			'job' => 'nullable|min:4|required_if:role,Profissional de Saúde',
+			'facility' => 'nullable|min:4|required_if:role,Profissional de Saúde',
+			'location' => 'nullable|min:4|required_if:role,Cuidador',
 		], $this->messages);
 
 		$user->name = $request->input('name');
