@@ -12,8 +12,11 @@ use Auth;
 class PatientsController extends Controller
 {
     private $messages = [
-	    'unique' =>  ':attribute já existe. Escolha outro.',
-	    'required' => ':attribute tem que ser preenchido.',
+	    'unique' =>  ':Attribute já existente. Escolha outro.',
+        'email.email' => 'O email tem que ser válido.',
+	    'email.required' => 'O email tem que ser preenchido.',
+        'name.required' => 'O nome tem que ser preenchido.',
+        'location.required' => 'A localização tem que ser preenchida',
 	];
 
 	public function index(Request $request)
