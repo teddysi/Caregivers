@@ -101,10 +101,11 @@ class CaregiversController extends Controller
     public function rate(Caregiver $caregiver)
     {
         if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
-			abort(401);
+			abort(403);
 		}
 
-        $evaluations = $caregiver->evaluations;
+        $evaluations = $caregiver->evaluations()->paginate(10, ['*'], 'evaluations');
+        $evaluations->setPageName('evaluations');
 
         $countedProceedings = DB::table('proceedings')
                                 ->join('materials', 'proceedings.material_id', 'materials.id')
@@ -113,6 +114,7 @@ class CaregiversController extends Controller
                                 ->where('caregiver_id', $caregiver->id)
                                 ->get();
                                 
+                                
         $rates = array('Mau', 'Normal', 'Bom', 'Muito Bom', 'Excelente');
 
         return view('caregivers.rate',  compact('caregiver', 'evaluations', 'countedProceedings', 'rates')); 
@@ -120,6 +122,10 @@ class CaregiversController extends Controller
 
     public function evaluate(Request $request, Caregiver $caregiver)
     {
+        if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
+			abort(403);
+		}
+
         $caregiver->rate = $request->input('rate');
         $caregiver->save();
 

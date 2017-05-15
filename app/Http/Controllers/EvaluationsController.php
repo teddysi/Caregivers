@@ -18,7 +18,7 @@ class EvaluationsController extends Controller
 	public function show(Evaluation $evaluation)
 	{
 		if ($evaluation->caregiver_id != null) {
-			if ($evaluation->caregiver_id != Auth::user()->id) {
+			if (!Auth::user()->caregivers->contains('id', $evaluation->caregiver_id)) {
 				abort(403);
 			}
 		}
@@ -29,7 +29,7 @@ class EvaluationsController extends Controller
     public function create($id)
 	{	
 		if (!str_contains(url()->current(), '/patients/')) {
-			if (Auth::user()->caregivers->contains('id', $id)) {
+			if (!Auth::user()->caregivers->contains('id', $id)) {
 				abort(403);
 			}
 		}
@@ -62,6 +62,10 @@ class EvaluationsController extends Controller
 
 			return redirect()->route('patients.show', ['patient' => $id]);
 		} else {
+			if (!Auth::user()->caregivers->contains('id', $id)) {
+				abort(403);
+			}
+
 			$evaluation->caregiver_id = $id;
 			$evaluation->save();
 
@@ -71,11 +75,23 @@ class EvaluationsController extends Controller
 
 	public function edit(Evaluation $evaluation)
 	{	
+		if ($evaluation->caregiver_id != null) {
+			if (!Auth::user()->caregivers->contains('id', $evaluation->caregiver_id)) {
+				abort(403);
+			}
+		} 
+
 		return view('evaluations.edit', compact('evaluation'));
 	}
 
 	public function update(Request $request, Evaluation $evaluation)
 	{
+		if ($evaluation->caregiver_id != null) {
+			if (!Auth::user()->caregivers->contains('id', $evaluation->caregiver_id)) {
+				abort(403);
+			}
+		} 
+
 		$this->validate($request, [
 				'name' => 'required|min:4|unique:evaluations,name,'.$evaluation->id,
 				'description' => 'required|min:4',
@@ -94,6 +110,12 @@ class EvaluationsController extends Controller
 
 	public function showEvaluation(Evaluation $evaluation)
 	{
+		if ($evaluation->caregiver_id != null) {
+			if (!Auth::user()->caregivers->contains('id', $evaluation->caregiver_id)) {
+				abort(403);
+			}
+		} 
+
 		$content = Storage::get($evaluation->path);
 		$whatIWant = substr($evaluation->path, strpos($evaluation->path, ".") + 1);
 		$contentType = 'application/'.$whatIWant;
