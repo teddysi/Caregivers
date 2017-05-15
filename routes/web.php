@@ -256,6 +256,25 @@ Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
 	]);
 });
 
+//TODO - Fazer index(procura)
+Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'evaluations'], function () {
+    Route::get('{evaluation}', [
+		'as' => 'evaluations.show',
+		'uses' =>'EvaluationsController@show'
+	]);
+
+	Route::get('{evaluation}/showContent', [
+		'as' => 'evaluations.showContent',
+		'uses' =>'EvaluationsController@showEvaluation'
+	]);
+
+	Route::get('{evaluation}/edit', [
+		'as' => 'evaluations.edit',
+		'uses' =>'EvaluationsController@edit'
+	]);
+	Route::patch('{evaluation}', 'EvaluationsController@update');
+});
+
 // Caregivers API
 Route::post('/caregiversAPI/login', 'CaregiversController@login');
 Route::get('/caregiversAPI/{caregiver}/patients', 'CaregiversController@patientsAPI');
