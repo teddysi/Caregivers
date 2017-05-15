@@ -30,7 +30,7 @@ class MaterialsController extends Controller
 	    'pathImage.mimes' => 'A imagem tem que estar num dos seguintes formatos: jpeg, png, jpg, gif, svg.',
 	    'pathVideo.required_if' => 'Introduza um video em formato mp4.',
 	    'pathVideo.mimes' => 'O video tem que ser em formato mp4.',
-	    'number.required' => 'Introduza um número de contacto.',
+	    'number.required_if' => 'Introduza um número de contacto.',
 	    'pathAnnex.required_if' => 'Introduza um anexo.',
 	    'url.required_if' => 'Introduza um url.',
 	    'url.url' => 'Introduza um url válido.',
@@ -219,13 +219,13 @@ class MaterialsController extends Controller
 		$this->validate($request, [
 			'name' => 'required|min:4|unique:materials,name,'.$material->id,
 			'description' => 'required|min:4',
-			'body' => 'nullable|required_if:type,text',
-			'pathImage' => 'nullable|required_if:type,image|mimes:jpeg,png,jpg,gif,svg',
-			'pathVideo' => 'nullable|required_if:type,video|mimes:mp4',
+			'body' => 'nullable|required_if:type,Texto',
+			'pathImage' => 'nullable|required_if:type,Imagem|mimes:jpeg,png,jpg,gif,svg',
+			'pathVideo' => 'nullable|required_if:type,Video|mimes:mp4',
 			'pathAnnex' => 'nullable',
 			'url' => 'nullable|url',
 			'mime' => 'nullable',
-			'number' => 'nullable|required_if:type,emergencyContact',
+			'number' => 'nullable|required_if:type,Contacto de Emergência',
 		], $this->messages);
 
 		$material->name = $request->input('name');
@@ -255,7 +255,12 @@ class MaterialsController extends Controller
 					$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
 					$material->path = $request->file('pathAnnex')->storeAs('annexs', $request->input('name') . '.' . $whatIWant);
 					$material->mime = '.' . $whatIWant;
-				} else {
+				} else if ($material->path) {
+					Storage::move($material->path, 'annexs/'. $request->input('name').$material->mime);
+					$material->path = 'annexs/'. $request->input('name').$material->mime;
+				}
+
+				if ($request->input('url')) {
 					$material->url = $request->input('url');
 				}
 				break;
@@ -467,15 +472,19 @@ class MaterialsController extends Controller
 	//autenticado pelo laravel
 	public function showMaterial(Material $material)
 	{
-		$content = Storage::get($material->path);
-		$whatIWant = substr($material->path, strpos($material->path, ".") + 1);
-		if ($material->type == 'image') {
-			$contentType = 'image/'.$whatIWant;
-		} else if ($material->type == 'video') {
-			$contentType = 'video/'.$whatIWant;
-			return response()->file(storage_path().'/app/videos/'.$material->name.$material->mime, ['Content-Type: '.$contentType]);
-		} else if ($material->type == 'annex') {
-			$contentType = 'application/'.$whatIWant;
+		if ($material->type == 'image' || $material->type == 'video' || $material->type == 'annex') {
+			$content = Storage::get($material->path);
+			$whatIWant = substr($material->path, strpos($material->path, ".") + 1);
+			if ($material->type == 'image') {
+				$contentType = 'image/'.$whatIWant;
+			} else if ($material->type == 'video') {
+				$contentType = 'video/'.$whatIWant;
+				return response()->file(storage_path().'/app/videos/'.$material->name.$material->mime, ['Content-Type: '.$contentType]);
+			} else if ($material->type == 'annex') {
+				$contentType = 'application/'.$whatIWant;
+			}
+		} else {
+			abort(404);
 		}
 
 		return response($content)->header('Content-Type', $contentType);
@@ -484,15 +493,19 @@ class MaterialsController extends Controller
 	//nao autenticado pelo laravel
 	public function showMaterialAPI(Material $material)
 	{
-		$content = Storage::get($material->path);
-		$whatIWant = substr($material->path, strpos($material->path, ".") + 1);
-		if ($material->type == 'image') {
-			$contentType = 'image/'.$whatIWant;
-		} else if ($material->type == 'video') {
-			$contentType = 'video/'.$whatIWant;
-			return response()->file(storage_path().'/app/videos/'.$material->name.$material->mime, ['Content-Type: '.$contentType]);
-		} else if ($material->type == 'annex') {
-			$contentType = 'application/'.$whatIWant;
+		if ($material->type == 'image' || $material->type == 'video' || $material->type == 'annex') {
+			$content = Storage::get($material->path);
+			$whatIWant = substr($material->path, strpos($material->path, ".") + 1);
+			if ($material->type == 'image') {
+				$contentType = 'image/'.$whatIWant;
+			} else if ($material->type == 'video') {
+				$contentType = 'video/'.$whatIWant;
+				return response()->file(storage_path().'/app/videos/'.$material->name.$material->mime, ['Content-Type: '.$contentType]);
+			} else if ($material->type == 'annex') {
+				$contentType = 'application/'.$whatIWant;
+			}
+		} else {
+			abort(404);
 		}
 		 
 		return response($content)->header('Content-Type', $contentType);

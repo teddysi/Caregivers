@@ -9,7 +9,6 @@
     <form action="{{ url('/users', ['user' => $user->id]) }}" method="POST" class="form-group">
         {{ method_field('PATCH') }}
         {{ csrf_field() }}
-
         <input name="role" type="hidden" value="{{ $user->role }}">
 
         <div class="form-group">

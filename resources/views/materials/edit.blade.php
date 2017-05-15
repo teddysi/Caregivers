@@ -9,6 +9,7 @@
     <form action="{{ url('/materials', ['material' => $material->id] )}}" method="POST" class="form-group"  enctype="multipart/form-data">
         {{ method_field('PATCH') }}
         {{ csrf_field() }}
+        <input name="type" type="hidden" value="{{ $material->type }}">
 
         <div class="form-group">
             <label for="inputName">Nome</label>
