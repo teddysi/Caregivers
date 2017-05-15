@@ -82,7 +82,6 @@ class NeedsController extends Controller
 
 	public function store(Request $request)
 	{
-
 		$this->validate($request, [
 			'description' => 'required|min:5|unique:needs',
 		], $this->messages);

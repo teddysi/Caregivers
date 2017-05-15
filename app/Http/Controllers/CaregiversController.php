@@ -16,7 +16,7 @@ class CaregiversController extends Controller
     public function patients(Caregiver $caregiver)
     {
         if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
-			abort(401);
+			abort(403);
 		}
 
         $patients = $caregiver->patients()->paginate(10);
@@ -30,12 +30,8 @@ class CaregiversController extends Controller
 
     public function associatePatient(Caregiver $caregiver, Patient $patient)
     {
-        if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
-			abort(401);
-		}
-
-        if ($patient->caregiver_id != null) {
-            abort(403);
+        if (!$caregiver->healthcarePros->contains('id', Auth::user()->id) || $patient->caregiver_id != null) {
+			abort(403);
 		}
         $patient->caregiver_id = $caregiver->id;
         $patient->save();
@@ -50,13 +46,9 @@ class CaregiversController extends Controller
 
     public function diassociatePatient(Caregiver $caregiver, Patient $patient)
     {
-        if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
-			abort(401);
+        if (!$caregiver->healthcarePros->contains('id', Auth::user()->id) || $patient->caregiver_id != $caregiver->id) {
+			abort(403);
 		}
-
-        if ($patient->caregiver_id != $caregiver->id) {
-            abort(403);
-        }
         $patient->caregiver_id = null;
         $patient->save();
 
@@ -71,7 +63,7 @@ class CaregiversController extends Controller
     public function materials(Caregiver $caregiver)
     {
         if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
-			abort(401);
+			abort(403);
 		}
 
         $patients = $caregiver->patients;
@@ -104,7 +96,7 @@ class CaregiversController extends Controller
     public function associateMaterial(Request $request, Caregiver $caregiver)
     {
         if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
-			abort(401);
+			abort(403);
 		}
 
         $material = Material::find($request->input('material'));
@@ -132,13 +124,9 @@ class CaregiversController extends Controller
 
     public function diassociateMaterial(Caregiver $caregiver, Material $material)
     {
-        if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
-			abort(401);
+        if (!$caregiver->healthcarePros->contains('id', Auth::user()->id) || !$caregiver->materials->contains('id', $material->id)) {
+			abort(403);
 		}
-
-        if (!$caregiver->materials->contains('id', $material->id)) {
-            abort(403);
-        }
         $caregiver->materials()->detach($material->id);
 
         $log = new Log();
@@ -152,7 +140,7 @@ class CaregiversController extends Controller
     public function rate(Caregiver $caregiver)
     {
         if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
-			abort(401);
+			abort(403);
 		}
 
         $countedProceedings = DB::table('proceedings')
@@ -170,7 +158,7 @@ class CaregiversController extends Controller
     public function evaluate(Request $request, Caregiver $caregiver)
     {
         if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
-			abort(401);
+			abort(403);
 		}
         $caregiver->rate = $request->input('rate');
         $caregiver->save();

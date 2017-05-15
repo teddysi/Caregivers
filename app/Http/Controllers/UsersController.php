@@ -169,7 +169,7 @@ class UsersController extends Controller
 	public function show(User $user)
 	{
 		if (Auth::user()->role == 'healthcarepro' && $user->role != 'caregiver') {
-			abort(401);
+			abort(403);
 		}
 
 		$this->roleToFullWord($user);
@@ -188,7 +188,7 @@ class UsersController extends Controller
 	public function create($role)
 	{	
 		if (Auth::user()->role == 'healthcarepro' && $role != 'caregiver') {
-			abort(401);
+			abort(403);
 		}
 
 		return view('users.create', compact('role'));
@@ -197,7 +197,7 @@ class UsersController extends Controller
 	public function store(Request $request)
 	{	
 		if (Auth::user()->role == 'healthcarepro' && $request->input('role') != 'caregiver') {
-			abort(401);
+			abort(403);
 		}
 
 		$this->validate($request, [
@@ -255,7 +255,7 @@ class UsersController extends Controller
 
 	public function edit(User $user) {
 		if (Auth::user()->role == 'healthcarepro' && $user->role != 'caregiver') {
-			abort(401);
+			abort(403);
 		}
 
 		$this->roleToFullWord($user);
@@ -265,7 +265,7 @@ class UsersController extends Controller
 	public function update(Request $request, User $user)
 	{
 		if (Auth::user()->role == 'healthcarepro' && $user->role != 'caregiver') {
-			abort(401);
+			abort(403);
 		}
 
 		$this->validate($request, [
@@ -305,7 +305,7 @@ class UsersController extends Controller
 	public function toggleBlock(Request $request, User $user)
 	{
 		if (Auth::user()->role == 'healthcarepro' && $user->role != 'caregiver') {
-			abort(401);
+			abort(403);
 		}
 
 		$this->roleToFullWord($user);
