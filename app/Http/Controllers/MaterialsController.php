@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Auth;
 use App\Material;
-use App\TextFile;
+use App\Text;
 use App\Video;
 use App\Image;
 use App\EmergencyContact;
