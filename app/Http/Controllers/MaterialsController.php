@@ -12,6 +12,7 @@ use App\EmergencyContact;
 use App\Annex;
 use App\Composite;
 use App\User;
+use App\Log;
 use Storage;
 use Response;
 use DB;
@@ -169,8 +170,12 @@ class MaterialsController extends Controller
 		$material->name = $request->input('name');
 		$material->description = $request->input('description');
 		$material->created_by = Auth::user()->id;
-
 		$material->save();
+
+		$log = new Log();
+		$log->performed_task = 'Criou o Material: ' . $material->name;
+		$log->user_id = Auth::user()->id;
+		$log->save();
 
 		return redirect('/');
 	}
@@ -200,15 +205,60 @@ class MaterialsController extends Controller
 		$this->validate($request, [
 			'name' => 'required|min:4|unique:materials,name,'.$material->id,
 			'description' => 'required|min:4',
-			'path' => 'nullable|required_if:type,text',
-			'url' => 'nullable|required_if:type,image|required_if:type,video|required_if:type,annex',
+			'body' => 'nullable|required_if:type,text',
+			'pathImage' => 'nullable|required_if:type,image|mimes:jpeg,png,jpg,gif,svg',
+			'pathVideo' => 'nullable|required_if:type,video|mimes:mp4',
+			'pathAnnex' => 'nullable',
+			'url' => 'nullable|url',
+			'mime' => 'nullable',
 			'number' => 'nullable|required_if:type,emergencyContact',
 		], $this->messages);
 
 		$material->name = $request->input('name');
 		$material->description = $request->input('description');
-		
+		switch ($material->type) {
+			case 'text':
+				$material->body = $request->input('body');
+				break;
+
+			case 'image':
+				$originalName = $request->pathImage->getClientOriginalName();
+				$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
+				$material->path = $request->file('pathImage')->storeAs('images', $request->input('name') . '.' . $whatIWant);
+				$material->mime = '.' . $whatIWant;
+				break;
+
+			case 'video':
+				$originalName = $request->pathVideo->getClientOriginalName();
+				$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
+				$material->path = $request->file('pathVideo')->storeAs('videos', $request->input('name') . '.' . $whatIWant);
+				$material->mime = '.' . $whatIWant;
+				break;
+
+			case 'annex':
+				if ($request->pathAnnex) {
+					$originalName = $request->pathAnnex->getClientOriginalName();
+					$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
+					$material->path = $request->file('pathAnnex')->storeAs('annexs', $request->input('name') . '.' . $whatIWant);
+					$material->mime = '.' . $whatIWant;
+				} else {
+					$material->url = $request->input('url');
+				}
+				break;
+
+			case 'emergencyContact':
+				$material->number = $request->input('number');
+				break;
+
+			default:
+				break;
+		}
 		$material->save();
+
+		$log = new Log();
+		$log->performed_task = 'Atualizou o Material: ' . $material->name;
+		$log->user_id = Auth::user()->id;
+		$log->save();
 
 		return redirect('/');
 	}
@@ -219,12 +269,24 @@ class MaterialsController extends Controller
             $material->blocked = 1;
             $material->save();
 
-            //$request->session()->flash('blockedStatus', "Material $material->name blocked.");
+			$log = new Log();
+			$log->performed_task = 'Bloqueou o Material: ' . $material->name;
+			$log->user_id = Auth::user()->id;
+			$log->save();
+
+			$this->changeTypeFormat($material);
+            $request->session()->flash('blockedStatus', "$material->type $material->name foi bloqueado.");
         } elseif ($material->blocked == 1) {
             $material->blocked = 0;
             $material->save();
 
-            //$request->session()->flash('blockedStatus', "Material $material->name unblocked.");
+			$log = new Log();
+			$log->performed_task = 'Desbloqueou o Material: ' . $material->name;
+			$log->user_id = Auth::user()->id;
+			$log->save();
+
+			$this->changeTypeFormat($material);
+            $request->session()->flash('blockedStatus', "$material->type $material->name foi desbloqueado.");
         }
 
         return back();
@@ -232,12 +294,12 @@ class MaterialsController extends Controller
 
 	public function materials(Material $material)
 	{
-		$compositeMaterials = $material->materials()->withPivot('order')->orderBy('pivot_order', 'asc')->paginate(10);
+		$compositeMaterials = $material->materials()->withPivot('order')->orderBy('pivot_order', 'asc')->paginate(10, ['*'], 'compositeMaterials');
 		$compositeMaterials->setPageName('compositeMaterials');
 
 		$notCompositeMaterials = Material::whereNotIn('id', $material->materials->modelKeys())
 									->where('type', '<>', 'composite')
-									->paginate(10);
+									->paginate(10, ['*'], 'notCompositeMaterials');
 		$notCompositeMaterials->setPageName('notCompositeMaterials');
 
 		return view('materials.materials', compact('material', 'compositeMaterials', 'notCompositeMaterials'));
@@ -254,8 +316,12 @@ class MaterialsController extends Controller
 		$composite->name = $request->input('name');
 		$composite->description = $request->input('description');
 		$composite->created_by = Auth::user()->id;
-
 		$composite->save();
+
+		$log = new Log();
+        $log->performed_task = 'Criou o Material Composto: ' . $composite->name;
+        $log->user_id = Auth::user()->id;
+        $log->save();
 
 		return redirect()->route('materials.materials', ['material' => $composite->id]); 
 	}
@@ -265,12 +331,16 @@ class MaterialsController extends Controller
 		$count = count($composite->materials()->get());
 		$composite->materials()->attach([$material->id => ['order'=> $count + 1]]);
 
+		$log = new Log();
+        $log->performed_task = 'Adicionou o Material: ' . $material->name. 'ao Material Composto: ' . $composite->name;
+        $log->user_id = Auth::user()->id;
+        $log->save();
+
         return redirect()->route('materials.materials', ['composite' => $composite->id]); 
 	}
 
 	public function removeMaterial(Material $composite, Material $material)
 	{
-		// TO DO: Quando removo um material falta atualizar a ordem na BD
 		$orderOfMaterial = DB::table('composite_material')->select('order')->where([['composite_id', $composite->id], ['material_id', $material->id]])->first()->order;
 		$composite->materials()->detach($material->id);
 		$materialsToUpdateOrder = $composite->materials()->where('order', '>', $orderOfMaterial)->get();
@@ -278,6 +348,11 @@ class MaterialsController extends Controller
 			$orderOfMaterialToUpdate = DB::table('composite_material')->select('order')->where([['composite_id', $composite->id], ['material_id', $materialToUpdate->id]])->first()->order;
 			$composite->materials()->updateExistingPivot($materialToUpdate->id, ['order' => $orderOfMaterialToUpdate - 1]);
 		}
+
+		$log = new Log();
+        $log->performed_task = 'Removeu o Material: ' . $material->name. 'ao Material Composto: ' . $composite->name;
+        $log->user_id = Auth::user()->id;
+        $log->save();
 
         return redirect()->route('materials.materials', ['composite' => $composite->id]); 
 	}
@@ -289,6 +364,11 @@ class MaterialsController extends Controller
 		$composite->materials()->updateExistingPivot($material->id, ['order' => $orderOfMaterial - 1]);
 		$composite->materials()->updateExistingPivot($aboveMaterial->id, ['order' => $orderOfMaterial]);
 
+		$log = new Log();
+        $log->performed_task = 'Colocou o Material: ' . $material->name. ' uma posição acima na lista de materiais do Material Composto: ' . $composite->name;
+        $log->user_id = Auth::user()->id;
+        $log->save();
+
         return redirect()->route('materials.materials', ['composite' => $composite->id]); 
 	}
 
@@ -298,6 +378,11 @@ class MaterialsController extends Controller
 		$aboveMaterial = $composite->materials()->where('order', $orderOfMaterial + 1)->first();
 		$composite->materials()->updateExistingPivot($material->id, ['order' => $orderOfMaterial + 1]);
 		$composite->materials()->updateExistingPivot($aboveMaterial->id, ['order' => $orderOfMaterial]);
+
+		$log = new Log();
+        $log->performed_task = 'Colocou o Material: ' . $material->name. ' uma posição abaixo na lista de materiais do Material Composto: ' . $composite->name;
+        $log->user_id = Auth::user()->id;
+        $log->save();
 
         return redirect()->route('materials.materials', ['composite' => $composite->id]); 
 	}

@@ -82,7 +82,6 @@ class NeedsController extends Controller
 
 	public function store(Request $request)
 	{
-
 		$this->validate($request, [
 			'description' => 'required|min:5|unique:needs',
 		], $this->messages);
@@ -90,8 +89,12 @@ class NeedsController extends Controller
 		$need = new Need();
 		$need->description = $request->input('description');
 		$need->created_by = Auth::user()->id;
-
 		$need->save();
+
+        $log = new Log();
+		$log->performed_task = 'Criou a Necessidade: ' . $need->description;
+		$log->user_id = Auth::user()->id;
+		$log->save();
 
 		return redirect('/');
 	}
@@ -107,8 +110,12 @@ class NeedsController extends Controller
 		], $this->messages);
 
 		$need->description = $request->input('description');
-
 		$need->save();
+
+        $log = new Log();
+		$log->performed_task = 'Atualizou a Necessidade: ' . $need->description;
+		$log->user_id = Auth::user()->id;
+		$log->save();
 
 		return redirect('/');
 	}
@@ -123,7 +130,15 @@ class NeedsController extends Controller
 
     public function diassociateMaterial(Need $need, Material $material)
     {
+        if (!$need->materials->contains('id', $material->id)) {
+            abort(403);
+        }
         $need->materials()->detach($material->id);
+
+        $log = new Log();
+		$log->performed_task = 'Desassociou o Material: ' . $material->name. 'da Necessiade: ' . $need->description;
+		$log->user_id = Auth::user()->id;
+		$log->save();
 
         return redirect()->route('needs.materials', ['need' => $need->id]); 
     }

@@ -6,7 +6,7 @@
 
 <div class="container">
     <h2>Editar {{ $material->type }}</h2>
-    <form action="{{ url('/materials', ['material' => $material->id] )}}" method="POST" class="form-group">
+    <form action="{{ url('/materials', ['material' => $material->id] )}}" method="POST" class="form-group"  enctype="multipart/form-data">
         {{ method_field('PATCH') }}
         {{ csrf_field() }}
 
@@ -26,24 +26,46 @@
                 value="{{ $material->description }}" />
         </div>
 
-        @if ($material->type == 'Ficheiro de Texto' || $material->type == 'Imagem')
+        @if ($material->type == 'Texto')
             <div class="form-group">
-                <label for="inputPath">Localização</label>
-                <input
-                    type="text" class="form-control"
-                    name="path" id="inputPath"
-                    value="{{ $material->path }}" />
+                <label for="inputBody">Texto</label>
+                <textarea class="form-control" rows="5" 
+                    type="text" name="body"
+                    id="inputBody">
+                    {{ $material->body }}
+                </textarea>
+            </div>
+        @endif
+
+        @if ($material->type == 'Imagem')
+            <div class="form-group">
+                <label for="inputFile">Ficheiro</label>
+                <input type="file" name="pathImage" accept="image/*"/>
             </div>
         @endif
 
         @if ($material->type == 'Video')
             <div class="form-group">
-                <label for="inputURL">URL</label>
-                <input
-                    type="text" class="form-control"
-                    name="url" id="inputURL"
-                    value="{{ $material->url }}" />
+                <label for="inputFile">Ficheiro</label>
+                <input type="file" name="pathVideo" accept="video/mp4"/>
             </div>
+        @endif
+
+        @if ($material->type == 'Anexo')
+            @if ($material->path == null)
+                <div class="form-group">
+                    <label for="inputURL">URL</label>
+                    <input
+                        type="url" class="form-control"
+                        name="url" id="inputURL"
+                        value="{{ $material->url }}"/>
+                </div>
+            @else
+                <div class="form-group">
+                    <label for="inputFile">Ficheiro</label>
+                    <input type="file" name="pathAnnex"/>
+                </div>
+            @endif
         @endif
 
         @if ($material->type == 'Contacto de Emergência')

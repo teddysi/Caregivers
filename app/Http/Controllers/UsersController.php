@@ -13,19 +13,18 @@ use App\Caregiver;
 use App\Patient;
 use App\Need;
 use App\Material;
+use App\Log;
 use App\Http\Controllers\MaterialsController;
 use DB;
 
 class UsersController extends Controller
 {
-
 	private $messages = [
 	    'unique' =>  ':attribute já existe. Escolha outro.',
 	    'required' => ':attribute tem que ser preenchido.',
 	    'min'    => ':attribute tem que ter pelo menos 4 letras/digitos.',
 	    'confirmed' => 'As passwords têm que ser iguais nos dois campos',
 	];
-    
 
 	public function dashboard()
 	{
@@ -170,7 +169,7 @@ class UsersController extends Controller
 	public function show(User $user)
 	{
 		if (Auth::user()->role == 'healthcarepro' && $user->role != 'caregiver') {
-			abort(401);
+			abort(403);
 		}
 
 		$this->roleToFullWord($user);
@@ -188,11 +187,19 @@ class UsersController extends Controller
 
 	public function create($role)
 	{	
+		if (Auth::user()->role == 'healthcarepro' && $role != 'caregiver') {
+			abort(403);
+		}
+
 		return view('users.create', compact('role'));
 	}
 
 	public function store(Request $request)
 	{	
+		if (Auth::user()->role == 'healthcarepro' && $request->input('role') != 'caregiver') {
+			abort(403);
+		}
+
 		$this->validate($request, [
 			'username' => 'required|min:4|unique:users',
 			'name' => 'required|min:4',
@@ -236,16 +243,31 @@ class UsersController extends Controller
 			Auth::user()->caregivers()->attach(User::where('username', $user->username)->firstOrFail()->id);
 		}
 
+		$this->roleToFullWord($user);
+
+		$log = new Log();
+		$log->performed_task = 'Criou o ' . $user->role . ': ' . $user->username;
+		$log->user_id = Auth::user()->id;
+		$log->save(); 
+
 		return redirect('/');
 	}
 
 	public function edit(User $user) {
+		if (Auth::user()->role == 'healthcarepro' && $user->role != 'caregiver') {
+			abort(403);
+		}
+
 		$this->roleToFullWord($user);
 		return view('users.edit', compact('user'));
 	}
 
 	public function update(Request $request, User $user)
 	{
+		if (Auth::user()->role == 'healthcarepro' && $user->role != 'caregiver') {
+			abort(403);
+		}
+
 		$this->validate($request, [
 			'name' => 'required',
 			'email' => 'required|email|unique:users,email,'.$user->id,
@@ -270,21 +292,44 @@ class UsersController extends Controller
 
 		$user->save();
 
+		$this->roleToFullWord($user);
+
+		$log = new Log();
+		$log->performed_task = 'Atualizou o ' . $user->role. ': ' . $user->username;
+		$log->user_id = Auth::user()->id;
+		$log->save();
+
 		return redirect('/');
 	}
 	
 	public function toggleBlock(Request $request, User $user)
 	{
+		if (Auth::user()->role == 'healthcarepro' && $user->role != 'caregiver') {
+			abort(403);
+		}
+
+		$this->roleToFullWord($user);
+
 		if ($user->blocked == 0) {
             $user->blocked = 1;
             $user->save();
 
-            //$request->session()->flash('blockedStatus', "User $user->name blocked.");
+			$log = new Log();
+			$log->performed_task = 'Bloqueou o ' . $user->role. ': ' . $user->username;
+			$log->user_id = Auth::user()->id;
+			$log->save();
+
+            $request->session()->flash('blockedStatus', "$user->role $user->username foi bloqueado.");
         } elseif ($user->blocked == 1) {
             $user->blocked = 0;
             $user->save();
 
-            //$request->session()->flash('blockedStatus', "User $user->name unblocked.");
+			$log = new Log();
+			$log->performed_task = 'Desbloqueou o ' . $user->role. ': ' . $user->username;
+			$log->user_id = Auth::user()->id;
+			$log->save();
+
+            $request->session()->flash('blockedStatus', "$user->role $user->username foi desbloqueado.");
         }
 
         return back();
@@ -292,10 +337,10 @@ class UsersController extends Controller
 
 	public function caregivers(User $user)
 	{
-		$caregivers = $user->caregivers()->paginate(10);
+		$caregivers = $user->caregivers()->paginate(10, ['*'], 'caregivers');
 		$caregivers->setPageName('caregivers');
 
-		$otherCaregivers = Caregiver::whereNotIn('id', $user->caregivers->modelKeys())->paginate(10);
+		$otherCaregivers = Caregiver::whereNotIn('id', $user->caregivers->modelKeys())->paginate(10, ['*'], 'otherCaregivers');
 		foreach ($otherCaregivers as $index => $otherCaregiver) {
 			if (count($otherCaregiver->healthcarePros) >= 2) {
 				$otherCaregivers->forget($index);
@@ -308,14 +353,36 @@ class UsersController extends Controller
 
 	public function associate(User $user, Caregiver $caregiver)
     {
+		if (count($caregiver->healthcarePros) >= 2 || $caregiver->healthcarePros->contains('id', $user->id)) {
+			abort(403);
+		}
 		$user->caregivers()->attach($caregiver->id);
+
+		$this->roleToFullWord($user);
+		$this->roleToFullWord($caregiver);
+
+		$log = new Log();
+		$log->performed_task = 'Associou o ' . $caregiver->role. ': ' . $caregiver->username . 'ao ' . $user->role . ': ' . $user->username;
+		$log->user_id = Auth::user()->id;
+		$log->save();
 
         return redirect()->route('users.caregivers', ['user' => $user->id]); 
     }
 
     public function diassociate(User $user, Caregiver $caregiver)
     {
-        $user->caregivers()->detach($caregiver->id);
+		if (count($caregiver->healthcarePros) <= 0 || !$caregiver->healthcarePros->contains('id', $user->id)) {
+        	abort(403);
+		}
+		$user->caregivers()->detach($caregiver->id);
+
+		$this->roleToFullWord($user);
+		$this->roleToFullWord($caregiver);
+
+		$log = new Log();
+		$log->performed_task = 'Desassociou o ' . $caregiver->role. ': ' . $caregiver->username . 'do ' . $user->role . ': ' . $user->username;
+		$log->user_id = Auth::user()->id;
+		$log->save();
 
         return redirect()->route('users.caregivers', ['user' => $user->id]); 
     }

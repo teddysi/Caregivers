@@ -110,6 +110,11 @@ class PatientsController extends Controller
 		$patient->created_by = Auth::user()->id;
 		$patient->save();
 
+        $log = new Log();
+		$log->performed_task = 'Criou o Paciente: ' . $patient->name;
+		$log->user_id = Auth::user()->id;
+		$log->save();
+
 		return redirect('/');
 	}
 
@@ -118,7 +123,8 @@ class PatientsController extends Controller
 		return view('patients.show', compact('patient'));
 	}
 
-	public function edit(Patient $patient) {
+	public function edit(Patient $patient)
+    {
 		return view('patients.edit', compact('patient'));
 	}
 
@@ -133,18 +139,22 @@ class PatientsController extends Controller
 		$patient->name = $request->input('name');
 		$patient->email = $request->input('email');
 		$patient->location = $request->input('location');
-
 		$patient->save();
+
+        $log = new Log();
+		$log->performed_task = 'Atualizou o Paciente: ' . $patient->name;
+		$log->user_id = Auth::user()->id;
+		$log->save();
 
 		return redirect('/');
 	}
 
 	public function needs(Patient $patient)
     {
-        $needs = $patient->needs()->paginate(10);
+        $needs = $patient->needs()->paginate(10, ['*'], 'needs');
 		$needs->setPageName('needs');
 
-		$notMyNeeds = Need::whereNotIn('id', $patient->needs->modelKeys())->paginate(10);
+		$notMyNeeds = Need::whereNotIn('id', $patient->needs->modelKeys())->paginate(10, ['*'], 'notMyNeeds');
 		$notMyNeeds->setPageName('notMyNeeds');
 
         return view('patients.needs',  compact('patient', 'needs', 'notMyNeeds'));   
@@ -152,14 +162,30 @@ class PatientsController extends Controller
 
 	public function associate(Patient $patient, Need $need)
     {
+        if ($patient->needs->contains('id', $need->id)) {
+            abort(403);
+        }
 		$patient->needs()->attach($need->id);
+
+        $log = new Log();
+		$log->performed_task = 'Associou a Necessidade: ' . $need->description. 'ao Paciente: ' . $patient->name;
+		$log->user_id = Auth::user()->id;
+		$log->save();
 
         return redirect()->route('patients.needs', ['patient' => $patient->id]); 
     }
 
     public function diassociate(Patient $patient, Need $need)
     {
+        if (!$patient->needs->contains('id', $need->id)) {
+            abort(403);
+        }
         $patient->needs()->detach($need->id);
+
+        $log = new Log();
+		$log->performed_task = 'Desassociou a Necessidade: ' . $need->description. 'do Paciente: ' . $patient->name;
+		$log->user_id = Auth::user()->id;
+		$log->save();
 
         return redirect()->route('patients.needs', ['patient' => $patient->id]);
     }
