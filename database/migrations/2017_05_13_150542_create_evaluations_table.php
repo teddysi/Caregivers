@@ -16,7 +16,8 @@ class CreateEvaluationsTable extends Migration
         Schema::create('evaluations', function (Blueprint $table) {
             $table->increments('id');
             $table->text('description');
-            $table->string('name')->unique();
+            $table->string('type');
+            $table->string('model');
             $table->string('path')->nullable();
             $table->string('mime')->nullable();
             $table->integer('created_by')->unsigned()->index();

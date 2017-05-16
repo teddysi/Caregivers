@@ -11,19 +11,27 @@
         {{ csrf_field() }}
 
         <div class="form-group">
-            <label for="inputName">Nome</label>
-            <input
-                type="text" class="form-control"
-                name="name" id="inputName"
-                value="{{ $evaluation->name }}" />
-        </div>
-
-        <div class="form-group">
             <label for="inputDescription">Descrição</label>
             <input
                 type="text" class="form-control"
                 name="description" id="inputDescription"
                 value="{{ $evaluation->description }}" />
+        </div>
+
+        <div class="form-group">
+            <label for="inputType">Tipo de Avaliação</label>
+            <input
+                type="text" class="form-control"
+                name="type" id="inputType"
+                value="{{ $evaluation->type }}" />
+        </div>
+
+        <div class="form-group">
+            <label for="inputModel">Modelo</label>
+            <input
+                type="text" class="form-control"
+                name="model" id="inputModel"
+                value="{{ $evaluation->model }}" />
         </div>
 
         <div class="form-group">

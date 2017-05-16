@@ -243,8 +243,9 @@ class DatabaseSeeder extends Seeder
             
             $caregiver = $healthcare_pro->caregivers->random();
             $evaluation = new App\Evaluation();
-            $evaluation->name = $name;
+            $evaluation->type = 'Pela aplicação';
             $evaluation->description = $name.' description';
+            $evaluation->model = 'Model X';
             $evaluation->path = 'evaluations/'.$name.'.pdf';
             $evaluation->mime = '.pdf';
             $evaluation->created_by = $healthcare_pro->id;
