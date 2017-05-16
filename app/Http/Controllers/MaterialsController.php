@@ -143,8 +143,6 @@ class MaterialsController extends Controller
 
 			case 'image':
 				$material = new Image();
-				$disk = Storage::disk('gcs');
-				$disk->put('images/1', $request->file('pathImage'));
 				$originalName = $request->pathImage->getClientOriginalName();
 				$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
 				$material->url = $request->root() . '/materials/'.$material->id.'/showContent';
