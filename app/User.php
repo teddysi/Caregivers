@@ -38,14 +38,19 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function caregivers_created()
+    public function caregiverCreated()
     {
         return $this->hasMany('App\Caregiver', 'created_by', 'id');
     }
 
-    public function materials_created()
+    public function materialsCreated()
     {
         return $this->hasMany('App\Material', 'created_by', 'id');
+    }
+
+    public function tasksDone()
+    {
+        return $this->hasMany('App\Log', 'done_by', 'id');
     }
 
     public function logs()
@@ -53,11 +58,10 @@ class User extends Authenticatable
         return $this->hasMany('App\Log', 'user_id', 'id');
     }
 
-    public function evaluations_created()
+    public function evaluationsCreated()
     {
         return $this->hasMany('App\Evaluation', 'created_by', 'id');
     }
-    
 }
 
 

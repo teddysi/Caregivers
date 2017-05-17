@@ -25,4 +25,8 @@ class Need extends Model
         return $this->belongsToMany('App\Patient');
     }
 
+    public function logs()
+    {
+        return $this->hasMany('App\Need', 'need_id', 'id');
+    }
 }

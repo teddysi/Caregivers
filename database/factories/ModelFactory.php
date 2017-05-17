@@ -174,10 +174,19 @@ $factory->define(App\Proceeding::class, function (Faker\Generator $faker) {
 });
 
 $factory->define(App\Log::class, function (Faker\Generator $faker) {
+    $doneBy = App\User::where('role', '<>', 'caregiver')->get()->random();
     $user = App\User::all()->random();
+    $patient = App\Patient::all()->random();
+    $need = App\Need::all()->random();
+    $material = App\Material::all()->random();
+    $rand = rand(0, 20);
 
     return [
-        'performed_task' => $faker->randomElement($array = array('Criou', 'Atualizou', 'Removeu')) . ' um ' .  $faker->randomElement($array = array('Patiente', 'Material', 'Cuidador', 'Profissional de Saúde')),
-        'user_id' => $user->id,
+        'performed_task' => $faker->randomElement($array = array('Criou', 'Atualizou', 'Bloqueou', 'Desbloqueou')),
+        'done_by' => $doneBy->id,
+        'user_id' => $rand < 5 ? $user->id : null,
+        'patient_id' => ($rand >= 5 && $rand < 10) ? $patient->id : null,
+        'need_id' => ($rand >= 10 && $rand < 15) ? $need->id : null,
+        'material_id' => ($rand >= 15 && $rand < 20) ? $material->id : null,
     ];
 });

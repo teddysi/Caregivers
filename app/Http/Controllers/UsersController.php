@@ -259,7 +259,8 @@ class UsersController extends Controller
 
 		$log = new Log();
 		$log->performed_task = 'Criou o ' . $user->role . ': ' . $user->username;
-		$log->user_id = Auth::user()->id;
+		$log->done_by = Auth::user()->id;
+		$log->user_id = $user->id;
 		$log->save(); 
 
 		return redirect('/');
@@ -308,7 +309,8 @@ class UsersController extends Controller
 
 		$log = new Log();
 		$log->performed_task = 'Atualizou o ' . $user->role. ': ' . $user->username;
-		$log->user_id = Auth::user()->id;
+		$log->done_by = Auth::user()->id;
+		$log->user_id = $user->id;
 		$log->save();
 
 		return redirect('/');
@@ -328,7 +330,8 @@ class UsersController extends Controller
 
 			$log = new Log();
 			$log->performed_task = 'Bloqueou o ' . $user->role. ': ' . $user->username;
-			$log->user_id = Auth::user()->id;
+			$log->done_by = Auth::user()->id;
+			$log->user_id = $user->id;
 			$log->save();
 
             $request->session()->flash('blockedStatus', "$user->role $user->username foi bloqueado.");
@@ -338,7 +341,8 @@ class UsersController extends Controller
 
 			$log = new Log();
 			$log->performed_task = 'Desbloqueou o ' . $user->role. ': ' . $user->username;
-			$log->user_id = Auth::user()->id;
+			$log->done_by = Auth::user()->id;
+			$log->user_id = $user->id;
 			$log->save();
 
             $request->session()->flash('blockedStatus', "$user->role $user->username foi desbloqueado.");
@@ -375,7 +379,14 @@ class UsersController extends Controller
 
 		$log = new Log();
 		$log->performed_task = 'Associou o ' . $caregiver->role. ': ' . $caregiver->username . 'ao ' . $user->role . ': ' . $user->username;
-		$log->user_id = Auth::user()->id;
+		$log->done_by = Auth::user()->id;
+		$log->user_id = $caregiver->id;
+		$log->save();
+
+		$log = new Log();
+		$log->performed_task = 'Foi associado o ' . $caregiver->role. ': ' . $caregiver->username . 'ao ' . $user->role . ': ' . $user->username;
+		$log->done_by = Auth::user()->id;
+		$log->user_id = $caregiver->id;
 		$log->save();
 
         return redirect()->route('users.caregivers', ['user' => $user->id]); 
