@@ -34,4 +34,9 @@ class Log extends Model
     {
         return $this->belongsTo('App\Material', 'material_id', 'id');
     }
+
+    public function evaluation()
+    {
+        return $this->belongsTo('App\Evaluation', 'evaluation_id', 'id');
+    }
 }

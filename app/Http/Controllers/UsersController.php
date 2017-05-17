@@ -386,7 +386,7 @@ class UsersController extends Controller
 		$log = new Log();
 		$log->performed_task = 'Foi associado o ' . $caregiver->role. ': ' . $caregiver->username . 'ao ' . $user->role . ': ' . $user->username;
 		$log->done_by = Auth::user()->id;
-		$log->user_id = $caregiver->id;
+		$log->user_id = $user->id;
 		$log->save();
 
         return redirect()->route('users.caregivers', ['user' => $user->id]); 
@@ -404,7 +404,14 @@ class UsersController extends Controller
 
 		$log = new Log();
 		$log->performed_task = 'Desassociou o ' . $caregiver->role. ': ' . $caregiver->username . 'do ' . $user->role . ': ' . $user->username;
-		$log->user_id = Auth::user()->id;
+		$log->done_by = Auth::user()->id;
+		$log->user_id = $caregiver->id;
+		$log->save();
+
+		$log = new Log();
+		$log->performed_task = 'Desassociou o ' . $caregiver->role. ': ' . $caregiver->username . 'do ' . $user->role . ': ' . $user->username;
+		$log->done_by = Auth::user()->id;
+		$log->user_id = $user->id;
 		$log->save();
 
         return redirect()->route('users.caregivers', ['user' => $user->id]); 

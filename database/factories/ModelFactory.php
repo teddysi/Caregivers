@@ -179,7 +179,8 @@ $factory->define(App\Log::class, function (Faker\Generator $faker) {
     $patient = App\Patient::all()->random();
     $need = App\Need::all()->random();
     $material = App\Material::all()->random();
-    $rand = rand(0, 20);
+    $evaluation = App\Evaluation::all()->random();
+    $rand = rand(0, 25);
 
     return [
         'performed_task' => $faker->randomElement($array = array('Criou', 'Atualizou', 'Bloqueou', 'Desbloqueou')),
@@ -188,5 +189,6 @@ $factory->define(App\Log::class, function (Faker\Generator $faker) {
         'patient_id' => ($rand >= 5 && $rand < 10) ? $patient->id : null,
         'need_id' => ($rand >= 10 && $rand < 15) ? $need->id : null,
         'material_id' => ($rand >= 15 && $rand < 20) ? $material->id : null,
+        'evaluation_id' => ($rand >= 20 && $rand < 25) ? $evaluation->id : null,
     ];
 });

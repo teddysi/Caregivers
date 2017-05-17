@@ -65,14 +65,25 @@ class EvaluationsController extends Controller
 			$evaluation->patient_id = $id;
 			$evaluation->save();
 
+			$log = new Log();
+			$log->performed_task = 'Criou a Avaliação' . $evaluation->description;
+			$log->done_by = Auth::user()->id;
+			$log->evaluation_id = $evaluation->id;
+			$log->save();
+
 			return redirect()->route('patients.show', ['patient' => $id]);
 		} else {
 			if (!Auth::user()->caregivers->contains('id', $id)) {
 				abort(403);
 			}
-
 			$evaluation->caregiver_id = $id;
 			$evaluation->save();
+
+			$log = new Log();
+			$log->performed_task = 'Criou a Avaliação' . $evaluation->description;
+			$log->done_by = Auth::user()->id;
+			$log->evaluation_id = $evaluation->id;
+			$log->save();
 
 			return redirect()->route('caregivers.rate', ['caregiver' => $id]);
 		} 
@@ -105,6 +116,12 @@ class EvaluationsController extends Controller
 		$evaluation->name = $request->input('name');
 		$evaluation->description = $request->input('description');
 		$evaluation->save();
+
+		$log = new Log();
+		$log->performed_task = 'Atualizou a Avaliação' . $evaluation->description;
+		$log->done_by = Auth::user()->id;
+		$log->evaluation_id = $evaluation->id;
+		$log->save();
 
 		if ($evaluation->patient_id != null) {
 			return redirect()->route('patients.show', ['patient' => $evaluation->patient_id]);
