@@ -57,6 +57,16 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Evaluation', 'created_by', 'id');
     }
+
+    public function questions_created()
+    {
+        return $this->hasMany('App\Question', 'created_by', 'id');
+    }
+
+    public function answers_created()
+    {
+        return $this->hasMany('App\Answer', 'answer_by', 'id');
+    }
     
 }
 

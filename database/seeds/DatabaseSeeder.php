@@ -122,6 +122,10 @@ class DatabaseSeeder extends Seeder
 
        $this->buildEvaluations();
 
+       $this->buildQuestions();
+
+       $this->buildAnswers();
+
     }
 
     private function buildCustomUsers()
@@ -258,6 +262,42 @@ class DatabaseSeeder extends Seeder
 
 
             $evaluation->save();
+        }
+    }
+
+    private function buildQuestions()
+    {
+        $healthcare_pros = App\HealthcarePro::all();
+        $questions_text = [
+            'Como está?', 'Tem comido?', 'Que horas são?', 'Choveu ontem?', 'Gosta de frango?', 
+            'Amanhã chove?'
+        ];
+
+        foreach ($questions_text as $question_text) {
+            $question = new App\Question();
+            $question->question = $question_text;
+            $question->created_by = $healthcare_pros->random()->id;
+
+            $question->save();
+        }
+    }
+
+    public function buildAnswers()
+    {
+        $caregivers = App\Caregiver::all();
+        $questions = App\Question::all();
+        $answers_text = [
+            'Sim.', 'Não.', 'Amanhã vai estar sol.', 'Bem.', 'Com dores.', '14h.'
+        ];
+
+        foreach ($answers_text as $answer_text) {
+            $answer = new App\Answer();
+            $answer->answer = $answer_text;
+            $answer->answer_by = $caregivers->random()->id;
+            $answer->question_id = $questions->random()->id;
+
+            $answer->save();
+
         }
     }
 }
