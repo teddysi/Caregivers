@@ -123,9 +123,23 @@ class DatabaseSeeder extends Seeder
        $this->buildEvaluations();
 
        $this->buildQuestions();
+       $this->buildQuizs();
+
+       $qz_q = [
+            [1, 1, 1], [1, 2, 2], [2, 3, 1],
+            [2, 4, 2], [3, 5, 1], [3, 6, 2]
+        ]; 
+      
+        for($i = 0; $i < count($qz_q); $i++) {
+            DB::table('quiz_question')->insert([
+                'quiz_id' => $qz_q[$i][0],
+                'question_id' => $qz_q[$i][1],
+                'order' => $qz_q[$i][2],
+            ]);
+        }
+
 
        $this->buildAnswers();
-
     }
 
     private function buildCustomUsers()
@@ -282,6 +296,23 @@ class DatabaseSeeder extends Seeder
         }
     }
 
+    public function buildQuizs()
+    {
+        $names = [
+            'Quiz-1', 'Quiz-2', 'Quiz-3'
+        ];
+        $healthcare_pros = App\HealthcarePro::all();
+
+        foreach ($names as $name) {
+            $quiz = new App\Quiz();
+            $quiz->name = $name;
+            $quiz->created_by = $healthcare_pros->random()->id;
+
+            $quiz->save();
+        }
+
+    }
+
     public function buildAnswers()
     {
         $caregivers = App\Caregiver::all();
@@ -289,13 +320,15 @@ class DatabaseSeeder extends Seeder
         $answers_text = [
             'Sim.', 'Não.', 'Amanhã vai estar sol.', 'Bem.', 'Com dores.', '14h.'
         ];
+        $quizs = App\Quiz::all();
 
         foreach ($answers_text as $answer_text) {
             $answer = new App\Answer();
             $answer->answer = $answer_text;
-            $answer->answer_by = $caregivers->random()->id;
+            $answer->answered_by = $caregivers->random()->id;
             $answer->question_id = $questions->random()->id;
-
+            //id do questionario
+            $answer->quiz_id = $quizs->random()->id;
             $answer->save();
 
         }

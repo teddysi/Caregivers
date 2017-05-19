@@ -53,20 +53,22 @@ class User extends Authenticatable
         return $this->hasMany('App\Log', 'user_id', 'id');
     }
 
-    public function evaluations_created()
+    public function evaluationsCreated()
     {
         return $this->hasMany('App\Evaluation', 'created_by', 'id');
     }
 
-    public function questions_created()
+    public function questionsCreated()
     {
         return $this->hasMany('App\Question', 'created_by', 'id');
     }
 
-    public function answers_created()
+    public function quizsCreated()
     {
-        return $this->hasMany('App\Answer', 'answer_by', 'id');
+        return $this->hasMany('App\Quiz', 'created_by', 'id');
     }
+
+    
     
 }
 

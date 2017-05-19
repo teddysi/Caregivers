@@ -10,14 +10,19 @@ class Answer extends Model
         'answer', 
     ];
 
-    public function answer_by()
+    public function answeredBy()
     {
-        return $this->belongsTo('App\User', 'answer_by', 'id');
+        return $this->belongsTo('App\User', 'answered_by', 'id');
     }
 
     public function question()
     {
         return $this->belongsTo('App\Question', 'question_id', 'id');
+    }
+
+    public function quiz()
+    {
+        return $this->belongsTo('App\Quiz', 'quiz_id', 'id');
     }
 
 

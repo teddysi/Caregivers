@@ -16,10 +16,12 @@ class CreateAnswersTable extends Migration
         Schema::create('answers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('answer');
-            $table->integer('answer_by')->unsigned()->index();
-            $table->foreign('answer_by')->references('id')->on('users');
+            $table->integer('answered_by')->unsigned()->index();
+            $table->foreign('answered_by')->references('id')->on('users');
             $table->integer('question_id')->unsigned()->index();
             $table->foreign('question_id')->references('id')->on('questions');
+            $table->integer('quiz_id')->unsigned()->index();
+            $table->foreign('quiz_id')->references('id')->on('quizs');
             $table->timestamps();
         });
     }
