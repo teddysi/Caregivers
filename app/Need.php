@@ -27,6 +27,6 @@ class Need extends Model
 
     public function logs()
     {
-        return $this->hasMany('App\Need', 'need_id', 'id');
+        return $this->hasMany('App\Log', 'need_id', 'id');
     }
 }

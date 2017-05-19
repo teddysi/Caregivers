@@ -194,7 +194,10 @@ class UsersController extends Controller
 			}
 		}
 
-		return view('users.show', compact('user', 'isMyCaregiver'));
+		$logs = $user->logs()->paginate(10, ['*'], 'logs');
+		$logs->setPageName('logs');
+
+		return view('users.show', compact('user', 'isMyCaregiver', 'logs'));
 	}
 
 	public function create($role)
@@ -322,12 +325,11 @@ class UsersController extends Controller
 			abort(403);
 		}
 
-		$this->roleToFullWord($user);
-
 		if ($user->blocked == 0) {
             $user->blocked = 1;
             $user->save();
 
+			$this->roleToFullWord($user);
 			$log = new Log();
 			$log->performed_task = 'Bloqueou o ' . $user->role. ': ' . $user->username;
 			$log->done_by = Auth::user()->id;
@@ -339,6 +341,7 @@ class UsersController extends Controller
             $user->blocked = 0;
             $user->save();
 
+			$this->roleToFullWord($user);
 			$log = new Log();
 			$log->performed_task = 'Desbloqueou o ' . $user->role. ': ' . $user->username;
 			$log->done_by = Auth::user()->id;
@@ -378,13 +381,13 @@ class UsersController extends Controller
 		$this->roleToFullWord($caregiver);
 
 		$log = new Log();
-		$log->performed_task = 'Associou o ' . $caregiver->role. ': ' . $caregiver->username . 'ao ' . $user->role . ': ' . $user->username;
+		$log->performed_task = 'Associou o ' . $caregiver->role. ': ' . $caregiver->username . ' ao ' . $user->role . ': ' . $user->username;
 		$log->done_by = Auth::user()->id;
 		$log->user_id = $caregiver->id;
 		$log->save();
 
 		$log = new Log();
-		$log->performed_task = 'Foi associado o ' . $caregiver->role. ': ' . $caregiver->username . 'ao ' . $user->role . ': ' . $user->username;
+		$log->performed_task = 'Associou o ' . $caregiver->role. ': ' . $caregiver->username . ' ao ' . $user->role . ': ' . $user->username;
 		$log->done_by = Auth::user()->id;
 		$log->user_id = $user->id;
 		$log->save();
@@ -403,13 +406,13 @@ class UsersController extends Controller
 		$this->roleToFullWord($caregiver);
 
 		$log = new Log();
-		$log->performed_task = 'Desassociou o ' . $caregiver->role. ': ' . $caregiver->username . 'do ' . $user->role . ': ' . $user->username;
+		$log->performed_task = 'Desassociou o ' . $caregiver->role. ': ' . $caregiver->username . ' do ' . $user->role . ': ' . $user->username;
 		$log->done_by = Auth::user()->id;
 		$log->user_id = $caregiver->id;
 		$log->save();
 
 		$log = new Log();
-		$log->performed_task = 'Desassociou o ' . $caregiver->role. ': ' . $caregiver->username . 'do ' . $user->role . ': ' . $user->username;
+		$log->performed_task = 'Desassociou o ' . $caregiver->role. ': ' . $caregiver->username . ' do ' . $user->role . ': ' . $user->username;
 		$log->done_by = Auth::user()->id;
 		$log->user_id = $user->id;
 		$log->save();

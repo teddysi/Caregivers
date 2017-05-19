@@ -106,8 +106,6 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'caregivers
 		'as' => 'evaluations.createForCaregiver',
 		'uses' =>'EvaluationsController@store'
 	]);
-
-	Route::patch('{caregiver}', 'CaregiversController@evaluate');
 });
 
 Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'patients'], function () {

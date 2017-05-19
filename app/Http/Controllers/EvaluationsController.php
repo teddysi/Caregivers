@@ -66,7 +66,7 @@ class EvaluationsController extends Controller
 			$evaluation->save();
 
 			$log = new Log();
-			$log->performed_task = 'Criou a Avaliação' . $evaluation->description;
+			$log->performed_task = 'Criou a Avaliação ' . $evaluation->description;
 			$log->done_by = Auth::user()->id;
 			$log->evaluation_id = $evaluation->id;
 			$log->save();
@@ -80,7 +80,7 @@ class EvaluationsController extends Controller
 			$evaluation->save();
 
 			$log = new Log();
-			$log->performed_task = 'Criou a Avaliação' . $evaluation->description;
+			$log->performed_task = 'Criou a Avaliação ' . $evaluation->description;
 			$log->done_by = Auth::user()->id;
 			$log->evaluation_id = $evaluation->id;
 			$log->save();
@@ -118,7 +118,7 @@ class EvaluationsController extends Controller
 		$evaluation->save();
 
 		$log = new Log();
-		$log->performed_task = 'Atualizou a Avaliação' . $evaluation->description;
+		$log->performed_task = 'Atualizou a Avaliação ' . $evaluation->description;
 		$log->done_by = Auth::user()->id;
 		$log->evaluation_id = $evaluation->id;
 		$log->save();
