@@ -34,11 +34,12 @@
 								<td style="width:37%">
 									<div class="row">
 										<div class="col-sm-6 col-md-4 col-lg-4">
-											<a class="btn btn-block btn-primary" href="">Ver</a>
+											<a class="btn btn-block btn-primary" href="{{route('quizs.show', ['quiz' => $quiz->id])}}">Ver</a>
 										</div>
 										<div class="col-sm-6 col-md-4 col-lg-4">
 											<a class="btn btn-block btn-warning" href="{{route('quizs.edit', ['quiz' => $quiz->id])}}">Editar</a>
 										</div>
+										@if(count($quiz->answers)==0)
 										<div class="col-sm-6 col-md-4 col-lg-4">
 											<form action="{{route('quizs.delete', ['quiz' => $quiz->id])}}" method="POST" class="form-group">
 												{{ method_field('DELETE') }}
@@ -46,6 +47,7 @@
 												<button type="submit" class="btn btn-block btn-danger" name="save">Eliminar</button>
 										    </form>
 										</div>
+										@endif
 									</div>
 								</td>
 					        </tr>

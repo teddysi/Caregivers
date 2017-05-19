@@ -322,6 +322,11 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'quizs'], f
 		'as' => 'quizs.questions',
 		'uses' =>'QuizController@questions'
 	]);
+
+	Route::get('{quiz}', [
+		'as' => 'quizs.show',
+		'uses' =>'QuizController@show'
+	]);
 });
 
 

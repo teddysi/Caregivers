@@ -107,6 +107,9 @@ class QuizController extends Controller
 
     public function delete(Quiz $quiz)
     {
+
+    	$quiz->questions()->detach();
+
     	$quiz->delete();
 
     	return redirect()->route('quizs');
@@ -122,5 +125,12 @@ class QuizController extends Controller
 		$notQuizQuestions->setPageName('notQuizQuestions');
 
 		return view('quizs.questions', compact('quiz', 'quizQuestions', 'notQuizQuestions'));
+	}
+
+	public function show(Quiz $quiz) 
+	{
+		$quizQuestions = $quiz->questions()->withPivot('order')->orderBy('pivot_order', 'asc')->paginate(10, ['*'], 'quizQuestions');
+
+		return view('quizs.show', compact('quizQuestions', 'quiz'));
 	}
 }

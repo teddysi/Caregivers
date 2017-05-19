@@ -34,9 +34,6 @@
 								<td style="width:37%">
 									<div class="row">
 										<div class="col-sm-6 col-md-4 col-lg-4">
-											<a class="btn btn-block btn-primary" href="">Ver</a>
-										</div>
-										<div class="col-sm-6 col-md-4 col-lg-4">
 											<a class="btn btn-block btn-warning" href="{{route('questions.edit', ['question' => $question->id])}}">Editar</a>
 										</div>
 										<div class="col-sm-6 col-md-4 col-lg-4">
