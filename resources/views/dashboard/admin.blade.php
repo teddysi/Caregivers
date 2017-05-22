@@ -28,9 +28,9 @@
 					</div>
 				</div>
 			</fieldset>
+			<br />
+			<legend>Listar</legend>
 			@if (count($users))
-				<br /><br />
-				<legend>Listar</legend>
 				<form class="form" method="POST" action="{{ route('users') }}">
 					{{ csrf_field() }}
 					<input name="dashboard" type="hidden" value="true">
@@ -150,9 +150,9 @@
 					</div>
 				</div>
 			</fieldset>
+			<br />
+			<legend>Listar</legend>
 			@if (count($materials))
-				<br /><br />
-				<legend>Listar</legend>
 				<form class="form" method="POST" action="{{ route('materials') }}">
 					{{ csrf_field() }}
 					<input name="dashboard" type="hidden" value="true">

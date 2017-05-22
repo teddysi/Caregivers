@@ -275,55 +275,55 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'evaluation
 Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'quizs'], function () {
 	Route::get('/', [
 		'as' => 'quizs',
-		'uses' =>'QuizController@index'
+		'uses' =>'QuizsController@index'
 	]);
+	Route::post('/', 'QuizsController@index');
 
 	Route::get('create', [
 		'as' => 'quizs.create',
-		'uses' => 'QuizController@create'
-		]);
+		'uses' => 'QuizsController@create'
+	]);
+	Route::post('create', 'QuizsController@store');
 
-	Route::post('create', 'QuizController@store');
+	Route::get('{quiz}', [
+		'as' => 'quizs.show',
+		'uses' =>'QuizsController@show'
+	]);
 
 	Route::get('{quiz}/edit', [
 		'as' => 'quizs.edit',
-		'uses' =>'QuizController@edit'
+		'uses' =>'QuizsController@edit'
 	]);
-	Route::patch('{quiz}', 'QuizController@update');
+	Route::patch('{quiz}', 'QuizsController@update');
 
 	Route::delete('{quiz}/delete', [
 		'as' => 'quizs.delete',
-		'uses' =>'QuizController@delete'
-	]);
-
-	Route::post('{quiz}/add/{question}/add', [
-		'as' => 'quizs.addQuestion',
-		'uses' =>'QuizController@addQuestion'
-	]);
-
-	Route::post('{quiz}/add/{question}/remove', [
-		'as' => 'quizs.removeQuestion',
-		'uses' =>'QuizController@removeQuestion'
-	]);
-
-	Route::post('{quiz}/add/{question}/up', [
-		'as' => 'quizs.upQuestion',
-		'uses' =>'QuizController@upQuestion'
-	]);
-
-	Route::post('{quiz}/add/{question}/down', [
-		'as' => 'quizs.downQuestion',
-		'uses' =>'QuizController@downQuestion'
+		'uses' =>'QuizsController@delete'
 	]);
 
 	Route::get('{quiz}/questions', [
 		'as' => 'quizs.questions',
-		'uses' =>'QuizController@questions'
+		'uses' =>'QuizsController@questions'
 	]);
 
-	Route::get('{quiz}', [
-		'as' => 'quizs.show',
-		'uses' =>'QuizController@show'
+	Route::post('{quiz}/add/{question}/add', [
+		'as' => 'quizs.addQuestion',
+		'uses' =>'QuizsController@addQuestion'
+	]);
+
+	Route::post('{quiz}/add/{question}/remove', [
+		'as' => 'quizs.removeQuestion',
+		'uses' =>'QuizsController@removeQuestion'
+	]);
+
+	Route::post('{quiz}/add/{question}/up', [
+		'as' => 'quizs.upQuestion',
+		'uses' =>'QuizsController@upQuestion'
+	]);
+
+	Route::post('{quiz}/add/{question}/down', [
+		'as' => 'quizs.downQuestion',
+		'uses' =>'QuizsController@downQuestion'
 	]);
 });
 
@@ -331,25 +331,30 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'quizs'], f
 Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'questions'], function () {
 	Route::get('/', [
 		'as' => 'questions',
-		'uses' =>'QuestionController@index'
+		'uses' =>'QuestionsController@index'
 	]);
+	Route::post('/', 'QuestionsController@index');
 
 	Route::get('create', [
 		'as' => 'questions.create',
-		'uses' => 'QuestionController@create'
-		]);
+		'uses' => 'QuestionsController@create'
+	]);
+	Route::post('create', 'QuestionsController@store');
 
-	Route::post('create', 'QuestionController@store');
+	Route::get('{question}', [
+		'as' => 'questions.show',
+		'uses' =>'QuestionsController@show'
+	]);
 
 	Route::get('{question}/edit', [
 		'as' => 'questions.edit',
-		'uses' =>'QuestionController@edit'
+		'uses' =>'QuestionsController@edit'
 	]);
-	Route::patch('{question}', 'QuestionController@update');
+	Route::patch('{question}', 'QuestionsController@update');
 
 	Route::delete('{question}/delete', [
 		'as' => 'questions.delete',
-		'uses' =>'QuestionController@delete'
+		'uses' =>'QuestionsController@delete'
 	]);
 });
 

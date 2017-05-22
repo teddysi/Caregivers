@@ -62,8 +62,6 @@
 		<div class="col-lg-6">
 			<legend>Procedimentos</legend>
             @if (count($countedProceedings))
-				<br /><br />
-				<legend>Procedimentos realizados</legend>
 		        <table class="table table-striped">
 			        <thead>
 			            <tr>

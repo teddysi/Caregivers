@@ -43,7 +43,7 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-sm-6 col-md-6 col-lg-6">
-                            <a class="btn btn-block btn-warning" href="{{ route('materials.edit', ['id' => $material->id]) }}">Editar</a>
+                            <a class="btn btn-block btn-warning" href="{{ route('materials.edit', ['material' => $material->id]) }}">Editar</a>
                         </div>
                         <div class="col-sm-6 col-md-6 col-lg-6">
                             <form action="{{ route('materials.toggleBlock', ['material' => $material->id]) }}" method="POST" class="form-group">
@@ -82,8 +82,8 @@
     @if ($material->type == 'Composto')
         <div class="row">
             <div class="col-lg-12">
+                <legend>Materiais Associados</legend>
                 @if (count($compositeMaterials))
-                    <legend>Materiais Associados</legend>
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -146,6 +146,7 @@
 			            <tr>
 							<th>Tarefa</th>
 							<th>Realizada por</th>
+                            <th>Data</th>
 			            </tr>
 			        </thead>
 			        <tbody>
@@ -153,6 +154,7 @@
 							<tr>
 					        	<td>{{$log->performed_task}}</td>
 								<td>{{$log->doneBy->username}}</td>
+                                <td>{{$log->created_at}}</td>
 					        </tr>
 				        @endforeach
 					</tbody>

@@ -40,7 +40,7 @@
 					</div>
 				</div>
 			</fieldset>
-			<br /><br />
+			<br />
 			<legend>Listar</legend>
             <form class="form" method="POST" action="{{ route('materials') }}">
 				{{ csrf_field() }}
@@ -140,10 +140,10 @@
                                 <td style="width:35%">
                                     <div class="row">
                                         <div class="col-lg-4">
-                                            <a class="btn btn-block btn-primary" href="{{ route('materials.show', ['id' => $material->id]) }}">Detalhes</a>
+                                            <a class="btn btn-block btn-primary" href="{{ route('materials.show', ['material' => $material->id]) }}">Detalhes</a>
                                         </div>
                                         <div class="col-lg-4">
-                                            <a class="btn btn-block btn-warning" href="{{ route('materials.edit', ['id' => $material->id]) }}">Editar</a>
+                                            <a class="btn btn-block btn-warning" href="{{ route('materials.edit', ['material' => $material->id]) }}">Editar</a>
                                         </div>
                                         <div class="col-lg-4">
                                             <form action="{{ route('materials.toggleBlock', ['material' => $material->id]) }}" method="POST" class="form-group">

@@ -85,6 +85,7 @@
 			            <tr>
 							<th>Tarefa</th>
 							<th>Realizada por</th>
+                            <th>Data</th>
 			            </tr>
 			        </thead>
 			        <tbody>
@@ -92,6 +93,7 @@
 							<tr>
 					        	<td>{{$log->performed_task}}</td>
 								<td>{{$log->doneBy->username}}</td>
+                                <td>{{$log->created_at}}</td>
 					        </tr>
 				        @endforeach
 					</tbody>

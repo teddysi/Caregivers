@@ -22,9 +22,9 @@
 					</div>
 				</div>
 			</fieldset>
+			<br />
+			<legend>Listar</legend>
 			@if (count($caregivers))
-				<br /><br />
-				<legend>Listar</legend>
 				<form class="form" method="POST" action="{{ route('users') }}">
 					{{ csrf_field() }}
 					<input name="dashboard" type="hidden" value="true">
@@ -113,9 +113,9 @@
 					</div>
 				</div>
 			</fieldset>
+			<br />
+			<legend>Listar</legend>
 			@if (count($patients))
-				<br /><br />
-				<legend>Listar</legend>
 				<form class="form" method="POST" action="{{ route('patients') }}">
 					{{ csrf_field() }}
 					<input name="dashboard" type="hidden" value="true">
@@ -208,9 +208,9 @@
 					</div>
 				</div>
 			</fieldset>
+			<br />
+			<legend>Listar</legend>
 			@if (count($needs))
-				<br /><br />
-				<legend>Listar</legend>
 				<form class="form" method="POST" action="{{ route('needs') }}">
 					{{ csrf_field() }}
 					<input name="dashboard" type="hidden" value="true">
@@ -308,9 +308,9 @@
 					</div>
 				</div>
 			</fieldset>
+			<br />
+			<legend>Listar</legend>
 			@if (count($materials))
-				<br /><br />
-				<legend>Listar</legend>
 				<form class="form" method="POST" action="{{ route('materials') }}">
 					{{ csrf_field() }}
 					<input name="dashboard" type="hidden" value="true">
@@ -401,6 +401,178 @@
 			@endif
 			<div class="text-center">
 				{!! $materials->links() !!}
+			</div>
+        </div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+            <h1>Questionários</h1>
+			<fieldset>
+				<legend>Criar</legend>
+				<div class="row">
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('quizs.create') }}">Questionário</a>
+					</div>
+				</div>
+			</fieldset>
+			<br />
+			<legend>Listar</legend>
+			@if (count($quizs))
+				<form class="form" method="POST" action="{{ route('quizs') }}">
+					{{ csrf_field() }}
+					<input name="dashboard" type="hidden" value="true">
+					<div class="row">
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<label class="sr-only" for="inputQuizName">Nome</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+								</div>
+								<input type="text" name="quizName" class="form-control" id="inputQuizName" placeholder="Nome">
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<label class="sr-only" for="inputQuizCreator">Criador</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+								</div>
+								<input type="text" name="quizCreator" class="form-control" id="inputQuizCreator" placeholder="Criador">
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6 pull-right">
+							<button type="submit" class="btn btn-default btn-block">
+								<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Procurar
+							</button>
+						</div>
+					</div>
+				</form>
+				<br />
+		        <table class="table table-striped">
+			        <thead>
+			            <tr>
+			                <th>Nome</th>
+			                <th>Criador</th>
+							<th>Ações</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+						@foreach ($quizs as $quiz)
+							<tr>
+					        	<td>{{ $quiz->name }}</td>
+					        	<td>{{ $quiz->creator->username }}</td>
+								<td style="width:35%">
+									<div class="row">
+										<div class="col-sm-6 col-md-4 col-lg-4">
+											<a class="btn btn-block btn-primary" href="{{ route('quizs.show', ['quiz' => $quiz->id]) }}">Detalhes</a>
+										</div>
+										<div class="col-sm-6 col-md-4 col-lg-4">
+											<a class="btn btn-block btn-warning" href="{{ route('quizs.edit', ['quiz' => $quiz->id]) }}">Editar</a>
+										</div>
+										<div class="col-sm-6 col-md-4 col-lg-4">
+											<form action="{{route('quizs.delete', ['quiz' => $quiz->id])}}" method="POST" class="form-group">
+												{{ method_field('DELETE') }}
+										        {{ csrf_field() }}
+												<button type="submit" class="btn btn-block btn-danger" name="save">Eliminar</button>
+										    </form>
+										</div>
+									</div>
+								</td>
+					        </tr>
+				        @endforeach
+					</tbody>
+			    </table>
+			@else
+				<h4>Não existem questionários.</h4>
+			@endif
+			<div class="text-center">
+				{!! $quizs->links() !!}
+			</div>
+        </div>
+	</div>
+	<div class="row">
+		<div class="col-lg-12">
+            <h1>Questões</h1>
+			<fieldset>
+				<legend>Criar</legend>
+				<div class="row">
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('questions.create') }}">Questão</a>
+					</div>
+				</div>
+			</fieldset>
+			<br />
+			<legend>Listar</legend>
+			@if (count($questions))
+				<form class="form" method="POST" action="{{ route('questions') }}">
+					{{ csrf_field() }}
+					<input name="dashboard" type="hidden" value="true">
+					<div class="row">
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<label class="sr-only" for="inputQuestion">Questão</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+								</div>
+								<input type="text" name="question" class="form-control" id="inputQuestion" placeholder="Pergunta">
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<label class="sr-only" for="inputQuestionCreator">Criador</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+								</div>
+								<input type="text" name="questionCreator" class="form-control" id="inputQuestionCreator" placeholder="Criador">
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6 pull-right">
+							<button type="submit" class="btn btn-default btn-block">
+								<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Procurar
+							</button>
+						</div>
+					</div>
+				</form>
+				<br />
+		        <table class="table table-striped">
+			        <thead>
+			            <tr>
+			                <th>Questão</th>
+			                <th>Criador</th>
+							<th>Ações</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+						@foreach ($questions as $question)
+							<tr>
+					        	<td>{{ $question->question }}</td>
+					        	<td>{{ $question->creator->username }}</td>
+								<td style="width:35%">
+									<div class="row">
+										<div class="col-sm-6 col-md-4 col-lg-4">
+											<a class="btn btn-block btn-primary" href="{{ route('questions.show', ['question' => $question->id]) }}">Detalhes</a>
+										</div>
+										<div class="col-sm-6 col-md-4 col-lg-4">
+											<a class="btn btn-block btn-warning" href="{{ route('questions.edit', ['question' => $question->id]) }}">Editar</a>
+										</div>
+										<div class="col-sm-6 col-md-4 col-lg-4">
+											<form action="{{route('questions.delete', ['question' => $question->id])}}" method="POST" class="form-group">
+												{{ method_field('DELETE') }}
+										        {{ csrf_field() }}
+												<button type="submit" class="btn btn-block btn-danger" name="save">Eliminar</button>
+										    </form>
+										</div>
+									</div>
+								</td>
+					        </tr>
+				        @endforeach
+					</tbody>
+			    </table>
+			@else
+				<h4>Não existem questões.</h4>
+			@endif
+			<div class="text-center">
+				{!! $questions->links() !!}
 			</div>
         </div>
 	</div>

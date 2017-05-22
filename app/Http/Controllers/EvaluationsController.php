@@ -29,7 +29,10 @@ class EvaluationsController extends Controller
 			}
 		}
 
-		return view('evaluations.show', compact('evaluation'));
+		$logs = $evaluation->logs()->paginate(10, ['*'], 'logs');
+		$logs->setPageName('logs');
+
+		return view('evaluations.show', compact('evaluation', 'logs'));
 	}
 
     public function create($id)

@@ -124,8 +124,9 @@ class DatabaseSeeder extends Seeder
         $this->buildQuizs();
 
         $qz_q = [
-            [1, 1, 1], [1, 2, 2], [2, 3, 3],
-            [2, 4, 1], [3, 5, 2], [3, 6, 3]
+            [1, 1, 1], [1, 2, 2], 
+            [2, 3, 1], [2, 4, 2], 
+            [3, 5, 1], [3, 6, 2]
         ]; 
       
         for($i = 0; $i < count($qz_q); $i++) {
@@ -247,11 +248,11 @@ class DatabaseSeeder extends Seeder
     {
         $patients = App\Patient::all();
         $i = 0;
-        $evaluations_name = [
+        $evaluationsName = [
             'Evaluation-1', 'Evaluation-2', 'Evaluation-3', 'Evaluation-4', 'Evaluation-5'
         ]; 
       
-        foreach ($evaluations_name as $name) {
+        foreach ($evaluationsName as $name) {
             $healthcare_pro;
             do {
                 $healthcare_pro = App\HealthcarePro::all()->random();
@@ -260,7 +261,7 @@ class DatabaseSeeder extends Seeder
             $caregiver = $healthcare_pro->caregivers->random();
             $evaluation = new App\Evaluation();
             $evaluation->type = 'Pela aplicação';
-            $evaluation->description = $name.' description';
+            $evaluation->description = $name;
             $evaluation->model = 'Model X';
             $evaluation->path = 'evaluations/'.$name.'.pdf';
             $evaluation->mime = '.pdf';

@@ -5,10 +5,9 @@
 @section('content')
 
 <div class="container">
-        <form action="{{ url('/quizs', ['quiz' => $quiz->id]) }}" method="POST" class="form-group" enctype="multipart/form-data">
+    <form action="{{ url('/quizs', ['quiz' => $quiz->id]) }}" method="POST" class="form-group" enctype="multipart/form-data">
         {{ method_field('PATCH') }}
         {{ csrf_field() }}
-
         <div class="form-group">
             <label for="inputName">Nome</label>
             <input
@@ -18,7 +17,7 @@
         </div>
         
         <div class="form-group">
-            <button type="submit" class="btn btn-primary" name="save">Gravar</button>
+            <button type="submit" class="btn btn-primary" name="save">Guardar</button>
             <a class="btn btn-default" href="javascript:history.back()">Cancelar</a>
         </div>
     @include('layouts.errors')

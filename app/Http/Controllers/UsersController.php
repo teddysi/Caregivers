@@ -13,6 +13,8 @@ use App\Caregiver;
 use App\Patient;
 use App\Need;
 use App\Material;
+use App\Quiz;
+use App\Question;
 use App\Log;
 use App\Http\Controllers\MaterialsController;
 use DB;
@@ -74,7 +76,13 @@ class UsersController extends Controller
 			$materials = Material::paginate(10, ['*'], 'materials');
 			$this->changeTypeFormat($materials);
 			$materials->setPageName('materials');
-			return view('dashboard.healthcarepro',  compact('caregivers', 'patients', 'needs', 'materials'));
+
+			$quizs = Quiz::paginate(10, ['*'], 'quizs');
+			$quizs->setPageName('quizs');
+
+			$questions = Question::paginate(10, ['*'], 'questions');
+			$questions->setPageName('questions');
+			return view('dashboard.healthcarepro',  compact('caregivers', 'patients', 'needs', 'materials', 'quizs', 'questions'));
 		}
 
         Auth::logout();

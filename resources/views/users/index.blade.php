@@ -30,7 +30,7 @@
 					</div>
 				</div>
 			</fieldset>
-			<br /><br />
+			<br />
 			<legend>Listar</legend>
             <form class="form" method="POST" action="{{ route('users') }}">
 				{{ csrf_field() }}

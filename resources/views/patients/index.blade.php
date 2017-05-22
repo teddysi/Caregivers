@@ -14,7 +14,7 @@
 					</div>
 				</div>
 			</fieldset>
-			<br /><br />
+			<br />
 			<legend>Listar</legend>
             <form class="form" method="POST" action="{{ route('patients') }}">
 				{{ csrf_field() }}
