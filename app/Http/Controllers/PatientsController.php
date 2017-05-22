@@ -118,7 +118,8 @@ class PatientsController extends Controller
 
         $log = new Log();
 		$log->performed_task = 'Criou o Paciente: ' . $patient->name;
-		$log->user_id = Auth::user()->id;
+		$log->done_by = Auth::user()->id;
+		$log->patient_id = $patient->id;
 		$log->save();
 
 		return redirect('/');
@@ -126,8 +127,12 @@ class PatientsController extends Controller
 
 	public function show(Patient $patient)
 	{
-        $evaluations = $patient->evaluations;
-		return view('patients.show', compact('patient', 'evaluations'));
+        $evaluations = $patient->evaluations()->paginate(10, ['*'], 'evaluations');
+		$evaluations->setPageName('evaluations');;
+
+        $logs = $patient->logs()->paginate(10, ['*'], 'logs');
+		$logs->setPageName('logs');
+		return view('patients.show', compact('patient', 'evaluations', 'logs'));
 	}
 
 	public function edit(Patient $patient)
@@ -150,7 +155,8 @@ class PatientsController extends Controller
 
         $log = new Log();
 		$log->performed_task = 'Atualizou o Paciente: ' . $patient->name;
-		$log->user_id = Auth::user()->id;
+		$log->done_by = Auth::user()->id;
+		$log->patient_id = $patient->id;
 		$log->save();
 
 		return redirect('/');
@@ -175,8 +181,15 @@ class PatientsController extends Controller
 		$patient->needs()->attach($need->id);
 
         $log = new Log();
-		$log->performed_task = 'Associou a Necessidade: ' . $need->description. 'ao Paciente: ' . $patient->name;
-		$log->user_id = Auth::user()->id;
+		$log->performed_task = 'Associou a Necessidade: ' . $need->description. ' ao Paciente: ' . $patient->name;
+		$log->done_by = Auth::user()->id;
+		$log->patient_id = $patient->id;
+		$log->save();
+
+        $log = new Log();
+		$log->performed_task = 'Associou a Necessidade: ' . $need->description. ' ao Paciente: ' . $patient->name;
+		$log->done_by = Auth::user()->id;
+		$log->need_id = $need->id;
 		$log->save();
 
         return redirect()->route('patients.needs', ['patient' => $patient->id]); 
@@ -190,8 +203,15 @@ class PatientsController extends Controller
         $patient->needs()->detach($need->id);
 
         $log = new Log();
-		$log->performed_task = 'Desassociou a Necessidade: ' . $need->description. 'do Paciente: ' . $patient->name;
-		$log->user_id = Auth::user()->id;
+		$log->performed_task = 'Desassociou a Necessidade: ' . $need->description. ' do Paciente: ' . $patient->name;
+		$log->done_by = Auth::user()->id;
+		$log->patient_id = $patient->id;
+		$log->save();
+
+        $log = new Log();
+		$log->performed_task = 'Desassociou a Necessidade: ' . $need->description. ' do Paciente: ' . $patient->name;
+		$log->done_by = Auth::user()->id;
+		$log->need_id = $need->id;
 		$log->save();
 
         return redirect()->route('patients.needs', ['patient' => $patient->id]);

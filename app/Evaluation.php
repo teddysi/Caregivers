@@ -26,4 +26,8 @@ class Evaluation extends Model
         'name', 'description', 'path', 'mime',
     ];
 
+    public function logs()
+    {
+        return $this->hasMany('App\Log', 'evaluation_id', 'id');
+    }
 }

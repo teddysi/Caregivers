@@ -116,12 +116,9 @@ class DatabaseSeeder extends Seeder
             }
         }
         
-       factory(App\Proceeding::class, 10)->create();
-
-       factory(App\Log::class, 20)->create();
-
-       $this->buildEvaluations();
-
+        factory(App\Proceeding::class, 10)->create();
+        $this->buildEvaluations();
+        factory(App\Log::class, 50)->create();
     }
 
     private function buildCustomUsers()

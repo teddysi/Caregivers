@@ -188,7 +188,8 @@ class MaterialsController extends Controller
 
 		$log = new Log();
 		$log->performed_task = 'Criou o Material: ' . $material->name;
-		$log->user_id = Auth::user()->id;
+		$log->done_by = Auth::user()->id;
+		$log->material_id = $material->id;
 		$log->save();
 
 		return redirect('/');
@@ -206,7 +207,10 @@ class MaterialsController extends Controller
 			}
 		}
 
-		return view('materials.show', compact('material', 'compositeMaterials'));
+		$logs = $material->logs()->paginate(10, ['*'], 'logs');
+		$logs->setPageName('logs');
+
+		return view('materials.show', compact('material', 'compositeMaterials', 'logs'));
 	}
 
 	public function edit(Material $material) {
@@ -276,7 +280,8 @@ class MaterialsController extends Controller
 
 		$log = new Log();
 		$log->performed_task = 'Atualizou o Material: ' . $material->name;
-		$log->user_id = Auth::user()->id;
+		$log->done_by = Auth::user()->id;
+		$log->material_id = $material->id;
 		$log->save();
 
 		return redirect('/');
@@ -290,7 +295,8 @@ class MaterialsController extends Controller
 
 			$log = new Log();
 			$log->performed_task = 'Bloqueou o Material: ' . $material->name;
-			$log->user_id = Auth::user()->id;
+			$log->done_by = Auth::user()->id;
+			$log->material_id = $material->id;
 			$log->save();
 
 			$this->changeTypeFormat($material);
@@ -301,7 +307,8 @@ class MaterialsController extends Controller
 
 			$log = new Log();
 			$log->performed_task = 'Desbloqueou o Material: ' . $material->name;
-			$log->user_id = Auth::user()->id;
+			$log->done_by = Auth::user()->id;
+			$log->material_id = $material->id;
 			$log->save();
 
 			$this->changeTypeFormat($material);
@@ -339,7 +346,8 @@ class MaterialsController extends Controller
 
 		$log = new Log();
         $log->performed_task = 'Criou o Material Composto: ' . $composite->name;
-        $log->user_id = Auth::user()->id;
+        $log->done_by = Auth::user()->id;
+		$log->material_id = $material->id;
         $log->save();
 
 		return redirect()->route('materials.materials', ['material' => $composite->id]); 
@@ -351,8 +359,15 @@ class MaterialsController extends Controller
 		$composite->materials()->attach([$material->id => ['order'=> $count + 1]]);
 
 		$log = new Log();
-        $log->performed_task = 'Adicionou o Material: ' . $material->name. 'ao Material Composto: ' . $composite->name;
-        $log->user_id = Auth::user()->id;
+        $log->performed_task = 'Adicionou o Material: ' . $material->name. ' ao Material Composto: ' . $composite->name;
+		$log->done_by = Auth::user()->id;
+		$log->material_id = $material->id;
+        $log->save();
+
+		$log = new Log();
+        $log->performed_task = 'Adicionou o Material: ' . $material->name. ' ao Material Composto: ' . $composite->name;
+		$log->done_by = Auth::user()->id;
+		$log->material_id = $composite->id;
         $log->save();
 
         return redirect()->route('materials.materials', ['composite' => $composite->id]); 
@@ -369,8 +384,15 @@ class MaterialsController extends Controller
 		}
 
 		$log = new Log();
-        $log->performed_task = 'Removeu o Material: ' . $material->name. 'ao Material Composto: ' . $composite->name;
-        $log->user_id = Auth::user()->id;
+        $log->performed_task = 'Removeu o Material: ' . $material->name. ' ao Material Composto: ' . $composite->name;
+       	$log->done_by = Auth::user()->id;
+		$log->material_id = $material->id;
+        $log->save();
+
+		$log = new Log();
+        $log->performed_task = 'Removeu o Material: ' . $material->name. ' ao Material Composto: ' . $composite->name;
+        $log->done_by = Auth::user()->id;
+		$log->material_id = $composite->id;
         $log->save();
 
         return redirect()->route('materials.materials', ['composite' => $composite->id]); 
@@ -385,7 +407,8 @@ class MaterialsController extends Controller
 
 		$log = new Log();
         $log->performed_task = 'Colocou o Material: ' . $material->name. ' uma posição acima na lista de materiais do Material Composto: ' . $composite->name;
-        $log->user_id = Auth::user()->id;
+        $log->done_by = Auth::user()->id;
+		$log->material_id = $composite->id;
         $log->save();
 
         return redirect()->route('materials.materials', ['composite' => $composite->id]); 
@@ -400,7 +423,8 @@ class MaterialsController extends Controller
 
 		$log = new Log();
         $log->performed_task = 'Colocou o Material: ' . $material->name. ' uma posição abaixo na lista de materiais do Material Composto: ' . $composite->name;
-        $log->user_id = Auth::user()->id;
+        $log->done_by = Auth::user()->id;
+		$log->material_id = $composite->id;
         $log->save();
 
         return redirect()->route('materials.materials', ['composite' => $composite->id]); 

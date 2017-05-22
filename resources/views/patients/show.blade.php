@@ -5,18 +5,46 @@
 @section ('content')
 <div class="container">
     <h2><strong>Paciente:</strong> {{ $patient->name }}</h2>
-    <h4><strong>Email:</strong> {{ $patient->email }}</h4>
-    <h4><strong>Localização:</strong> {{ $patient->location }}</h4>
-    <h4><strong>Cuidador:</strong> 
-        @if ($patient->caregiver)
-            {{ $patient->caregiver->username }}
-        @else
-            Não tem Cuidador
-        @endif
-    </h4>
-    <h4><strong>Criador:</strong> {{ $patient->creator->username }}</h4>
-    <h4><strong>Data da criação:</strong> {{ $patient->created_at }}</h4>
-    <h4><strong>Data da última atualização:</strong> {{ $patient->updated_at }}</h4>
+	<div class="row">
+		<div class="col-sm-12 col-md-8 col-lg-8">
+			<h4><strong>Email:</strong> {{ $patient->email }}</h4>
+			<h4><strong>Localização:</strong> {{ $patient->location }}</h4>
+			<h4><strong>Cuidador:</strong> 
+				@if ($patient->caregiver)
+					{{ $patient->caregiver->username }}
+				@else
+					Não tem Cuidador
+				@endif
+			</h4>
+			<h4><strong>Criador:</strong> {{ $patient->creator->username }}</h4>
+			<h4><strong>Data da criação:</strong> {{ $patient->created_at }}</h4>
+			<h4><strong>Data da última atualização:</strong> {{ $patient->updated_at }}</h4>
+		</div>
+		<div class="col-sm-12 col-md-4 col-lg-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Ações</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6 col-lg-6">
+                            <a class="btn btn-block btn-warning" href="{{ route('patients.edit', ['patient' => $patient->id]) }}">Editar</a>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-6">
+                            <a class="btn btn-block btn-primary" href="{{ route('patients.needs', ['patient' => $patient->id]) }}">Necessidades</a>
+                        </div>
+                    </div>
+					<br />
+					<div class="row">
+						<div class="col-sm-12 col-md-12 col-lg-12">
+							<a class="btn btn-block btn-default" href="javascript:history.back()">Voltar a atrás</a>
+						</div>
+					</div>
+                </div>
+            </div>
+ 		</div>
+	</div>
+    <br />
     <div class="row">
 		<div class="col-lg-12">
             <h2>Avaliações</h2>
@@ -61,12 +89,36 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem avaliações realizadas a este Cuidador.</h4>
+				<h4>Não existem avaliações realizadas a este Paciente.</h4>
 			@endif
  		</div>
 	</div>
-    <br />
-    <p><a class="btn btn-default" href="javascript:history.back()">Voltar a atrás</a></p>
+	<br />
+    <div class="row">
+		<div class="col-lg-12">
+            <legend>Registros</legend>
+			@if (count($logs))
+		        <table class="table table-striped">
+			        <thead>
+			            <tr>
+							<th>Tarefa</th>
+							<th>Realizada por</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+						@foreach($logs as $log)
+							<tr>
+					        	<td>{{$log->performed_task}}</td>
+								<td>{{$log->doneBy->username}}</td>
+					        </tr>
+				        @endforeach
+					</tbody>
+			    </table>
+			@else
+				<h4>Não existem registros referentes a este Paciente.</h4>
+			@endif
+ 		</div>
+	</div>
 </div>
 
 @endsection

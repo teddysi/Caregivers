@@ -34,4 +34,9 @@ class Patient extends Model
     {
         return $this->hasMany('App\Evaluation');
     }
+
+    public function logs()
+    {
+        return $this->hasMany('App\Log', 'patient_id', 'id');
+    }
 }

@@ -74,7 +74,10 @@ class NeedsController extends Controller
 
 	public function show(Need $need)
 	{
-		return view('needs.show', compact('need'));
+        $logs = $need->logs()->paginate(10, ['*'], 'logs');
+		$logs->setPageName('logs');
+
+		return view('needs.show', compact('need', 'logs'));
 	}
 
     public function create()
@@ -95,7 +98,8 @@ class NeedsController extends Controller
 
         $log = new Log();
 		$log->performed_task = 'Criou a Necessidade: ' . $need->description;
-		$log->user_id = Auth::user()->id;
+		$log->done_by = Auth::user()->id;
+		$log->need_id = $need->id;
 		$log->save();
 
 		return redirect('/');
@@ -116,7 +120,8 @@ class NeedsController extends Controller
 
         $log = new Log();
 		$log->performed_task = 'Atualizou a Necessidade: ' . $need->description;
-		$log->user_id = Auth::user()->id;
+		$log->done_by = Auth::user()->id;
+		$log->need_id = $need->id;
 		$log->save();
 
 		return redirect('/');
@@ -138,8 +143,15 @@ class NeedsController extends Controller
         $need->materials()->detach($material->id);
 
         $log = new Log();
-		$log->performed_task = 'Desassociou o Material: ' . $material->name. 'da Necessiade: ' . $need->description;
-		$log->user_id = Auth::user()->id;
+		$log->performed_task = 'Desassociou o Material: ' . $material->name. ' da Necessiade: ' . $need->description;
+		$log->done_by = Auth::user()->id;
+		$log->need_id = $need->id;
+		$log->save();
+
+        $log = new Log();
+		$log->performed_task = 'Desassociou o Material: ' . $material->name. ' da Necessiade: ' . $need->description;
+		$log->done_by = Auth::user()->id;
+		$log->material_id = $material->id;
 		$log->save();
 
         return redirect()->route('needs.materials', ['need' => $need->id]); 
