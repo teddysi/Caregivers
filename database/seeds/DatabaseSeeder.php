@@ -119,6 +119,25 @@ class DatabaseSeeder extends Seeder
         factory(App\Proceeding::class, 10)->create();
         $this->buildEvaluations();
         factory(App\Log::class, 50)->create();
+
+        $this->buildQuestions();
+        $this->buildQuizs();
+
+        $qz_q = [
+            [1, 1, 1], [1, 2, 2], [2, 3, 3],
+            [2, 4, 1], [3, 5, 2], [3, 6, 3]
+        ]; 
+      
+        for($i = 0; $i < count($qz_q); $i++) {
+            DB::table('quiz_question')->insert([
+                'quiz_id' => $qz_q[$i][0],
+                'question_id' => $qz_q[$i][1],
+                'order' => $qz_q[$i][2],
+            ]);
+        }
+
+
+       $this->buildAnswers();
     }
 
     private function buildCustomUsers()
@@ -240,8 +259,9 @@ class DatabaseSeeder extends Seeder
             
             $caregiver = $healthcare_pro->caregivers->random();
             $evaluation = new App\Evaluation();
-            $evaluation->name = $name;
+            $evaluation->type = 'Pela aplicação';
             $evaluation->description = $name.' description';
+            $evaluation->model = 'Model X';
             $evaluation->path = 'evaluations/'.$name.'.pdf';
             $evaluation->mime = '.pdf';
             $evaluation->created_by = $healthcare_pro->id;
@@ -254,6 +274,61 @@ class DatabaseSeeder extends Seeder
 
 
             $evaluation->save();
+        }
+    }
+
+    private function buildQuestions()
+    {
+        $healthcare_pros = App\HealthcarePro::all();
+        $questions_text = [
+            'Como está?', 'Tem comido?', 'Que horas são?', 'Choveu ontem?', 'Gosta de frango?', 
+            'Amanhã chove?'
+        ];
+
+        foreach ($questions_text as $question_text) {
+            $question = new App\Question();
+            $question->question = $question_text;
+            $question->created_by = $healthcare_pros->random()->id;
+
+            $question->save();
+        }
+    }
+
+    public function buildQuizs()
+    {
+        $names = [
+            'Quiz-1', 'Quiz-2', 'Quiz-3'
+        ];
+        $healthcare_pros = App\HealthcarePro::all();
+
+        foreach ($names as $name) {
+            $quiz = new App\Quiz();
+            $quiz->name = $name;
+            $quiz->created_by = $healthcare_pros->random()->id;
+
+            $quiz->save();
+        }
+
+    }
+
+    public function buildAnswers()
+    {
+        $caregivers = App\Caregiver::all();
+        $questions = App\Question::all();
+        $answers_text = [
+            'Sim.', 'Não.', 'Amanhã vai estar sol.', 'Bem.', 'Com dores.', '14h.'
+        ];
+        $quizs = App\Quiz::all();
+
+        foreach ($answers_text as $answer_text) {
+            $answer = new App\Answer();
+            $answer->answer = $answer_text;
+            $answer->answered_by = $caregivers->random()->id;
+            $answer->question_id = $questions->random()->id;
+            //id do questionario
+            $answer->quiz_id = $quizs->random()->id;
+            $answer->save();
+
         }
     }
 }

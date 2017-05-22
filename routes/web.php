@@ -272,6 +272,87 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'evaluation
 	Route::patch('{evaluation}', 'EvaluationsController@update');
 });
 
+Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'quizs'], function () {
+	Route::get('/', [
+		'as' => 'quizs',
+		'uses' =>'QuizController@index'
+	]);
+
+	Route::get('create', [
+		'as' => 'quizs.create',
+		'uses' => 'QuizController@create'
+		]);
+
+	Route::post('create', 'QuizController@store');
+
+	Route::get('{quiz}/edit', [
+		'as' => 'quizs.edit',
+		'uses' =>'QuizController@edit'
+	]);
+	Route::patch('{quiz}', 'QuizController@update');
+
+	Route::delete('{quiz}/delete', [
+		'as' => 'quizs.delete',
+		'uses' =>'QuizController@delete'
+	]);
+
+	Route::post('{quiz}/add/{question}/add', [
+		'as' => 'quizs.addQuestion',
+		'uses' =>'QuizController@addQuestion'
+	]);
+
+	Route::post('{quiz}/add/{question}/remove', [
+		'as' => 'quizs.removeQuestion',
+		'uses' =>'QuizController@removeQuestion'
+	]);
+
+	Route::post('{quiz}/add/{question}/up', [
+		'as' => 'quizs.upQuestion',
+		'uses' =>'QuizController@upQuestion'
+	]);
+
+	Route::post('{quiz}/add/{question}/down', [
+		'as' => 'quizs.downQuestion',
+		'uses' =>'QuizController@downQuestion'
+	]);
+
+	Route::get('{quiz}/questions', [
+		'as' => 'quizs.questions',
+		'uses' =>'QuizController@questions'
+	]);
+
+	Route::get('{quiz}', [
+		'as' => 'quizs.show',
+		'uses' =>'QuizController@show'
+	]);
+});
+
+
+Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'questions'], function () {
+	Route::get('/', [
+		'as' => 'questions',
+		'uses' =>'QuestionController@index'
+	]);
+
+	Route::get('create', [
+		'as' => 'questions.create',
+		'uses' => 'QuestionController@create'
+		]);
+
+	Route::post('create', 'QuestionController@store');
+
+	Route::get('{question}/edit', [
+		'as' => 'questions.edit',
+		'uses' =>'QuestionController@edit'
+	]);
+	Route::patch('{question}', 'QuestionController@update');
+
+	Route::delete('{question}/delete', [
+		'as' => 'questions.delete',
+		'uses' =>'QuestionController@delete'
+	]);
+});
+
 // Caregivers API: missing authorization on showContent
 Route::post('/caregiversAPI/login', 'CaregiversController@login');
 Route::get('/caregiversAPI/{caregiver}/patients', 'CaregiversController@patientsAPI');

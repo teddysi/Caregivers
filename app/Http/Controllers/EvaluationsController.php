@@ -12,11 +12,12 @@ Use Response;
 class EvaluationsController extends Controller
 {
 	private $messages = [
-	    'name.unique' =>  'Esse nome já existe. Escolha outro.',
-	    'name.required' => 'O nome tem que ser preenchido.',
-	    'name.min' => 'O nome tem que ter pelo menos 4 letras.',
 	    'description.required' => 'A descrição tem que ser preenchida.',
 	    'description.min' => 'A descrição tem que ter pelo menos 4 letras.',
+	    'type.required' => 'O tipo de avaliação tem que ser preenchido',
+	   	'type.min' => 'O tipo de avaliação tem que ter pelo menos 4 letras',
+	   	'model.required' => 'O modelo tem que ser preenchido',
+	   	'model.min' => 'O modelo tem que ter pelo menos 3 letras',
 	    'path.required' => 'Introduza um ficheiro de avaliação.',
 	];
 
@@ -45,19 +46,21 @@ class EvaluationsController extends Controller
 	public function store(Request $request, $id)
 	{
 		$this->validate($request, [
-				'name' => 'required|min:4|unique:evaluations',
 				'description' => 'required|min:4',
+				'type' => 'required|min:4',
+				'model' => 'required|min:3',
 				'path' => 'required',
 				'mime' => 'nullable',
 		], $this->messages);
 
 		$evaluation = new Evaluation();
-		$evaluation->name = $request->input('name');
 		$evaluation->description = $request->input('description');
+		$evaluation->type = $request->input('type');
+		$evaluation->model = $request->input('model');
 
 		$originalName = $request->path->getClientOriginalName();
 		$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
-		$evaluation->path = $request->file('path')->storeAs('evaluations', $request->input('name') . '.' . $whatIWant);
+		$evaluation->path = $originalName;
 		$evaluation->mime = '.' . $whatIWant;
 		$evaluation->created_by = Auth::user()->id;
 
@@ -109,12 +112,14 @@ class EvaluationsController extends Controller
 		} 
 
 		$this->validate($request, [
-				'name' => 'required|min:4|unique:evaluations,name,'.$evaluation->id,
 				'description' => 'required|min:4',
+				'type' => 'required|min:4',
+				'model' => 'required|min:3',
 		], $this->messages);
 
-		$evaluation->name = $request->input('name');
 		$evaluation->description = $request->input('description');
+		$evaluation->type = $request->input('type');
+		$evaluation->model = $request->input('model');
 		$evaluation->save();
 
 		$log = new Log();

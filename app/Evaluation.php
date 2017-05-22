@@ -23,7 +23,7 @@ class Evaluation extends Model
     }
 
     protected $fillable = [
-        'name', 'description', 'path', 'mime',
+        'type', 'model', 'description', 'path', 'mime',
     ];
 
     public function logs()

@@ -62,19 +62,23 @@
 		        <table class="table table-striped">
 			        <thead>
 			            <tr>
-							<th>Nome</th>
 							<th>Descrição</th>
+							<th>Tipo</th>
+							<th>Modelo</th>
 							<th>Realizada por</th>
+							<th>Data</th>
 							<th>Ações</th>
 			            </tr>
 			        </thead>
 			        <tbody>
 						@foreach($evaluations as $evaluation)
 							<tr>
-					        	<td>{{$evaluation->name}}</td>
-								<td>{{$evaluation->description}}</td>
+					        	<td>{{$evaluation->description}}</td>
+								<td>{{$evaluation->type}}</td>
+								<td>{{$evaluation->model}}</td>
                                 <td>{{$evaluation->creator->username}}</td>
-								<td>
+                                <td>{{$evaluation->created_at}}</td>
+                                <td>
 									<div class="row">
 										<div class="col-sm-6 col-md-6 col-lg-6">
 											<a class="btn btn-block btn-primary" href="{{ route('evaluations.show', ['evaluation' => $evaluation->id]) }}">Detalhes</a>
