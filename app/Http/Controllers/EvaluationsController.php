@@ -63,7 +63,7 @@ class EvaluationsController extends Controller
 
 		$originalName = $request->path->getClientOriginalName();
 		$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
-		$evaluation->path = $originalName;
+		$evaluation->path = $request->file('path')->storeAs('evaluations', $request->input('description') . '.' . $whatIWant);
 		$evaluation->mime = '.' . $whatIWant;
 		$evaluation->created_by = Auth::user()->id;
 
