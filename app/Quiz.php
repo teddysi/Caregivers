@@ -26,4 +26,19 @@ class Quiz extends Model
     {
         return $this->belongsTo('App\User', 'created_by', 'id');
     }
+
+    public function caregivers()
+    {
+        return $this->belongsToMany('App\Caregiver', 'quiz_caregiver', 'quiz_id', 'caregiver_id');
+    }
+
+    public function patients()
+    {
+        return $this->belongsToMany('App\Patient', 'quiz_patient', 'quiz_id', 'patient_id');
+    }
+
+    public function materials()
+    {
+        return $this->belongsToMany('App\Material', 'quiz_material', 'quiz_id', 'material_id');
+    }
 }

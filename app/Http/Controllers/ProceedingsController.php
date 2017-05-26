@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Caregiver;
 use App\Patient;
-use App\Need;
 use App\Material;
 use App\Proceeding;
 
@@ -16,15 +15,13 @@ class ProceedingsController extends Controller
         $caregiver_token = $request->header('Authorization');
         $caregiver_id = $request->input('caregiver_id');
         $patient_id = $request->input('patient_id');
-        $need_id = $request->input('need_id');
         $material_id = $request->input('material_id');
 
         $caregiver = Caregiver::find($caregiver_id);
         $patient = Patient::find($patient_id);
-        $need = Need::find($need_id);
         $material = Material::find($material_id);
 
-        if ($caregiver == null || $patient == null || $need == null || $material == null) {
+        if ($caregiver == null || $patient == null || $material == null) {
            return response('Não Encontrado', 404);
         }
 
@@ -35,7 +32,6 @@ class ProceedingsController extends Controller
         $proceeding = new Proceeding;
         $proceeding->caregiver_id = $caregiver_id;
         $proceeding->patient_id = $patient_id;
-        $proceeding->need_id = $need_id;
         $proceeding->material_id = $material_id;
         $proceeding->save();
         

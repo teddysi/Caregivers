@@ -137,8 +137,48 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
+        $qz_c = [
+            [1, 8], [1, 9], [1, 10],
+            [2, 11], [2, 12], [3, 15]
+        ];
+
+        for($i = 0; $i < count($qz_c); $i++) {
+            DB::table('quiz_caregiver')->insert([
+                'quiz_id' => $qz_c[$i][0],
+                'caregiver_id' => $qz_c[$i][1],
+            ]);
+        }
+
+        $qz_p = [
+            [1, 1], [1, 2], [1, 3],
+            [2, 4], [2, 5], [2, 6],
+            [3, 7], [3, 8], [3, 9]
+        ];
+
+        for($i = 0; $i < count($qz_p); $i++) {
+            DB::table('quiz_patient')->insert([
+                'quiz_id' => $qz_p[$i][0],
+                'patient_id' => $qz_p[$i][1],
+            ]);
+        }
+
+        $qz_m = [
+            [1, 1, 8], [1, 2, 9], [1, 3, 10],
+            [2, 4, 11], [2, 5, 12], [2, 6, 15]
+        ];
+
+        for($i = 0; $i < count($qz_m); $i++) {
+            DB::table('quiz_material')->insert([
+                'quiz_id' => $qz_m[$i][0],
+                'material_id' => $qz_m[$i][1],
+                'caregiver_id' => $qz_m[$i][2],
+            ]);
+        }
+
 
        $this->buildAnswers();
+
+
     }
 
     private function buildCustomUsers()
@@ -285,11 +325,31 @@ class DatabaseSeeder extends Seeder
             'Como está?', 'Tem comido?', 'Que horas são?', 'Choveu ontem?', 'Gosta de frango?', 
             'Amanhã chove?'
         ];
+        $question_type = [
+            'text', 'radio'
+        ];
+
+        $question_values_radio = [
+            'Sim;Não;', '1;2;3;4;5;', 'Consigo realizar;Não consigo realizar;'
+        ];
+
+        /*$question_values_multiple_choice = [
+            'Sei realizar;Não sei realizar;Percebi, mas não consigo realizar;Não percebi;O material não é esclarecedor;Não é possível compreender o material;O material é fácil de perceber'
+        ];*/
 
         foreach ($questions_text as $question_text) {
+
             $question = new App\Question();
             $question->question = $question_text;
             $question->created_by = $healthcare_pros->random()->id;
+
+            $index = array_rand($question_type, 1);
+            $question->type = $question_type[$index];
+
+            if($question->type == 'radio') {
+                $index = array_rand($question_values_radio,1);
+                $question->values = $question_values_radio[$index];
+            }
 
             $question->save();
         }

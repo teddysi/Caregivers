@@ -39,4 +39,9 @@ class Patient extends Model
     {
         return $this->hasMany('App\Log', 'patient_id', 'id');
     }
+
+    public function quizs()
+    {
+        return $this->belongsToMany('App\Quiz', 'quiz_patient', 'patient_id', 'quiz_id');
+    }
 }

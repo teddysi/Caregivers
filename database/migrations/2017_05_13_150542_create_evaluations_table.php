@@ -17,7 +17,7 @@ class CreateEvaluationsTable extends Migration
             $table->increments('id');
             $table->text('description');
             $table->string('type');
-            $table->string('model');
+            $table->string('model')->nullable();
             $table->string('path')->nullable();
             $table->string('mime')->nullable();
             $table->integer('created_by')->unsigned()->index();

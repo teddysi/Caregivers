@@ -5,9 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Evaluation;
 use App\Log;
+use App\Quiz;
+use App\Caregiver;
+use App\Patient;
 use Auth;
 use Storage;
-Use Response;
+use Response;
+use DB;
 
 class EvaluationsController extends Controller
 {
@@ -16,9 +20,9 @@ class EvaluationsController extends Controller
 	    'description.min' => 'A descrição tem que ter pelo menos 4 letras.',
 	    'type.required' => 'O tipo de avaliação tem que ser preenchido',
 	   	'type.min' => 'O tipo de avaliação tem que ter pelo menos 4 letras',
-	   	'model.required' => 'O modelo tem que ser preenchido',
+	   	'model.required_if' => 'O modelo tem que ser preenchido',
 	   	'model.min' => 'O modelo tem que ter pelo menos 3 letras',
-	    'path.required' => 'Introduza um ficheiro de avaliação.',
+	    'path.required_if' => 'Introduza um ficheiro de avaliação.',
 	];
 
 	public function show(Evaluation $evaluation)
@@ -35,15 +39,28 @@ class EvaluationsController extends Controller
 		return view('evaluations.show', compact('evaluation', 'logs'));
 	}
 
-    public function create($id)
+    public function create($id, $typeEval)
 	{	
 		if (!str_contains(url()->current(), '/patients/')) {
 			if (!Auth::user()->caregivers->contains('id', $id)) {
 				abort(403);
 			}
 		}
+		if($typeEval == 'quiz') {
+			if (str_contains(url()->current(), '/patients/')) {
+				$patient = Patient::find($id);
+				$quizs = Quiz::whereNotIn('id', $patient->quizs->modelKeys())->get();
+				
+				return view('evaluations.create_quiz', compact('id', 'quizs', 'typeEval'));	
+			} else {
+				$caregiver = Caregiver::find($id);
+				$quizs = Quiz::whereNotIn('id', $caregiver->quizs->modelKeys())->get();
+				
+				return view('evaluations.create_quiz', compact('id', 'quizs', 'typeEval'));
+			}
+		}
 
-		return view('evaluations.create', compact('id'));
+		return view('evaluations.create', compact('id', 'typeEval'));
 	}
 
 	public function store(Request $request, $id)
@@ -51,23 +68,33 @@ class EvaluationsController extends Controller
 		$this->validate($request, [
 				'description' => 'required|min:4',
 				'type' => 'required|min:4',
-				'model' => 'required|min:3',
-				'path' => 'required',
+				'model' => 'required_if:typeEval,eval|min:3',
+				'path' => 'required_if:typeEval,eval',
 				'mime' => 'nullable',
 		], $this->messages);
-
+		
 		$evaluation = new Evaluation();
 		$evaluation->description = $request->input('description');
 		$evaluation->type = $request->input('type');
-		$evaluation->model = $request->input('model');
 
-		$originalName = $request->path->getClientOriginalName();
-		$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
-		$evaluation->path = $request->file('path')->storeAs('evaluations', $request->input('description') . '.' . $whatIWant);
-		$evaluation->mime = '.' . $whatIWant;
+		if($request->input('typeEval') == 'eval') {
+			$evaluation->model = $request->input('model');
+
+			$originalName = $request->path->getClientOriginalName();
+			$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
+			$evaluation->path = $request->file('path')->storeAs('evaluations', $request->input('description') . '.' . $whatIWant);
+			$evaluation->mime = '.' . $whatIWant;
+		}
+
 		$evaluation->created_by = Auth::user()->id;
 
 		if (str_contains(url()->current(), '/patients/')) {
+			if($request->input('typeEval') == 'quiz') {
+				$quiz = Quiz::find($request->input('quiz'));
+				$evaluation->model = $quiz->name;
+				$quiz->patients()->attach($id);
+			}
+
 			$evaluation->patient_id = $id;
 			$evaluation->save();
 
@@ -82,6 +109,13 @@ class EvaluationsController extends Controller
 			if (!Auth::user()->caregivers->contains('id', $id)) {
 				abort(403);
 			}
+
+			if($request->input('typeEval') == 'quiz') {
+				$quiz = Quiz::find($request->input('quiz'));
+				$evaluation->model = $quiz->name;
+				$quiz->caregivers()->attach($id);
+			}
+
 			$evaluation->caregiver_id = $id;
 			$evaluation->save();
 

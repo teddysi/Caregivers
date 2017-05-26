@@ -52,7 +52,10 @@
 				<legend>Criar</legend>
 				<div class="row">
 					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('patients.evaluations.create', ['id' => $patient->id]) }}">Avaliação</a>
+						<a class="btn btn-block btn-primary" href="{{ route('patients.evaluations.create', ['id' => $patient->id, 'typeEval' => 'eval']) }}">Avaliação</a>
+					</div>
+					<div class="col-4 col-sm-4 col-md-4">
+						<a class="btn btn-block btn-primary" href="{{ route('patients.evaluations.create', ['id' => $patient->id, 'typeEval' => 'quiz']) }}">Disponiblizar Questionário</a>
 					</div>
 				</div>
 			</fieldset>

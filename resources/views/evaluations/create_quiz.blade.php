@@ -31,22 +31,19 @@
         </div>
 
         <div class="form-group">
-            <label for="inputDescription">Modelo</label>
-            <input
-                type="text" class="form-control"
-                name="model" id="inputModel"
-                placeholder="Modelo" value="{{ old('model') }}" />
+            <label for="inputQuiz">Questionário</label>
+            <select name="quiz" class="form-control">
+                @foreach($quizs as $quiz)
+                <option value="{{$quiz->id}}">{{$quiz->name}}</option>
+                @endforeach
+            </select>
         </div>
 
-        <div class="form-group">
-            <label for="inputFile">Ficheiro</label>
-            <input type="file" name="path"/>
-        </div>
-       
         <div class="form-group">
             <button type="submit" class="btn btn-primary" name="save">Submeter Avaliação</button>
             <a class="btn btn-default" href="javascript:history.back()">Cancelar</a>
         </div>
+        
     @include('layouts.errors')
     </form>
 </div>

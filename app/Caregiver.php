@@ -54,4 +54,9 @@ class Caregiver extends User
         return $this->hasMany('App\Answer', 'answered_by', 'id');
     }
 
+    public function quizs()
+    {
+        return $this->belongsToMany('App\Quiz', 'quiz_caregiver', 'caregiver_id', 'quiz_id');
+    }
+
 }

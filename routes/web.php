@@ -97,7 +97,7 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'caregivers
 		'uses' =>'CaregiversController@rate'
 	]);
 
-	Route::get('{id}/evaluation/create', [
+	Route::get('{id}/evaluation/create/{type}', [
 		'as' => 'caregivers.evaluations.create',
 		'uses' =>'EvaluationsController@create'
 	]);
@@ -106,6 +106,7 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'caregivers
 		'as' => 'evaluations.createForCaregiver',
 		'uses' =>'EvaluationsController@store'
 	]);
+
 });
 
 Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'patients'], function () {
@@ -147,7 +148,7 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'patients']
 		'uses' =>'PatientsController@diassociate'
 	]);
 
-	Route::get('{id}/evaluation/create', [
+	Route::get('{id}/evaluation/create{type}', [
 		'as' => 'patients.evaluations.create',
 		'uses' =>'EvaluationsController@create'
 	]);
