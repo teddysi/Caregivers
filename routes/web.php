@@ -107,6 +107,21 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'caregivers
 		'uses' =>'EvaluationsController@store'
 	]);
 
+	Route::get('{caregiver}/material/{material}', [
+		'as' => 'materials.rate_materials',
+		'uses' =>'EvaluationsController@rate_material'
+	]);
+
+	Route::get('{id}/rate/{material}', [
+		'as' => 'materials.create_for_materials',
+		'uses' =>'EvaluationsController@createForMaterial'
+	]);
+
+	Route::post('materials/{material}/evaluation', [
+		'as' => 'evaluations.storeForMaterial',
+		'uses' =>'EvaluationsController@storeForMaterial'
+	]);
+
 });
 
 Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'patients'], function () {

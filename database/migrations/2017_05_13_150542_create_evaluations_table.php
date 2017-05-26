@@ -26,6 +26,8 @@ class CreateEvaluationsTable extends Migration
             $table->foreign('caregiver_id')->references('id')->on('users');
             $table->integer('patient_id')->nullable()->unsigned()->index();
             $table->foreign('patient_id')->references('id')->on('patients');
+            $table->integer('material_id')->nullable()->unsigned()->index();
+            $table->foreign('material_id')->references('id')->on('materials');
             $table->timestamps();
         });
     }

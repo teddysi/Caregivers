@@ -22,6 +22,11 @@ class Evaluation extends Model
         return $this->belongsTo('App\Patient');
     }
 
+    public function material()
+    {
+        return $this->belongsTo('App\Material');
+    }
+
     protected $fillable = [
         'type', 'model', 'description', 'path', 'mime',
     ];

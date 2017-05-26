@@ -8,6 +8,7 @@ use App\Log;
 use App\Quiz;
 use App\Caregiver;
 use App\Patient;
+use App\Material;
 use Auth;
 use Storage;
 use Response;
@@ -190,5 +191,60 @@ class EvaluationsController extends Controller
 		}
 
 		return response($content)->header('Content-Type', $contentType);
+	}
+
+	public function rate_material(Caregiver $caregiver, Material $material)
+	{
+		if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
+			abort(403);
+		}
+
+        $evaluations = $material->evaluations()->paginate(10, ['*'], 'evaluations');
+        $evaluations->setPageName('evaluations');
+
+		return view('materials.rate_materials', compact('caregiver', 'evaluations', 'material'));
+	}
+
+	public function createForMaterial($id, Material $material)
+	{
+		if (!Auth::user()->caregivers->contains('id', $id)) {
+			abort(403);
+		}
+
+		$quizs = Quiz::whereNotIn('id', $material->quizs($id)->get()->modelKeys())->get();
+		
+
+		return view('materials.create_quiz_material', compact('id', 'quizs', 'material'));
+	}
+
+	public function storeForMaterial(Request $request, Material $material)
+	{
+		$this->validate($request, [
+				'description' => 'required|min:4',
+				'type' => 'required|min:4',
+		], $this->messages);
+		
+		$evaluation = new Evaluation();
+		$evaluation->description = $request->input('description');
+		$evaluation->type = $request->input('type');
+
+		$evaluation->created_by = Auth::user()->id;
+
+		$quiz = Quiz::find($request->input('quiz'));
+		$evaluation->model = $quiz->name;
+
+		$quiz->materials($request->input('caregiver'))->attach([$material->id => ['caregiver_id'=> $request->input('caregiver')]]);
+
+		$evaluation->material_id = $material->id;
+		$evaluation->save();
+
+		$log = new Log();
+		$log->performed_task = 'Criou a Avaliação ' . $evaluation->description;
+		$log->done_by = Auth::user()->id;
+		$log->evaluation_id = $evaluation->id;
+		$log->save();
+
+		return redirect()->route('materials.rate_materials', ['caregiver' => $request->input('caregiver'), 'material' => $material]);
+
 	}
 }

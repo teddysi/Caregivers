@@ -37,8 +37,8 @@ class Quiz extends Model
         return $this->belongsToMany('App\Patient', 'quiz_patient', 'quiz_id', 'patient_id');
     }
 
-    public function materials()
+    public function materials($id)
     {
-        return $this->belongsToMany('App\Material', 'quiz_material', 'quiz_id', 'material_id');
+        return $this->belongsToMany('App\Material', 'quiz_material', 'quiz_id', 'material_id')->where('caregiver_id', $id);
     }
 }

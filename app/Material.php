@@ -58,8 +58,13 @@ class Material extends Model
         return $this->hasMany('App\Log', 'material_id', 'id');
     }
 
-    public function quizs()
+    public function quizs($id)
     {
-        return $this->belongsToMany('App\Quiz', 'quiz_material', 'material_id','quiz_id');
+        return $this->belongsToMany('App\Quiz', 'quiz_material', 'material_id', 'quiz_id')->where('caregiver_id', $id);
+    }
+
+    public function evaluations()
+    {
+        return $this->hasMany('App\Evaluation', 'material_id', 'id');
     }
 }
