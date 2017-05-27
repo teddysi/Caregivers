@@ -238,7 +238,7 @@ class CaregiversController extends Controller
         foreach ($user->quizs as $quiz) {
             if(!$quiz->blocked) {
                 $objectQuiz = new \stdClass();
-                $this->buildQuiz($objectQuiz, $quiz, 'caregiver', $user->id);
+                $this->buildQuiz($objectQuiz, $quiz, 'caregiver', $user->id, $user->name);
                 array_push($objectX->quizs, $objectQuiz);
             }
         }
@@ -259,7 +259,7 @@ class CaregiversController extends Controller
                     foreach ($material->quizs($user->id)->get() as $quiz) {
                         if(!$quiz->blocked) {
                             $objectQuiz = new \stdClass();
-                            $this->buildQuiz($objectQuiz, $quiz, 'material', $material->id);
+                            $this->buildQuiz($objectQuiz, $quiz, 'material', $material->id, $material->name);
                             array_push($objectM->quizs, $objectQuiz);
                         }
                     }
@@ -271,7 +271,7 @@ class CaregiversController extends Controller
             foreach ($patient->quizs as $quiz) {
                 if(!$quiz->blocked) {
                     $objectQuiz = new \stdClass();
-                    $this->buildQuiz($objectQuiz, $quiz, 'patient', $patient->id);
+                    $this->buildQuiz($objectQuiz, $quiz, 'patient', $patient->id, $patient->name);
                     array_push($objectP->quizs, $objectQuiz);
                 }
             }
@@ -287,13 +287,14 @@ class CaregiversController extends Controller
         $objectX->patients = [];
     }
 
-    private function buildQuiz($objectQuiz, $quiz, $type, $id)
+    private function buildQuiz($objectQuiz, $quiz, $type, $id, $name)
     {
         $objectQuiz->id = $quiz->id;
         $objectQuiz->name = $quiz->name;
         $objectQuiz->blocked = $quiz->blocked;
-        $objectQuiz->references = $type;
+        $objectQuiz->reference = $type;
         $objectQuiz->reference_id = $id;
+        $objectQuiz->reference_name = $name;
         $objectQuiz->created_at = (string) $quiz->created_at;
         $objectQuiz->updated_at = (string) $quiz->updated_at;
         $objectQuiz->questions = [];
