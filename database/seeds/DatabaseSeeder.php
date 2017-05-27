@@ -342,7 +342,7 @@ class DatabaseSeeder extends Seeder
             $question = new App\Question();
             $question->question = $question_text;
             $question->created_by = $healthcare_pros->random()->id;
-
+            $question->blocked = false;
             $index = array_rand($question_type, 1);
             $question->type = $question_type[$index];
 
@@ -365,6 +365,7 @@ class DatabaseSeeder extends Seeder
         foreach ($names as $name) {
             $quiz = new App\Quiz();
             $quiz->name = $name;
+            $quiz->blocked = false;
             $quiz->created_by = $healthcare_pros->random()->id;
 
             $quiz->save();

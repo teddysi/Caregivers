@@ -9,7 +9,7 @@ class Quiz extends Model
     protected $table = 'quizs';
 
     protected $fillable = [
-        'name', 
+        'name', 'blocked',
     ];
 
     public function answers()

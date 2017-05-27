@@ -16,6 +16,7 @@ class CreateQuizsTable extends Migration
         Schema::create('quizs', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->boolean('blocked')->default(false);
             $table->integer('created_by')->unsigned()->index();
             $table->foreign('created_by')->references('id')->on('users');
             $table->timestamps();

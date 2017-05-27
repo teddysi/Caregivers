@@ -232,6 +232,17 @@ class CaregiversController extends Controller
 
         $patientsCollection = collect();
         $patients = $user->patients;
+        $objectX = new \stdClass();
+        $this->buildJson($objectX, $user);
+
+        foreach ($user->quizs as $quiz) {
+            if(!$quiz->blocked) {
+                $objectQuiz = new \stdClass();
+                $this->buildQuiz($objectQuiz, $quiz, 'caregiver', $user->id);
+                array_push($objectX->quizs, $objectQuiz);
+            }
+        }
+
         foreach ($patients as $patient) {
             $objectP = new \stdClass();
             $this->buildPatient($objectP, $patient);
@@ -245,13 +256,69 @@ class CaregiversController extends Controller
 
                         array_push($objectN->materials, $objectM);
                     }
+                    foreach ($material->quizs($user->id)->get() as $quiz) {
+                        if(!$quiz->blocked) {
+                            $objectQuiz = new \stdClass();
+                            $this->buildQuiz($objectQuiz, $quiz, 'material', $material->id);
+                            array_push($objectM->quizs, $objectQuiz);
+                        }
+                    }
                 }
                 array_push($objectP->needs, $objectN);
             }
-            $patientsCollection->push($objectP);
+            array_push($objectX->patients, $objectP);
+            
+            foreach ($patient->quizs as $quiz) {
+                if(!$quiz->blocked) {
+                    $objectQuiz = new \stdClass();
+                    $this->buildQuiz($objectQuiz, $quiz, 'patient', $patient->id);
+                    array_push($objectP->quizs, $objectQuiz);
+                }
+            }
         }
 
-        return response()->json($patientsCollection);      
+
+        return response()->json($objectX);      
+    }
+
+    private function buildJson($objectX)
+    {
+        $objectX->quizs = [];
+        $objectX->patients = [];
+    }
+
+    private function buildQuiz($objectQuiz, $quiz, $type, $id)
+    {
+        $objectQuiz->id = $quiz->id;
+        $objectQuiz->name = $quiz->name;
+        $objectQuiz->blocked = $quiz->blocked;
+        $objectQuiz->references = $type;
+        $objectQuiz->reference_id = $id;
+        $objectQuiz->created_at = (string) $quiz->created_at;
+        $objectQuiz->updated_at = (string) $quiz->updated_at;
+        $objectQuiz->questions = [];
+
+        foreach ($quiz->questions as $question) {
+            if(!$question->blocked) {
+                $objectQuestion = new \stdClass();
+                $this->buildQuestion($objectQuestion, $question);
+                array_push($objectQuiz->questions, $objectQuestion);
+            }
+        }
+
+    }
+
+    private function buildQuestion($objectQuestion, $question)
+    {
+        $objectQuestion->id = $question->id;
+        $objectQuestion->question = $question->question;
+        $objectQuestion->type = $question->type;
+        $objectQuestion->values = $question->values;
+        $objectQuestion->blocked = $question->blocked;
+        $objectQuestion->created_by = $question->created_by;
+        $objectQuestion->created_at = (string) $question->created_at;
+        $objectQuestion->updated_at = (string) $question->updated_at;
+
     }
 
     private function buildPatient($objectP, $patient)
@@ -265,6 +332,8 @@ class CaregiversController extends Controller
         $objectP->created_at = (string)$patient->created_at;
         $objectP->updated_at = (string)$patient->updated_at;
         $objectP->needs = [];
+        $objectP->quizs = [];
+
     }
 
     private function buildNeed($objectN, $need)
@@ -336,6 +405,8 @@ class CaregiversController extends Controller
                 }
             }
         }
+
+        $objectM->quizs = [];
     }
 
     public function proceedings(Request $request, $caregiver_id)

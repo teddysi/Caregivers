@@ -18,6 +18,7 @@ class CreateQuestionsTable extends Migration
             $table->string('question')->unique();
             $table->string('type');
             $table->string('values')->nullable();
+            $table->boolean('blocked')->default(false);
             $table->integer('created_by')->unsigned()->index();
             $table->foreign('created_by')->references('id')->on('users');
             $table->timestamps();
