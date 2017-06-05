@@ -18,6 +18,7 @@ class CreateQuizPatientPivotTable extends Migration
             $table->foreign('quiz_id')->references('id')->on('quizs');
             $table->integer('patient_id')->unsigned()->index();
             $table->foreign('patient_id')->references('id')->on('patients');
+            $table->integer('evaluation_id')->unsigned()->index();
             $table->primary(['quiz_id', 'patient_id']);
         });
     }

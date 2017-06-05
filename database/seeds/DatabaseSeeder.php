@@ -138,49 +138,30 @@ class DatabaseSeeder extends Seeder
         }
 
         $qz_c = [
-            [1, 8], [1, 9], [1, 10],
-            [2, 11], [2, 12], [3, 15]
+            [3, 15, 6]
         ];
 
         for($i = 0; $i < count($qz_c); $i++) {
             DB::table('quiz_caregiver')->insert([
                 'quiz_id' => $qz_c[$i][0],
                 'caregiver_id' => $qz_c[$i][1],
+                'evaluation_id' => $qz_c[$i][2],
             ]);
         }
 
         $qz_p = [
-            [1, 1], [1, 2], [1, 3],
-            [2, 4], [2, 5], [2, 6],
-            [3, 7], [3, 8], [3, 9],
-            [1, 10]
+            [1, 10, 7]
         ];
 
         for($i = 0; $i < count($qz_p); $i++) {
             DB::table('quiz_patient')->insert([
                 'quiz_id' => $qz_p[$i][0],
                 'patient_id' => $qz_p[$i][1],
+                'evaluation_id' => $qz_p[$i][2],
             ]);
         }
 
-        $qz_m = [
-            [1, 1, 8], [1, 2, 9], [1, 3, 10],
-            [2, 4, 11], [2, 5, 12], [2, 26, 15],
-            [1, 1, 15]
-        ];
-
-        for($i = 0; $i < count($qz_m); $i++) {
-            DB::table('quiz_material')->insert([
-                'quiz_id' => $qz_m[$i][0],
-                'material_id' => $qz_m[$i][1],
-                'caregiver_id' => $qz_m[$i][2],
-            ]);
-        }
-
-
-       $this->buildAnswers();
-
-
+        //$this->buildAnswers();
     }
 
     private function buildCustomUsers()
@@ -292,7 +273,8 @@ class DatabaseSeeder extends Seeder
         $i = 0;
         $evaluationsName = [
             'Evaluation-1', 'Evaluation-2', 'Evaluation-3', 'Evaluation-4', 'Evaluation-5'
-        ]; 
+        ];
+        $evaluationsQuizs = ['eval-quiz1', 'eval-quiz2'];
       
         foreach ($evaluationsName as $name) {
             $healthcare_pro;
@@ -318,6 +300,22 @@ class DatabaseSeeder extends Seeder
 
             $evaluation->save();
         }
+        
+        $evaluationC = new App\Evaluation();
+        $evaluationC->type = 'Pela aplicação';
+        $evaluationC->description = $evaluationsQuizs[0];
+        $evaluationC->model = 'Model X';
+        $evaluationC->created_by = 14;
+        $evaluationC->caregiver_id = 15;
+        $evaluationC->save();
+
+        $evaluationP = new App\Evaluation();
+        $evaluationP->type = 'Pela aplicação';
+        $evaluationP->description = $evaluationsQuizs[1];
+        $evaluationP->model = 'Model X';
+        $evaluationP->created_by = 14;
+        $evaluationP->patient_id = 10;
+        $evaluationP->save();
     }
 
     private function buildQuestions()
@@ -389,8 +387,8 @@ class DatabaseSeeder extends Seeder
             $answer->answer = $answer_text;
             $answer->answered_by = $caregivers->random()->id;
             $answer->question_id = $questions->random()->id;
-            //id do questionario
             $answer->quiz_id = $quizs->random()->id;
+            //$answer->evaluation_id = 0;
             $answer->save();
 
         }

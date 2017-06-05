@@ -20,6 +20,7 @@ class CreateQuizMaterialPivotTable extends Migration
             $table->foreign('material_id')->references('id')->on('materials');
             $table->integer('caregiver_id')->unsigned()->index();
             $table->foreign('caregiver_id')->references('id')->on('users');
+            $table->integer('evaluation_id')->unsigned()->index();
             $table->primary(['quiz_id', 'material_id', 'caregiver_id']);
         });
     }

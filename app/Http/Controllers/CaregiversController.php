@@ -9,6 +9,8 @@ use App\Patient;
 use App\Need;
 use App\Material;
 use App\Log;
+use App\Quiz;
+use App\Answer;
 use App\Http\Controllers\UsersController;
 use DB;
 
@@ -277,7 +279,6 @@ class CaregiversController extends Controller
             }
         }
 
-
         return response()->json($objectX);      
     }
 
@@ -306,7 +307,6 @@ class CaregiversController extends Controller
                 array_push($objectQuiz->questions, $objectQuestion);
             }
         }
-
     }
 
     private function buildQuestion($objectQuestion, $question)
@@ -319,7 +319,6 @@ class CaregiversController extends Controller
         $objectQuestion->created_by = $question->created_by;
         $objectQuestion->created_at = (string) $question->created_at;
         $objectQuestion->updated_at = (string) $question->updated_at;
-
     }
 
     private function buildPatient($objectP, $patient)
@@ -334,7 +333,6 @@ class CaregiversController extends Controller
         $objectP->updated_at = (string)$patient->updated_at;
         $objectP->needs = [];
         $objectP->quizs = [];
-
     }
 
     private function buildNeed($objectN, $need)
@@ -408,6 +406,54 @@ class CaregiversController extends Controller
         }
 
         $objectM->quizs = [];
+    }
+
+    public function submitQuizs(Request $request, $id)
+    {
+        $caregiver_token = $request->header('Authorization');
+        $user = Caregiver::find($id);
+
+        if ($user == null) {
+           return response('Não Encontrado', 404);
+        }
+
+        if (!$caregiver_token || $user->caregiver_token != $caregiver_token) {
+            return response('Não Autorizado', 401);
+        }
+
+        $quizs = $request->input();
+        foreach ($quizs as $quiz) {
+            $quizObj = Quiz::find($quiz["id"]);
+            $evaluation_id;
+            if ($quiz["reference"] == "caregiver") {
+                $evaluation_id = DB::table('quiz_caregiver')->select('evaluation_id')->where([['quiz_id', $quiz["id"]], ['caregiver_id', $quiz["reference_id"]]])->first()->evaluation_id;
+                $quizObj->caregivers()->detach($quiz["reference_id"]);
+            } else if ($quiz["reference"] == "patient") {
+                $evaluation_id = DB::table('quiz_patient')->select('evaluation_id')->where([['quiz_id', $quiz["id"]], ['patient_id', $quiz["reference_id"]]])->first()->evaluation_id;
+                $quizObj->patients()->detach($quiz["reference_id"]);
+            } else if ($quiz["reference"] == "material") {
+                $evaluation_id = DB::table('quiz_material')->select('evaluation_id')->where([['quiz_id', $quiz["id"]], ['material_id', $quiz["reference_id"]]])->first()->evaluation_id;
+                $quizObj->materials($id)->detach($quiz["reference_id"]);
+            }
+
+            foreach ($quiz["questions"] as $question) {
+                $answer = new Answer();
+                $answer->answered_by = $id;
+                $answer->question_id = $question["id"];
+                $answer->quiz_id = $quiz["id"];
+                if ($question["type"] != "text") {
+                    $possible_answers = explode(";", $question["values"]);
+                    $answer->answer = $possible_answers[$question["response"]];
+                } else {
+                    $answer->answer = $question["response"];
+                }
+                $answer->evaluation_id = $evaluation_id;
+                
+                $answer->save();
+            }
+        }
+
+        return response()->json("Quizs Submitted successfully");
     }
 
     public function proceedings(Request $request, $caregiver_id)
