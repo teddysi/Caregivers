@@ -25,5 +25,8 @@ class Answer extends Model
         return $this->belongsTo('App\Quiz', 'quiz_id', 'id');
     }
 
-
+    public function evaluation()
+    {
+        return $this->belongsTo('App\Evaluation', 'evaluation_id', 'id');
+    }
 }

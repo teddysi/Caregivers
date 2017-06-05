@@ -6,7 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Evaluation extends Model
 {
-    
+    protected $fillable = [
+        'type', 'model', 'description', 'path', 'mime',
+    ];
+
 	public function creator()
     {
         return $this->belongsTo('App\User', 'created_by', 'id');
@@ -27,9 +30,10 @@ class Evaluation extends Model
         return $this->belongsTo('App\Material');
     }
 
-    protected $fillable = [
-        'type', 'model', 'description', 'path', 'mime',
-    ];
+    public function answers()
+    {
+        return $this->hasMany('App\Answer', 'evaluation_id', 'id');
+    }
 
     public function logs()
     {

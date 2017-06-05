@@ -34,10 +34,15 @@ class EvaluationsController extends Controller
 			}
 		}
 
+		$answered_at = null;
+		if (count($evaluation->answers) > 0) {
+			$answered_at = $evaluation->answers()->first()->created_at;
+		}
+
 		$logs = $evaluation->logs()->paginate(10, ['*'], 'logs');
 		$logs->setPageName('logs');
 
-		return view('evaluations.show', compact('evaluation', 'logs'));
+		return view('evaluations.show', compact('evaluation', 'logs', 'answered_at'));
 	}
 
     public function create($id, $typeEval)
@@ -93,11 +98,13 @@ class EvaluationsController extends Controller
 			if($request->input('typeEval') == 'quiz') {
 				$quiz = Quiz::find($request->input('quiz'));
 				$evaluation->model = $quiz->name;
-				$quiz->patients()->attach($id);
+				$evaluation->patient_id = $id;
+				$evaluation->save();
+				$quiz->patients()->attach([$id => ['evaluation_id'=> $evaluation->id]]);
+			} else {
+				$evaluation->patient_id = $id;
+				$evaluation->save();
 			}
-
-			$evaluation->patient_id = $id;
-			$evaluation->save();
 
 			$log = new Log();
 			$log->performed_task = 'Criou a Avaliação ' . $evaluation->description;
@@ -114,11 +121,13 @@ class EvaluationsController extends Controller
 			if($request->input('typeEval') == 'quiz') {
 				$quiz = Quiz::find($request->input('quiz'));
 				$evaluation->model = $quiz->name;
-				$quiz->caregivers()->attach($id);
+				$evaluation->caregiver_id = $id;
+				$evaluation->save();
+				$quiz->caregivers()->attach([$id => ['evaluation_id'=> $evaluation->id]]);
+			} else {
+				$evaluation->caregiver_id = $id;
+				$evaluation->save();
 			}
-
-			$evaluation->caregiver_id = $id;
-			$evaluation->save();
 
 			$log = new Log();
 			$log->performed_task = 'Criou a Avaliação ' . $evaluation->description;
@@ -187,7 +196,7 @@ class EvaluationsController extends Controller
 
 		if ($whatIWant != 'pdf') {
 			$file = storage_path('app/'.$evaluation->path);
-			return Response::download($file, $evaluation->name.$evaluation->mime, ['Content-Type: application/'.$whatIWant]);
+			return Response::download($file, $evaluation->description.$evaluation->mime, ['Content-Type: application/'.$whatIWant]);
 		}
 
 		return response($content)->header('Content-Type', $contentType);
@@ -212,7 +221,6 @@ class EvaluationsController extends Controller
 		}
 
 		$quizs = Quiz::whereNotIn('id', $material->quizs($id)->get()->modelKeys())->get();
-		
 
 		return view('materials.create_quiz_material', compact('id', 'quizs', 'material'));
 	}
@@ -220,23 +228,21 @@ class EvaluationsController extends Controller
 	public function storeForMaterial(Request $request, Material $material)
 	{
 		$this->validate($request, [
-				'description' => 'required|min:4',
-				'type' => 'required|min:4',
+			'description' => 'required|min:4',
+			'type' => 'required|min:4',
 		], $this->messages);
-		
+
+		$quiz = Quiz::find($request->input('quiz'));
+
 		$evaluation = new Evaluation();
 		$evaluation->description = $request->input('description');
 		$evaluation->type = $request->input('type');
-
 		$evaluation->created_by = Auth::user()->id;
-
-		$quiz = Quiz::find($request->input('quiz'));
 		$evaluation->model = $quiz->name;
-
-		$quiz->materials($request->input('caregiver'))->attach([$material->id => ['caregiver_id'=> $request->input('caregiver')]]);
-
 		$evaluation->material_id = $material->id;
 		$evaluation->save();
+
+		$quiz->materials($request->input('caregiver'))->attach([$material->id => ['caregiver_id'=> $request->input('caregiver'), 'evaluation_id'=> $evaluation->id]]);
 
 		$log = new Log();
 		$log->performed_task = 'Criou a Avaliação ' . $evaluation->description;

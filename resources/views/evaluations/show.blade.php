@@ -9,10 +9,17 @@
 		<div class="col-sm-12 col-md-8 col-lg-8">
             <h4><strong>Tipo de Avaliação:</strong> {{ $evaluation->type }}</h4>
             <h4><strong>Modelo:</strong> {{ $evaluation->model }}</h4>
-            <h4><strong>Ficheiro:</strong> <a href="{{ route('evaluations.showContent', ['evaluation' => $evaluation->id] )}}" target="_blank">{{ $evaluation->description.$evaluation->mime }}</a></h4>
+            @if ($evaluation->path)
+                <h4><strong>Ficheiro:</strong> <a href="{{ route('evaluations.showContent', ['evaluation' => $evaluation->id] )}}" target="_blank">{{ $evaluation->description.$evaluation->mime }}</a></h4>
+            @endif
             <h4><strong>Criador:</strong> {{ $evaluation->creator->username }}</h4>
             <h4><strong>Data da criação:</strong> {{ $evaluation->created_at }}</h4>
             <h4><strong>Data da última atualização:</strong> {{ $evaluation->updated_at }}</h4>
+            @if ($answered_at)
+                <h4><strong>Data da resposta:</strong> {{ $answered_at }}</h4>
+            @elseif (!$answered_at && !$evaluation->path)
+                <h4><strong>Data da resposta:</strong> À espera de resposta</h4>
+            @endif
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4">
             <div class="panel panel-default">
@@ -32,6 +39,30 @@
             </div>
         </div>
     </div>
+    @if (count($evaluation->answers))
+        <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <legend>Respostas</legend>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Questão</th>
+                            <th>Resposta</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($evaluation->answers as $answer)
+                            <tr>
+                                <td>{{$answer->question->question}}</td>
+                                <td>{{$answer->answer}}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>			
+            </div>
+        </div>
+    @endif
     <br />
     <div class="row">
 		<div class="col-lg-12">

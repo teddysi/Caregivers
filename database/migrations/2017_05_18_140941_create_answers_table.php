@@ -22,6 +22,8 @@ class CreateAnswersTable extends Migration
             $table->foreign('question_id')->references('id')->on('questions');
             $table->integer('quiz_id')->unsigned()->index();
             $table->foreign('quiz_id')->references('id')->on('quizs');
+            $table->integer('evaluation_id')->unsigned()->dafault(null)->index();
+            $table->foreign('evaluation_id')->references('id')->on('evaluations');
             $table->timestamps();
         });
     }
