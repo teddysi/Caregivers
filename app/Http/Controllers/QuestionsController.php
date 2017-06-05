@@ -10,9 +10,12 @@ use DB;
 
 class QuestionsController extends Controller
 {
+
     private $messages = [
 	    'question.required' => 'A pergunta tem que ser preenchida.',
 	    'question.min' => 'A pergunta tem que ter um tamanho de pelo menos 8 letras.',
+        'values.required_if' => 'Tem que preencher o campo "Opções" com respostas.',
+        'conice' => 'merda',
 	];
 
 	public function index(Request $request)
@@ -76,44 +79,118 @@ class QuestionsController extends Controller
 
     public function store(Request $request)
     {
-    	$this->validate($request, [
+        $validator = \Validator::make($request->all(), [
 				'question' => 'required|min:4',
+                'values' => 'required_if:type,radio',
 		], $this->messages);
 
+        $errors = $validator->errors();
+        
 		$question = new Question();
 		$question->question = $request->input('question');
 		$question->created_by = Auth::user()->id;
 
+        if ($request->input('selectType') == 'radio') {
+            $question->type = 'radio';
+            
+            $values = $request->input('values');
+
+            $errors = $this->validateOptions($values, $errors);
+
+            $question->values = $values;
+
+        } else {
+            $questions->type = 'text';
+        }
+
+        if (!$errors->isEmpty()) {
+            return back()->withErrors($errors)->withInput();
+        }
+
 		$question->save();
 
-		return redirect('/');
+		return redirect('/questions');
+    }
+
+    public function validateOptions($values , $errors)
+    {
+        $count_values = substr_count($values,";");
+
+
+        if (substr($values, 0, 1) === ';') {
+            $errors->add('values','O campo "Opções" não pode começar com ";".');
+        }
+
+        if (substr($values, -1) !== ';') {
+            $errors->add('values','O campo "Opções" tem que terminar com ";".');
+        }
+
+        if (strpos($values, ' ;')) {
+            $errors->add('values', 'O campo "Opções" não deve conter espaços em branco antes de ";".');
+        }
+
+        if ($count_values < 2) {
+            $errors->add('values', 'O campo "Opções" tem que ter pelo menos duas respostas.');
+        }
+
+        return $errors;
     }
 
     public function show(Question $question)
     {
+        if ($question->type == 'radio') {
+            $values = explode(";", $question->values);
+            array_pop($values);
+            
+            return view('questions.show', compact('question', 'values'));
+        }
+
     	return view('questions.show', compact('question'));
     }
 
     public function edit(Question $question)
     {
-    	return view('questions.edit', compact('question'));
+        if (count($question->quizs) == 0) {
+
+            if($question->type == 'radio') {
+                $values = $question->values;
+                return view('questions.edit', compact('question', 'values'));
+            }
+
+    	   return view('questions.edit', compact('question'));
+        }
     }
 
     public function update(Request $request, Question $question)
     {
-    	$this->validate($request, [
-				'question' => 'required|min:4',
-		], $this->messages);
+    	$validator = \Validator::make($request->all(), [
+                'question' => 'required|min:4',
+                'values' => 'required_if:type,radio',
+        ], $this->messages);
+
+        $errors = $validator->errors();
 
 		$question->question = $request->input('question');
+
+        if ($question->type == 'radio') {
+
+            $values = $request->input('values');
+            $errors = $this->validateOptions($values, $errors);
+            $question->values = $values;
+        }
+
+        if (!$errors->isEmpty()) {
+            return back()->withErrors($errors)->withInput();
+        }
+
 		$question->save();
 
-		return redirect('/');
+		return redirect('/questions');
     }
 
     public function delete(Question $question)
     {
-		$quizs = $question->quizs;
+		/*$quizs = $question->quizs;
 		foreach ($quizs as $quiz) {
 			$orderOfQuestion = DB::table('quiz_question')->select('order')->where([['quiz_id', $quiz->id], ['question_id', $question->id]])->first()->order;
 			$quiz->questions()->detach($question->id);
@@ -128,7 +205,14 @@ class QuestionsController extends Controller
 		Answer::where('question_id', $question->id)->delete();
     	$question->delete();
 
-    	return redirect('/');
+    	return redirect('/questions');*/
+
+        if (count($question->quizs) == 0 ) {
+            
+            $question->delete();
+            return redirect('/questions');
+
+        }
     }
 
 	private function saveDataFieldsToSession(Request $request)
@@ -156,4 +240,5 @@ class QuestionsController extends Controller
         }
         return false;
     }
+
 }

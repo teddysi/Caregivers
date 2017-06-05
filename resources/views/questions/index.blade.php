@@ -86,6 +86,7 @@
 										<div class="col-sm-6 col-md-4 col-lg-4">
 											<a class="btn btn-block btn-primary" href="{{route('questions.show', ['question' => $question->id])}}">Detalhes</a>
 										</div>
+										@if(count($question->quizs) == 0)
 										<div class="col-sm-6 col-md-4 col-lg-4">
 											<a class="btn btn-block btn-warning" href="{{route('questions.edit', ['question' => $question->id])}}">Editar</a>
 										</div>
@@ -96,6 +97,7 @@
 												<button type="submit" class="btn btn-block btn-danger" name="save">Eliminar</button>
 										    </form>
 										</div>
+										@endif
 									</div>
 								</td>
 					        </tr>

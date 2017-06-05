@@ -17,6 +17,14 @@
                 placeholder="Pergunta?" value="{{ $question->question }}" />
         </div>
         
+        @if($question->type == 'radio')
+        <div class="form-group" id="inputOptions">
+                <label for="inputOptions">Opções de Resposta</label>
+                <h5>Cada opção deve ser separa e terminada por ";". Exemplo: "Gosto muito;Não gosto;Sim;Não;"</h5>
+                <input type="text" class="form-control" name="values" value="{{ $question->values }}"/>
+            </div>
+        @endif
+
         <div class="form-group">
             <button type="submit" class="btn btn-primary" name="save">Guardar</button>
             <a class="btn btn-default" href="javascript:history.back()">Cancelar</a>

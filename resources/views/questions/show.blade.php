@@ -19,6 +19,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="row">
+                        @if(count($question->quizs) == 0)
                         <div class="col-sm-6 col-md-6 col-lg-6">
                             <a class="btn btn-block btn-warning" href="{{ route('questions.edit', ['question' => $question->id]) }}">Editar</a>
                         </div>
@@ -29,6 +30,7 @@
                                 <button type="submit" class="btn btn-block btn-danger" name="save">Eliminar</button>
                             </form>
                         </div>
+                        @endif
                     </div>
                     <div class="row">
                         <div class="col-sm-12 col-md-12 col-lg-12">
@@ -39,5 +41,13 @@
             </div>
  		</div>
 	</div>
+    @if($question->type == 'radio')
+        <h2><strong>Opções de resposta:</strong></h2><br>
+        <div>
+        @foreach($values as $value)
+            <h4>{{ $value }};</h4><br>
+        @endforeach
+        </div>
+    @endif
 </div>
 @endsection
