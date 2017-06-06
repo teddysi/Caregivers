@@ -417,9 +417,9 @@ class CaregiversController extends Controller
            return response('Não Encontrado', 404);
         }
 
-        if (!$caregiver_token || $user->caregiver_token != $caregiver_token) {
+        /*if (!$caregiver_token || $user->caregiver_token != $caregiver_token) {
             return response('Não Autorizado', 401);
-        }
+        }*/
 
         $quizs = $request->input();
         foreach ($quizs as $quiz) {
