@@ -35,6 +35,11 @@ class Evaluation extends Model
         return $this->hasMany('App\Answer', 'evaluation_id', 'id');
     }
 
+    public function inquired()
+    {
+        return $this->belongsTo('App\User', 'answered_by', 'id');
+    }
+
     public function logs()
     {
         return $this->hasMany('App\Log', 'evaluation_id', 'id');

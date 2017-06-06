@@ -11,6 +11,7 @@ use App\Material;
 use App\Log;
 use App\Quiz;
 use App\Answer;
+use App\Evaluation;
 use App\Http\Controllers\UsersController;
 use DB;
 
@@ -38,6 +39,14 @@ class CaregiversController extends Controller
 		}
         $patient->caregiver_id = $caregiver->id;
         $patient->save();
+
+        foreach ($patient->needs as $need) {
+            foreach ($need->materials as $material) {
+                if (!$caregiver->materials->contains("id", $material->id)) {
+                    $caregiver->materials()->attach($material->id);
+                }
+            }
+        }
 
         $log = new Log();
 		$log->performed_task = 'Associou o Paciente: ' . $patient->name. ' ao Cuidador: ' . $caregiver->username;
@@ -133,21 +142,23 @@ class CaregiversController extends Controller
             $log->save();
         }
 
-        $need = Need::find($request->input('need'));
-        if (!$need->materials->contains('id', $request->input('material'))) {
-            $need->materials()->attach($request->input('material'));
+        if ($request->input('need')) {
+            $need = Need::find($request->input('need'));
+            if (!$need->materials->contains('id', $request->input('material'))) {
+                $need->materials()->attach($request->input('material'));
 
-            $log = new Log();
-            $log->performed_task = 'Associou o Material: ' . $material->name. ' à Necessidade: ' . $need->description;
-            $log->done_by = Auth::user()->id;
-		    $log->need_id = $need->id;
-            $log->save();
+                $log = new Log();
+                $log->performed_task = 'Associou o Material: ' . $material->name. ' à Necessidade: ' . $need->description;
+                $log->done_by = Auth::user()->id;
+                $log->need_id = $need->id;
+                $log->save();
 
-            $log = new Log();
-            $log->performed_task = 'Associou o Material: ' . $material->name. ' à Necessidade: ' . $need->description;
-            $log->done_by = Auth::user()->id;
-		    $log->material_id = $material->id;
-            $log->save();
+                $log = new Log();
+                $log->performed_task = 'Associou o Material: ' . $material->name. ' à Necessidade: ' . $need->description;
+                $log->done_by = Auth::user()->id;
+                $log->material_id = $material->id;
+                $log->save();
+            }
         }
 
         return redirect()->route('caregivers.materials', ['caregiver' => $caregiver->id]); 
@@ -436,6 +447,8 @@ class CaregiversController extends Controller
                 $quizObj->materials($id)->detach($quiz["reference_id"]);
             }
 
+            $evaluation = Evaluation::find($evaluation_id);
+            $answer;
             foreach ($quiz["questions"] as $question) {
                 $answer = new Answer();
                 $answer->answered_by = $id;
@@ -451,6 +464,9 @@ class CaregiversController extends Controller
                 
                 $answer->save();
             }
+
+            $evaluation->answered_at = $answer->created_at;
+            $evaluation->save();
         }
 
         return response()->json("Quizs Submitted successfully");

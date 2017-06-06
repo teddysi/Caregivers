@@ -34,15 +34,10 @@ class EvaluationsController extends Controller
 			}
 		}
 
-		$answered_at = null;
-		if (count($evaluation->answers) > 0) {
-			$answered_at = $evaluation->answers()->first()->created_at;
-		}
-
 		$logs = $evaluation->logs()->paginate(10, ['*'], 'logs');
 		$logs->setPageName('logs');
 
-		return view('evaluations.show', compact('evaluation', 'logs', 'answered_at'));
+		return view('evaluations.show', compact('evaluation', 'logs'));
 	}
 
     public function create($id, $typeEval)
@@ -208,7 +203,7 @@ class EvaluationsController extends Controller
 			abort(403);
 		}
 
-        $evaluations = $material->evaluations()->paginate(10, ['*'], 'evaluations');
+        $evaluations = $material->evaluations()->where('answered_by', $caregiver->id)->paginate(10, ['*'], 'evaluations');
         $evaluations->setPageName('evaluations');
 
 		return view('materials.rate_materials', compact('caregiver', 'evaluations', 'material'));
@@ -240,6 +235,7 @@ class EvaluationsController extends Controller
 		$evaluation->created_by = Auth::user()->id;
 		$evaluation->model = $quiz->name;
 		$evaluation->material_id = $material->id;
+		$evaluation->answered_by = $request->input('caregiver');
 		$evaluation->save();
 
 		$quiz->materials($request->input('caregiver'))->attach([$material->id => ['caregiver_id'=> $request->input('caregiver'), 'evaluation_id'=> $evaluation->id]]);

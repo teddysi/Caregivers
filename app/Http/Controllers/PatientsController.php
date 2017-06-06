@@ -180,6 +180,13 @@ class PatientsController extends Controller
         }
 		$patient->needs()->attach($need->id);
 
+        $caregiver = $patient->caregiver;
+        foreach ($need->materials as $material) {
+            if (!$caregiver->materials->contains("id", $material->id)) {
+                $caregiver->materials()->attach($material->id);
+            }
+        }
+
         $log = new Log();
 		$log->performed_task = 'Associou a Necessidade: ' . $need->description. ' ao Paciente: ' . $patient->name;
 		$log->done_by = Auth::user()->id;

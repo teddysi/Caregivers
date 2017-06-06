@@ -15,9 +15,9 @@
             <h4><strong>Criador:</strong> {{ $evaluation->creator->username }}</h4>
             <h4><strong>Data da criação:</strong> {{ $evaluation->created_at }}</h4>
             <h4><strong>Data da última atualização:</strong> {{ $evaluation->updated_at }}</h4>
-            @if ($answered_at)
+            @if ($evaluation->answered_at)
                 <h4><strong>Data da resposta:</strong> {{ $answered_at }}</h4>
-            @elseif (!$answered_at && !$evaluation->path)
+            @elseif (!$evaluation->answered_at && !$evaluation->path)
                 <h4><strong>Data da resposta:</strong> À espera de resposta</h4>
             @endif
         </div>

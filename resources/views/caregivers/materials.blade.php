@@ -11,29 +11,45 @@
 			<form class="form" method="POST" action="{{ route('caregivers.associateMaterial', ['caregiver' => $caregiver->id]) }}">
 				{{ csrf_field() }}
                 <div class="row">
-					<div class="col-lg-4 col-md-4 col-sm-6">
-						<div class="form-group form-inline">
-							<label for="need">Necessidade:</label>
-							<select name="need" class="form-control">
-								@foreach ($patientsNeeds as $patientsNeed)
-									<option value="{{ $patientsNeed->id }}">{{ $patientsNeed->description }}</option>
-								@endforeach
-							</select>
+					@if (count($patientsNeeds))
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<div class="form-group form-inline">
+								<label for="need">Necessidade:</label>
+								<select name="need" class="form-control">
+									@foreach ($patientsNeeds as $patientsNeed)
+										<option value="{{ $patientsNeed->id }}">{{ $patientsNeed->description }}</option>
+									@endforeach
+								</select>
+							</div>
 						</div>
-					</div>
-					<div class="col-lg-4 col-md-4 col-sm-6">
-						<div class="form-group form-inline">
-							<label for="material">Material:</label>
-							<select name="material" class="form-control">
-								@foreach ($allMaterials as $material)
-									<option value="{{ $material->id }}">{{ $material->name }}</option>
-								@endforeach
-							</select>
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<div class="form-group form-inline">
+								<label for="material">Material:</label>
+								<select name="material" class="form-control">
+									@foreach ($allMaterials as $material)
+										<option value="{{ $material->id }}">{{ $material->name }}</option>
+									@endforeach
+								</select>
+							</div>
 						</div>
-					</div>
-					<div class="col-lg-4 col-md-4 col-sm-6 pull-right">
-						<button type="submit" class="btn btn-default btn-block">Associar</button>
-					</div>
+						<div class="col-lg-4 col-md-4 col-sm-6 pull-right">
+							<button type="submit" class="btn btn-default btn-block">Associar</button>
+						</div>
+					@else
+						<div class="col-lg-6 col-md-6 col-sm-6">
+							<div class="form-group form-inline">
+								<label for="material">Material:</label>
+								<select name="material" class="form-control">
+									@foreach ($allMaterials as $material)
+										<option value="{{ $material->id }}">{{ $material->name }}</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-6 col-md-6 col-sm-6 pull-right">
+							<button type="submit" class="btn btn-default btn-block">Associar</button>
+						</div>
+					@endif
 				</div>
 			</form>
 		</div>

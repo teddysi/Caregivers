@@ -72,6 +72,11 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Quiz', 'created_by', 'id');
     }
+
+    public function quizsAnswered()
+    {
+        return $this->hasMany('App\Evaluation', 'answered_by', 'id');
+    }
 }
 
 
