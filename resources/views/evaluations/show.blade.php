@@ -16,7 +16,7 @@
             <h4><strong>Data da criação:</strong> {{ $evaluation->created_at }}</h4>
             <h4><strong>Data da última atualização:</strong> {{ $evaluation->updated_at }}</h4>
             @if ($evaluation->answered_at)
-                <h4><strong>Data da resposta:</strong> {{ $answered_at }}</h4>
+                <h4><strong>Data da resposta:</strong> {{ $evaluation->answered_at }}</h4>
             @elseif (!$evaluation->answered_at && !$evaluation->path)
                 <h4><strong>Data da resposta:</strong> À espera de resposta</h4>
             @endif

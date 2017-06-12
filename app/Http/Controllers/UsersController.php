@@ -64,6 +64,11 @@ class UsersController extends Controller
 			$materials->setPageName('materials');
             return view('dashboard.admin', compact('users', 'materials'));
         } elseif (Auth::user()->role == 'healthcarepro') {
+			$countNewNotifications = 0;
+			foreach (Auth::user()->caregivers as $caregiver) {
+				$countNewNotifications += count($caregiver->notificationsCreated->where('viewed', 0));
+			}
+
 			$caregivers = Caregiver::paginate(10, ['*'], 'caregivers');
 			$caregivers->setPageName('caregivers');
 

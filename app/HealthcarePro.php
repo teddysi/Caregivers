@@ -38,5 +38,4 @@ class HealthcarePro extends User
     {
         return $this->hasMany('App\Material', 'created_by', 'id');
     }
-    
 }

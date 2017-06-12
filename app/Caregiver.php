@@ -59,4 +59,8 @@ class Caregiver extends User
         return $this->belongsToMany('App\Quiz', 'quiz_caregiver', 'caregiver_id', 'quiz_id');
     }
 
+    public function notificationsCreated()
+    {
+        return $this->hasMany('App\Notification', 'created_by', 'id');
+    }
 }

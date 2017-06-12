@@ -88,11 +88,13 @@ class EvaluationsController extends Controller
 		}
 
 		$evaluation->created_by = Auth::user()->id;
-
+		
+		$patient = Patient::find($id);
 		if (str_contains(url()->current(), '/patients/')) {
 			if($request->input('typeEval') == 'quiz') {
 				$quiz = Quiz::find($request->input('quiz'));
 				$evaluation->model = $quiz->name;
+				$evaluation->answered_by = $patient->caregiver->id;
 				$evaluation->patient_id = $id;
 				$evaluation->save();
 				$quiz->patients()->attach([$id => ['evaluation_id'=> $evaluation->id]]);
@@ -116,6 +118,7 @@ class EvaluationsController extends Controller
 			if($request->input('typeEval') == 'quiz') {
 				$quiz = Quiz::find($request->input('quiz'));
 				$evaluation->model = $quiz->name;
+				$evaluation->answered_by = $id;
 				$evaluation->caregiver_id = $id;
 				$evaluation->save();
 				$quiz->caregivers()->attach([$id => ['evaluation_id'=> $evaluation->id]]);

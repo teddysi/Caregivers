@@ -7,6 +7,7 @@ use App\Caregiver;
 use App\Patient;
 use App\Material;
 use App\Proceeding;
+use App\Notification;
 
 class ProceedingsController extends Controller
 {
@@ -22,7 +23,7 @@ class ProceedingsController extends Controller
         $material = Material::find($material_id);
 
         if ($caregiver == null || $patient == null || $material == null) {
-           return response('Não Encontrado', 404);
+            return response('Não Encontrado', 404);
         }
 
         if (!$caregiver_token || $caregiver->caregiver_token != $caregiver_token) {
@@ -34,6 +35,11 @@ class ProceedingsController extends Controller
         $proceeding->patient_id = $patient_id;
         $proceeding->material_id = $material_id;
         $proceeding->save();
+
+        $notification = new Notification();
+        $notification->text = 'O Cuidador '.$caregiver->username.' utilizou o Material '.$material->name.' para cuidar o paciente '.$patient->name.'.';
+        $notification->created_by = $caregiver_id;
+        $notification->save();
         
         return response()->json("Proceeding created successfully");
     }
@@ -59,6 +65,11 @@ class ProceedingsController extends Controller
         $proceeding->material_id = $material_id;
         $proceeding->note = $note;
         $proceeding->save();
+
+        $notification = new Notification();
+        $notification->text = 'O Cuidador '.$caregiver->username.' atualizou o Procedimento realizado ao '.$patient->name.'.';
+        $notification->created_by = $proceeding->caregiver_id;
+        $notification->save();
         
         return response()->json("Proceeding updated successfully");
     }
