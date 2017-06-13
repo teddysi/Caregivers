@@ -122,7 +122,7 @@ class PatientsController extends Controller
 		$log->patient_id = $patient->id;
 		$log->save();
 
-		return redirect('/');
+		return redirect()->route('patients');
 	}
 
 	public function show(Patient $patient)
@@ -159,7 +159,7 @@ class PatientsController extends Controller
 		$log->patient_id = $patient->id;
 		$log->save();
 
-		return redirect('/');
+		return redirect()->route('patients');
 	}
 
 	public function needs(Patient $patient)

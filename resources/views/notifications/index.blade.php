@@ -5,18 +5,18 @@
 	<div class="row">
 		<div class="col-lg-12">
             <h1>Notificações</h1>
-            @if (count($allNotifications))
+            @if (count($notifications))
                 <br />
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>Data</th>
                             <th>Notificação</th>
-                            <th>Cuidador</th>
+                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($allNotifications as $notification)
+                        @foreach ($notifications as $notification)
 							<tr>
 					        	<td>{{ $notification->created_at }}
                                     @if ($notification->viewed == 0)
@@ -24,7 +24,17 @@
                                     @endif
                                 </td>
 								<td>{{ $notification->text }}</td>
-								<td>{{ $notification->creator->username }}</td>
+								<td>
+                                    <div class="row">
+										<div class="col-sm-12 col-md-12 col-lg-12">
+                                            @if ($notification->type == 'evaluation')
+                                                <a class="btn btn-block btn-primary" href="{{ route('evaluations.show', ['evaluation' => $notification->evaluation_id]) }}">Detalhes</a>
+                                            @else
+                                                <a class="btn btn-block btn-primary" href="{{ route('caregivers.rate', ['caregiver' => $notification->creator->id]) }}">Detalhes</a>
+                                            @endif
+										</div>
+									</div>
+                                </td>
 					        </tr>
 				        @endforeach
                     </tbody>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Question;
 use App\Answer;
+use App\Log;
 use Auth;
 use DB;
 
@@ -68,6 +69,13 @@ class QuestionsController extends Controller
         }
 
 		$questions = Question::where($where)->orderBy($col, $order)->paginate((int)$pages);
+        foreach ($questions as $question) {
+			if (count($question->quizs) < 1) {
+				$question->canBeBlocked = true;
+			} else {
+				$question->canBeBlocked = false;
+			}
+		}
 
 		return view('questions.index', compact('questions', 'searchData'));
     }
@@ -92,15 +100,11 @@ class QuestionsController extends Controller
 
         if ($request->input('selectType') == 'radio') {
             $question->type = 'radio';
-            
             $values = $request->input('values');
-
             $errors = $this->validateOptions($values, $errors);
-
             $question->values = $values;
-
         } else {
-            $questions->type = 'text';
+            $question->type = 'text';
         }
 
         if (!$errors->isEmpty()) {
@@ -109,13 +113,12 @@ class QuestionsController extends Controller
 
 		$question->save();
 
-		return redirect('/questions');
+		return redirect()->route('questions');
     }
 
     public function validateOptions($values , $errors)
     {
         $count_values = substr_count($values,";");
-
 
         if (substr($values, 0, 1) === ';') {
             $errors->add('values','O campo "Opções" não pode começar com ";".');
@@ -138,6 +141,12 @@ class QuestionsController extends Controller
 
     public function show(Question $question)
     {
+        if (count($question->quizs) < 1) {
+            $question->canBeBlocked = true;
+        } else {
+            $question->canBeBlocked = false;
+        }
+
         if ($question->type == 'radio') {
             $values = explode(";", $question->values);
             array_pop($values);
@@ -151,7 +160,6 @@ class QuestionsController extends Controller
     public function edit(Question $question)
     {
         if (count($question->quizs) == 0) {
-
             if($question->type == 'radio') {
                 $values = $question->values;
                 return view('questions.edit', compact('question', 'values'));
@@ -169,11 +177,9 @@ class QuestionsController extends Controller
         ], $this->messages);
 
         $errors = $validator->errors();
-
 		$question->question = $request->input('question');
 
         if ($question->type == 'radio') {
-
             $values = $request->input('values');
             $errors = $this->validateOptions($values, $errors);
             $question->values = $values;
@@ -182,37 +188,38 @@ class QuestionsController extends Controller
         if (!$errors->isEmpty()) {
             return back()->withErrors($errors)->withInput();
         }
-
 		$question->save();
 
-		return redirect('/questions');
+		return redirect()->route('questions');
     }
 
-    public function delete(Question $question)
+    public function toggleBlock(Request $request, Question $question)
     {
-		/*$quizs = $question->quizs;
-		foreach ($quizs as $quiz) {
-			$orderOfQuestion = DB::table('quiz_question')->select('order')->where([['quiz_id', $quiz->id], ['question_id', $question->id]])->first()->order;
-			$quiz->questions()->detach($question->id);
+		if ($question->blocked == 0) {
+            $question->blocked = 1;
+            $question->save();
 
-			$questionsToUpdateOrder = $quiz->questions()->where('order', '>', $orderOfQuestion)->get();
-			foreach ($questionsToUpdateOrder as $questionToUpdate) {
-				$orderOfQuestionToUpdate = DB::table('quiz_question')->select('order')->where([['quiz_id', $quiz->id], ['question_id', $questionToUpdate->id]])->first()->order;
-				$quiz->questions()->updateExistingPivot($questionToUpdate->id, ['order' => $orderOfQuestionToUpdate - 1]);
-			}
-		}
+			$log = new Log();
+			$log->performed_task = 'Foi bloqueada.';
+			$log->done_by = Auth::user()->id;
+			$log->question_id = $question->id;
+			$log->save();
 
-		Answer::where('question_id', $question->id)->delete();
-    	$question->delete();
+            $request->session()->flash('blockedStatus', "A Questão $question->question foi bloqueada.");
+        } elseif ($question->blocked == 1) {
+            $question->blocked = 0;
+            $question->save();
 
-    	return redirect('/questions');*/
+			$log = new Log();
+			$log->performed_task = 'Foi desbloqueada.';
+			$log->done_by = Auth::user()->id;
+			$log->question_id = $question->id;
+			$log->save();
 
-        if (count($question->quizs) == 0 ) {
-            
-            $question->delete();
-            return redirect('/questions');
-
+            $request->session()->flash('blockedStatus', "A Questão $question->question foi desbloqueada.");
         }
+
+        return back();
     }
 
 	private function saveDataFieldsToSession(Request $request)

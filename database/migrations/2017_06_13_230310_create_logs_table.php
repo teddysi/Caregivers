@@ -28,6 +28,10 @@ class CreateLogsTable extends Migration
             $table->foreign('material_id')->references('id')->on('materials');
             $table->integer('evaluation_id')->nullable()->unsigned()->index();
             $table->foreign('evaluation_id')->references('id')->on('evaluations');
+            $table->integer('quiz_id')->nullable()->unsigned()->index();
+            $table->foreign('quiz_id')->references('id')->on('quizs');
+            $table->integer('question_id')->nullable()->unsigned()->index();
+            $table->foreign('question_id')->references('id')->on('questions');
             $table->timestamps();
         });
     }

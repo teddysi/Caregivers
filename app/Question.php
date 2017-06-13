@@ -24,5 +24,10 @@ class Question extends Model
     {
         return $this->belongsToMany('App\Quiz', 'quiz_question', 'question_id', 'quiz_id');
     }
+
+    public function logs()
+    {
+        return $this->hasMany('App\Log', 'question_id', 'id');
+    }
 }
 

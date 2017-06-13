@@ -64,11 +64,6 @@ class UsersController extends Controller
 			$materials->setPageName('materials');
             return view('dashboard.admin', compact('users', 'materials'));
         } elseif (Auth::user()->role == 'healthcarepro') {
-			$countNewNotifications = 0;
-			foreach (Auth::user()->caregivers as $caregiver) {
-				$countNewNotifications += count($caregiver->notificationsCreated->where('viewed', 0));
-			}
-
 			$caregivers = Auth::user()->caregivers()->paginate(10, ['*'], 'caregivers');
 			$caregivers->setPageName('caregivers');
 
@@ -80,7 +75,7 @@ class UsersController extends Controller
 			}
 			$otherCaregivers->setPageName('otherCaregivers');
 
-			return view('dashboard.healthcarepro', compact('countNewNotifications', 'caregivers', 'otherCaregivers'));
+			return view('dashboard.healthcarepro', compact('caregivers', 'otherCaregivers'));
 		}
 
         Auth::logout();
@@ -89,8 +84,6 @@ class UsersController extends Controller
 
 	public function index(Request $request)
 	{
-		$countNewNotifications = $this->getCountNewNotifications();
-
 		$where = [];
         $pages = '10';
         $col = 'created_at';
@@ -183,7 +176,7 @@ class UsersController extends Controller
 			$this->roleToFullWord($user);
 		}
 
-		return view('users.index', compact('countNewNotifications', 'users','searchData'));
+		return view('users.index', compact('users','searchData'));
 	}	
 
 	public function show(User $user)
@@ -191,8 +184,6 @@ class UsersController extends Controller
 		if (Auth::user()->role == 'healthcarepro' && $user->role != 'caregiver') {
 			abort(403);
 		}
-
-		$countNewNotifications = $this->getCountNewNotifications();
 
 		$this->roleToFullWord($user);
 
@@ -207,7 +198,7 @@ class UsersController extends Controller
 		$logs = $user->logs()->paginate(10, ['*'], 'logs');
 		$logs->setPageName('logs');
 
-		return view('users.show', compact('countNewNotifications', 'user', 'isMyCaregiver', 'logs'));
+		return view('users.show', compact('user', 'isMyCaregiver', 'logs'));
 	}
 
 	public function create($role)
@@ -216,9 +207,7 @@ class UsersController extends Controller
 			abort(403);
 		}
 
-		$countNewNotifications = $this->getCountNewNotifications();
-
-		return view('users.create', compact('countNewNotifications', 'role'));
+		return view('users.create', compact('role'));
 	}
 
 	public function store(Request $request)
@@ -273,12 +262,12 @@ class UsersController extends Controller
 		$this->roleToFullWord($user);
 
 		$log = new Log();
-		$log->performed_task = 'Criou o ' . $user->role . ': ' . $user->username;
+		$log->performed_task = 'Foi criado.';
 		$log->done_by = Auth::user()->id;
 		$log->user_id = $user->id;
 		$log->save(); 
 
-		return redirect('/');
+		return redirect()->route('users');
 	}
 
 	public function edit(User $user) {
@@ -286,10 +275,8 @@ class UsersController extends Controller
 			abort(403);
 		}
 
-		$countNewNotifications = $this->getCountNewNotifications();
-
 		$this->roleToFullWord($user);
-		return view('users.edit', compact('countNewNotifications', 'user'));
+		return view('users.edit', compact('user'));
 	}
 
 	public function update(Request $request, User $user)
@@ -325,12 +312,12 @@ class UsersController extends Controller
 		$this->roleToFullWord($user);
 
 		$log = new Log();
-		$log->performed_task = 'Atualizou o ' . $user->role. ': ' . $user->username;
+		$log->performed_task = 'Foi atualizado.';
 		$log->done_by = Auth::user()->id;
 		$log->user_id = $user->id;
 		$log->save();
 
-		return redirect('/');
+		return redirect()->route('users');
 	}
 	
 	public function toggleBlock(Request $request, User $user)
@@ -345,7 +332,7 @@ class UsersController extends Controller
 
 			$this->roleToFullWord($user);
 			$log = new Log();
-			$log->performed_task = 'Bloqueou o ' . $user->role. ': ' . $user->username;
+			$log->performed_task = 'Foi bloqueado.';
 			$log->done_by = Auth::user()->id;
 			$log->user_id = $user->id;
 			$log->save();
@@ -357,7 +344,7 @@ class UsersController extends Controller
 
 			$this->roleToFullWord($user);
 			$log = new Log();
-			$log->performed_task = 'Desbloqueou o ' . $user->role. ': ' . $user->username;
+			$log->performed_task = 'Foi desbloqueado.';
 			$log->done_by = Auth::user()->id;
 			$log->user_id = $user->id;
 			$log->save();
@@ -379,13 +366,13 @@ class UsersController extends Controller
 		$this->roleToFullWord($caregiver);
 
 		$log = new Log();
-		$log->performed_task = 'Associou o ' . $caregiver->role. ': ' . $caregiver->username . ' ao ' . $user->role . ': ' . $user->username;
+		$log->performed_task = 'Foi associado ao '.$user->role.': '.$user->username.'.';
 		$log->done_by = Auth::user()->id;
 		$log->user_id = $caregiver->id;
 		$log->save();
 
 		$log = new Log();
-		$log->performed_task = 'Associou o ' . $caregiver->role. ': ' . $caregiver->username . ' ao ' . $user->role . ': ' . $user->username;
+		$log->performed_task = 'Tornou-se responsável pelo '.$caregiver->role.': '.$caregiver->username.'.';
 		$log->done_by = Auth::user()->id;
 		$log->user_id = $user->id;
 		$log->save();
@@ -404,13 +391,13 @@ class UsersController extends Controller
 		$this->roleToFullWord($caregiver);
 
 		$log = new Log();
-		$log->performed_task = 'Desassociou o ' . $caregiver->role. ': ' . $caregiver->username . ' do ' . $user->role . ': ' . $user->username;
+		$log->performed_task = 'Foi desassociado ao '.$user->role.': '.$user->username.'.';
 		$log->done_by = Auth::user()->id;
 		$log->user_id = $caregiver->id;
 		$log->save();
 
 		$log = new Log();
-		$log->performed_task = 'Desassociou o ' . $caregiver->role. ': ' . $caregiver->username . ' do ' . $user->role . ': ' . $user->username;
+		$log->performed_task = 'Deixou de ser responsável pelo '.$caregiver->role.': '.$caregiver->username.'.';
 		$log->done_by = Auth::user()->id;
 		$log->user_id = $user->id;
 		$log->save();
@@ -420,21 +407,26 @@ class UsersController extends Controller
 
 	public function notifications(User $user)
     {
-		$countNewNotifications = $this->getCountNewNotifications();
-
 		$allNotifications = collect();
 		foreach ($user->caregivers as $caregiver) {
-			foreach ($caregiver->notificationsCreated as $notification) {
-				$replica = $notification->replicate();
-				$replica->created_at = $notification->created_at;
-				$allNotifications->push($replica);
+			$allNotifications = $allNotifications->merge($caregiver->notificationsCreated);
+		}
+		$sortedNotifications = $allNotifications->sortByDesc(function($notification) {
+			return $notification->created_at;
+		});
 
+		$notifications = collect();
+		foreach ($sortedNotifications as $notification) {
+			$replica = $notification->replicate();
+			$replica->created_at = $notification->created_at;
+			$notifications->push($replica);
+			if ($notification->viewed == 0) {
 				$notification->viewed = 1;
 				$notification->save();
 			}
 		}
 
-        return view('notifications.index', ['user' => Auth::user()->id], compact('countNewNotifications', 'allNotifications'));
+        return view('notifications.index', ['user' => Auth::user()->id], compact('notifications'));
     }
 
 	private function roleToFullWord($user)
@@ -462,16 +454,6 @@ class UsersController extends Controller
 		foreach ($materials as $material) {
 			MaterialsController::changeTypeFormat($material);
 		}
-	}
-
-	public static function getCountNewNotifications()
-	{
-		$countNewNotifications = 0;
-		foreach (Auth::user()->caregivers as $caregiver) {
-			$countNewNotifications += count($caregiver->notificationsCreated->where('viewed', 0));
-		}
-
-		return $countNewNotifications;
 	}
 
 	private function saveDataFieldsToSession(Request $request)

@@ -87,16 +87,23 @@
 											<a class="btn btn-block btn-primary" href="{{route('questions.show', ['question' => $question->id])}}">Detalhes</a>
 										</div>
 										@if(count($question->quizs) == 0)
-										<div class="col-sm-6 col-md-4 col-lg-4">
-											<a class="btn btn-block btn-warning" href="{{route('questions.edit', ['question' => $question->id])}}">Editar</a>
-										</div>
-										<div class="col-sm-6 col-md-4 col-lg-4">
-											<form action="{{route('questions.delete', ['question' => $question->id])}}" method="POST" class="form-group">
-												{{ method_field('DELETE') }}
-										        {{ csrf_field() }}
-												<button type="submit" class="btn btn-block btn-danger" name="save">Eliminar</button>
-										    </form>
-										</div>
+											<div class="col-sm-6 col-md-4 col-lg-4">
+												<a class="btn btn-block btn-warning" href="{{route('questions.edit', ['question' => $question->id])}}">Editar</a>
+											</div>
+										@endif
+										@if ($question->canBeBlocked)
+											<div class="col-sm-6 col-md-4 col-lg-4">
+												<form action="{{ route('questions.toggleBlock', ['question' => $question->id]) }}" method="POST" class="form-group">
+													{{ csrf_field() }}
+													<div class="form-group">
+														@if ($question->blocked == 0)
+															<button type="submit" class="btn btn-block btn-danger" name="block">Bloquear</button>
+														@elseif ($question->blocked == 1)
+															<button type="submit" class="btn btn-block btn-success" name="unblock">Desbloquear</button>
+														@endif
+													</div>
+												</form>
+											</div>
 										@endif
 									</div>
 								</td>

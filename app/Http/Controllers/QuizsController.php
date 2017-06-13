@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Quiz;
 use App\Question;
 use App\Answer;
+use App\Log;
 use Auth;
 use DB;
 
@@ -66,6 +67,18 @@ class QuizsController extends Controller
         }
 
 		$quizs = Quiz::where($where)->orderBy($col, $order)->paginate((int)$pages);
+		foreach ($quizs as $quiz) {
+			$count = 0;
+			$count += count($quiz->caregivers);
+			$count += count($quiz->patients);
+			$count += DB::table('quiz_material')->where('quiz_id', $quiz->id)->count();
+
+			if ($count < 1) {
+				$quiz->canBeBlocked = true;
+			} else {
+				$quiz->canBeBlocked = false;
+			}
+		}
 
 		return view('quizs.index', compact('quizs', 'searchData'));
 	}
@@ -84,7 +97,6 @@ class QuizsController extends Controller
 		$quiz = new Quiz();
 		$quiz->name = $request->input('name');
 		$quiz->created_by = Auth::user()->id;
-
 		$quiz->save();
 
 		return redirect()->route('quizs.questions', ['quiz' => $quiz->id]);
@@ -93,6 +105,17 @@ class QuizsController extends Controller
 	public function show(Quiz $quiz) 
 	{
 		$quizQuestions = $quiz->questions()->withPivot('order')->orderBy('pivot_order', 'asc')->paginate(10, ['*'], 'quizQuestions');
+
+		$count = 0;
+		$count += count($quiz->caregivers);
+		$count += count($quiz->patients);
+		$count += DB::table('quiz_material')->where('quiz_id', $quiz->id)->count();
+
+		if ($count < 1) {
+			$quiz->canBeBlocked = true;
+		} else {
+			$quiz->canBeBlocked = false;
+		}
 
 		return view('quizs.show', compact('quiz', 'quizQuestions'));
 	}
@@ -105,23 +128,42 @@ class QuizsController extends Controller
     public function update(Request $request, Quiz $quiz)
     {
     	$this->validate($request, [
-				'name' => 'required|min:4',
+			'name' => 'required|min:4',
 		], $this->messages);
 
 		$quiz->name = $request->input('name');
 		$quiz->save();
 
-		return redirect('/');
+		return redirect()->route('quizs');
     }
 
-	public function delete(Quiz $quiz)
+	public function toggleBlock(Request $request, Quiz $quiz)
     {
-		//TODO: apagar avaliaçoes k usem este questionario
-        Answer::where('quiz_id', $quiz->id)->delete();
-    	$quiz->questions()->detach();
-    	$quiz->delete();
+		if ($quiz->blocked == 0) {
+            $quiz->blocked = 1;
+            $quiz->save();
 
-    	return redirect('/');
+			$log = new Log();
+			$log->performed_task = 'Foi bloqueado.';
+			$log->done_by = Auth::user()->id;
+			$log->quiz_id = $quiz->id;
+			$log->save();
+
+            $request->session()->flash('blockedStatus', "O Questionário $quiz->name foi bloqueado.");
+        } elseif ($quiz->blocked == 1) {
+            $quiz->blocked = 0;
+            $quiz->save();
+
+			$log = new Log();
+			$log->performed_task = 'Foi desbloqueado.';
+			$log->done_by = Auth::user()->id;
+			$log->quiz_id = $quiz->id;
+			$log->save();
+
+            $request->session()->flash('blockedStatus', "O Questionário $quiz->name foi desbloqueado.");
+        }
+
+        return back();
     }
 
 	public function questions(Quiz $quiz)
@@ -130,6 +172,7 @@ class QuizsController extends Controller
 		$quizQuestions->setPageName('quizQuestions');
 
 		$notQuizQuestions = Question::whereNotIn('id', $quiz->questions->modelKeys())
+									->where('blocked', 0)
 									->paginate(10, ['*'], 'notQuizQuestions');
 		$notQuizQuestions->setPageName('notQuizQuestions');
 
@@ -138,7 +181,11 @@ class QuizsController extends Controller
 
     public function addQuestion(Quiz $quiz, Question $question)
     {
-    	$count = count($quiz->questions()->get());
+		if ($question->blocked == 1) {
+			abort(403);
+		}
+		
+    	$count = count($quiz->questions);
 		$quiz->questions()->attach([$question->id => ['order'=> $count + 1]]);
 
 		return redirect()->route('quizs.questions', ['quiz' => $quiz->id]); 
@@ -151,9 +198,7 @@ class QuizsController extends Controller
 
 		$questionsToUpdateOrder = $quiz->questions()->where('order', '>', $orderOfQuestion)->get();
 		foreach ($questionsToUpdateOrder as $questionToUpdate) {
-
 			$orderOfQuestionToUpdate = DB::table('quiz_question')->select('order')->where([['quiz_id', $quiz->id], ['question_id', $questionToUpdate->id]])->first()->order;
-
 			$quiz->questions()->updateExistingPivot($questionToUpdate->id, ['order' => $orderOfQuestionToUpdate - 1]);
 		}
 

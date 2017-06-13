@@ -41,4 +41,9 @@ class Quiz extends Model
     {
         return $this->belongsToMany('App\Material', 'quiz_material', 'quiz_id', 'material_id')->where('caregiver_id', $id);
     }
+
+    public function logs()
+    {
+        return $this->hasMany('App\Log', 'quiz_id', 'id');
+    }
 }

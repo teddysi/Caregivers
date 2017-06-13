@@ -39,6 +39,7 @@ class ProceedingsController extends Controller
         $notification = new Notification();
         $notification->text = 'O Cuidador '.$caregiver->username.' utilizou o Material '.$material->name.' para cuidar o paciente '.$patient->name.'.';
         $notification->created_by = $caregiver_id;
+        $notification->type = 'proceeding';
         $notification->save();
         
         return response()->json("Proceeding created successfully");
@@ -69,6 +70,7 @@ class ProceedingsController extends Controller
         $notification = new Notification();
         $notification->text = 'O Cuidador '.$caregiver->username.' atualizou o Procedimento realizado ao '.$patient->name.'.';
         $notification->created_by = $proceeding->caregiver_id;
+        $notification->type = 'proceeding';
         $notification->save();
         
         return response()->json("Proceeding updated successfully");

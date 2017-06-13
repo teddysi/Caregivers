@@ -34,7 +34,7 @@
                             <a class="btn btn-block btn-warning" href="{{ route('users.edit', ['user' => $user->id]) }}">Editar</a>
                         </div>
                         <div class="col-sm-6 col-md-6 col-lg-6">
-                            <form action="{{ route('users.toggleBlock', ['users' => $user->id]) }}" method="POST" class="form-group">
+                            <form action="{{ route('users.toggleBlock', ['user' => $user->id]) }}" method="POST" class="form-group">
                                 {{ csrf_field() }}
                                 <div class="form-group">
                                     @if ($user->blocked == 0)

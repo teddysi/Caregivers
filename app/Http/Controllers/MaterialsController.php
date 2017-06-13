@@ -192,7 +192,7 @@ class MaterialsController extends Controller
 		$log->material_id = $material->id;
 		$log->save();
 
-		return redirect('/');
+		return redirect()->route('materials');
 	}
 
 	public function show(Material $material)
@@ -284,7 +284,7 @@ class MaterialsController extends Controller
 		$log->material_id = $material->id;
 		$log->save();
 
-		return redirect('/');
+		return redirect()->route('materials');
 	}
 
 	public function toggleBlock(Request $request, Material $material)

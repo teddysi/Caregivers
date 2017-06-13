@@ -64,6 +64,8 @@ class AnswersController extends Controller
             $notification = new Notification();
             $notification->text = 'O Cuidador '.$user->username.' respondeu à Avaliação '.$evaluation->description.'.';
             $notification->created_by = $id;
+            $notification->type = 'evaluation';
+            $notification->evaluation_id = $evaluation->id;
             $notification->save();
         }
 

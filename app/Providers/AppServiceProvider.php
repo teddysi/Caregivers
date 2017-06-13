@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
- use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Schema;
+use Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,11 +16,18 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-       
-
-
-    Schema::defaultStringLength(191);
-
+        Schema::defaultStringLength(191);
+        view()->composer('*', function($view) {
+            if (Auth::check()) {
+                if (Auth::user()->role == 'healthcarepro') {
+                    $countNewNotifications = 0;
+                    foreach (Auth::user()->caregivers as $caregiver) {
+                        $countNewNotifications += count($caregiver->notificationsCreated->where('viewed', 0));
+                    }
+                    $view->with('countNewNotifications', $countNewNotifications);
+                }
+            }
+        });
     }
 
     /**

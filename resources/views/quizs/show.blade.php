@@ -18,26 +18,48 @@
                     <h3 class="panel-title">Ações</h3>
                 </div>
                 <div class="panel-body">
-                    <div class="row">
-                        <div class="col-sm-6 col-md-6 col-lg-6">
-                            <a class="btn btn-block btn-warning" href="{{ route('quizs.edit', ['quiz' => $quiz->id]) }}">Editar</a>
+                    @if ($quiz->canBeBlocked)
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                <a class="btn btn-block btn-warning" href="{{ route('quizs.edit', ['quiz' => $quiz->id]) }}">Editar</a>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                <form action="{{ route('quizs.toggleBlock', ['quiz' => $quiz->id]) }}" method="POST" class="form-group">
+                                    {{ csrf_field() }}
+                                    <div class="form-group">
+                                        @if ($quiz->blocked == 0)
+                                            <button type="submit" class="btn btn-block btn-danger" name="block">Bloquear</button>
+                                        @elseif ($quiz->blocked == 1)
+                                            <button type="submit" class="btn btn-block btn-success" name="unblock">Desbloquear</button>
+                                        @endif
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-lg-6">
-                            <form action="{{route('quizs.delete', ['quiz' => $quiz->id])}}" method="POST" class="form-group">
-                                {{ method_field('DELETE') }}
-                                {{ csrf_field() }}
-                                <button type="submit" class="btn btn-block btn-danger" name="save">Eliminar</button>
-                            </form>
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                <a class="btn btn-block btn-primary" href="{{ route('quizs.questions', ['quiz' => $quiz->id]) }}">Perguntas</a>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar a atrás</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-6 col-md-6 col-lg-6">
-                            <a class="btn btn-block btn-primary" href="{{ route('quizs.questions', ['quiz' => $quiz->id]) }}">Perguntas</a>
+                    @else
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                <a class="btn btn-block btn-warning" href="{{ route('quizs.edit', ['quiz' => $quiz->id]) }}">Editar</a>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                <a class="btn btn-block btn-primary" href="{{ route('quizs.questions', ['quiz' => $quiz->id]) }}">Perguntas</a>
+                            </div>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-lg-6">
-                            <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar a atrás</a>
+                        <br />
+                        <div class="row">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar a atrás</a>
+                            </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
             </div>
  		</div>

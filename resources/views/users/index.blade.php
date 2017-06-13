@@ -13,7 +13,11 @@
 <div class="container">
 	<div class="row">
 		<div class="col-lg-12">
-            <h1>Utilizadores</h1>
+			@if (Auth::user()->role == 'admin')
+            	<h1>Utilizadores</h1>
+			@elseif (Auth::user()->role == 'healthcarepro')
+				<h1>Cuidadores</h1>
+			@endif
 			<fieldset>
 				<legend>Criar</legend>
 				<div class="row">
@@ -151,7 +155,7 @@
 											<a class="btn btn-block btn-warning" href="{{ route('users.edit', ['user' => $user->id]) }}">Editar</a>
 										</div>
 										<div class="col-sm-6 col-md-4 col-lg-4">
-											<form action="{{ route('users.toggleBlock', ['users' => $user->id]) }}" method="POST" class="form-group">
+											<form action="{{ route('users.toggleBlock', ['user' => $user->id]) }}" method="POST" class="form-group">
 												{{ csrf_field() }}
 												<div class="form-group">
 													@if ($user->blocked == 0)

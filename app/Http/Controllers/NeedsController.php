@@ -102,7 +102,7 @@ class NeedsController extends Controller
 		$log->need_id = $need->id;
 		$log->save();
 
-		return redirect('/');
+		return redirect()->route('needs');
 	}
 
 	public function edit(Need $need) {
@@ -124,7 +124,7 @@ class NeedsController extends Controller
 		$log->need_id = $need->id;
 		$log->save();
 
-		return redirect('/');
+		return redirect()->route('needs');
 	}
 
 	public function materials(Need $need)

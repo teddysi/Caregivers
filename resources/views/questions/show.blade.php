@@ -18,20 +18,25 @@
                     <h3 class="panel-title">Ações</h3>
                 </div>
                 <div class="panel-body">
-                    <div class="row">
-                        @if(count($question->quizs) == 0)
-                        <div class="col-sm-6 col-md-6 col-lg-6">
-                            <a class="btn btn-block btn-warning" href="{{ route('questions.edit', ['question' => $question->id]) }}">Editar</a>
+                    @if(count($question->quizs) == 0 && $question->canBeBlocked)
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                <a class="btn btn-block btn-warning" href="{{ route('questions.edit', ['question' => $question->id]) }}">Editar</a>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                <form action="{{ route('questions.toggleBlock', ['question' => $question->id]) }}" method="POST" class="form-group">
+                                    {{ csrf_field() }}
+                                    <div class="form-group">
+                                        @if ($question->blocked == 0)
+                                            <button type="submit" class="btn btn-block btn-danger" name="block">Bloquear</button>
+                                        @elseif ($question->blocked == 1)
+                                            <button type="submit" class="btn btn-block btn-success" name="unblock">Desbloquear</button>
+                                        @endif
+                                    </div>
+                                </form>
+                            </div>
                         </div>
-                        <div class="col-sm-6 col-md-6 col-lg-6">
-                            <form action="{{route('questions.delete', ['question' => $question->id])}}" method="POST" class="form-group">
-                                {{ method_field('DELETE') }}
-                                {{ csrf_field() }}
-                                <button type="submit" class="btn btn-block btn-danger" name="save">Eliminar</button>
-                            </form>
-                        </div>
-                        @endif
-                    </div>
+                    @endif
                     <div class="row">
                         <div class="col-sm-12 col-md-12 col-lg-12">
                             <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar a atrás</a>
@@ -42,11 +47,11 @@
  		</div>
 	</div>
     @if($question->type == 'radio')
-        <h2><strong>Opções de resposta:</strong></h2><br>
+        <h2><strong>Opções de resposta:</strong></h2>
         <div>
-        @foreach($values as $value)
-            <h4>{{ $value }};</h4><br>
-        @endforeach
+            @foreach($values as $value)
+                <h4>{{ $value }};</h4>
+            @endforeach
         </div>
     @endif
 </div>

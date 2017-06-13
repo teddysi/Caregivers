@@ -18,7 +18,9 @@ class CreateNotificationsTable extends Migration
             $table->string('text');
             $table->integer('created_by')->unsigned()->index();
             $table->foreign('created_by')->references('id')->on('users');
+            $table->string('type');
             $table->boolean('viewed')->default(false);
+            $table->integer('evaluation_id')->unsigned()->nullable();
             $table->timestamps();
         });
     }

@@ -312,9 +312,9 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'quizs'], f
 	]);
 	Route::patch('{quiz}', 'QuizsController@update');
 
-	Route::delete('{quiz}/delete', [
-		'as' => 'quizs.delete',
-		'uses' =>'QuizsController@delete'
+	Route::post('{quiz}/toggleBlock', [
+		'as' => 'quizs.toggleBlock',
+		'uses' =>'QuizsController@toggleBlock'
 	]);
 
 	Route::get('{quiz}/questions', [
@@ -368,9 +368,9 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'questions'
 	]);
 	Route::patch('{question}', 'QuestionsController@update');
 
-	Route::delete('{question}/delete', [
-		'as' => 'questions.delete',
-		'uses' =>'QuestionsController@delete'
+	Route::post('{question}/toggleBlock', [
+		'as' => 'questions.toggleBlock',
+		'uses' =>'QuestionsController@toggleBlock'
 	]);
 });
 

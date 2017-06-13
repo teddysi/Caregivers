@@ -250,6 +250,5 @@ class EvaluationsController extends Controller
 		$log->save();
 
 		return redirect()->route('materials.rate_materials', ['caregiver' => $request->input('caregiver'), 'material' => $material]);
-
 	}
 }
