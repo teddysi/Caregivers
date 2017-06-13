@@ -44,11 +44,6 @@ Route::group(['middleware' => 'auth', 'prefix' => 'users'], function () {
 	]);
 
 	Route::group(['middleware' => 'healthcarepro'], function () {
-		Route::get('{user}/caregivers', [
-			'as' => 'users.caregivers',
-			'uses' =>'UsersController@caregivers'
-		]);
-
 		Route::post('{user}/caregivers/{caregiver}/associate', [
 			'as' => 'users.associateCaregiver',
 			'uses' =>'UsersController@associate'
@@ -57,6 +52,11 @@ Route::group(['middleware' => 'auth', 'prefix' => 'users'], function () {
 		Route::post('{user}/caregivers/{caregiver}/diassociate', [
 			'as' => 'users.diassociateCaregiver',
 			'uses' =>'UsersController@diassociate'
+		]);
+
+		Route::get('{user}/notifications', [
+			'as' => 'users.notifications',
+			'uses' =>'UsersController@notifications'
 		]);
 	});
 });

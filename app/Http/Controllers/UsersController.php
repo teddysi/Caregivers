@@ -69,25 +69,18 @@ class UsersController extends Controller
 				$countNewNotifications += count($caregiver->notificationsCreated->where('viewed', 0));
 			}
 
-			$caregivers = Caregiver::paginate(10, ['*'], 'caregivers');
+			$caregivers = Auth::user()->caregivers()->paginate(10, ['*'], 'caregivers');
 			$caregivers->setPageName('caregivers');
 
-			$patients = Patient::paginate(10, ['*'], 'patients');
-			$patients->setPageName('patients');
+			$otherCaregivers = Caregiver::whereNotIn('id', Auth::user()->caregivers->modelKeys())->paginate(10, ['*'], 'otherCaregivers');
+			foreach ($otherCaregivers as $index => $otherCaregiver) {
+				if (count($otherCaregiver->healthcarePros) >= 2) {
+					$otherCaregivers->forget($index);
+				}
+			}
+			$otherCaregivers->setPageName('otherCaregivers');
 
-			$needs = Need::paginate(10, ['*'], 'needs');
-			$needs->setPageName('needs');
-
-			$materials = Material::paginate(10, ['*'], 'materials');
-			$this->changeTypeFormat($materials);
-			$materials->setPageName('materials');
-
-			$quizs = Quiz::paginate(10, ['*'], 'quizs');
-			$quizs->setPageName('quizs');
-
-			$questions = Question::paginate(10, ['*'], 'questions');
-			$questions->setPageName('questions');
-			return view('dashboard.healthcarepro',  compact('caregivers', 'patients', 'needs', 'materials', 'quizs', 'questions'));
+			return view('dashboard.healthcarepro', compact('countNewNotifications', 'caregivers', 'otherCaregivers'));
 		}
 
         Auth::logout();
@@ -96,6 +89,8 @@ class UsersController extends Controller
 
 	public function index(Request $request)
 	{
+		$countNewNotifications = $this->getCountNewNotifications();
+
 		$where = [];
         $pages = '10';
         $col = 'created_at';
@@ -188,7 +183,7 @@ class UsersController extends Controller
 			$this->roleToFullWord($user);
 		}
 
-		return view('users.index', compact('users','searchData'));
+		return view('users.index', compact('countNewNotifications', 'users','searchData'));
 	}	
 
 	public function show(User $user)
@@ -196,6 +191,8 @@ class UsersController extends Controller
 		if (Auth::user()->role == 'healthcarepro' && $user->role != 'caregiver') {
 			abort(403);
 		}
+
+		$countNewNotifications = $this->getCountNewNotifications();
 
 		$this->roleToFullWord($user);
 
@@ -210,7 +207,7 @@ class UsersController extends Controller
 		$logs = $user->logs()->paginate(10, ['*'], 'logs');
 		$logs->setPageName('logs');
 
-		return view('users.show', compact('user', 'isMyCaregiver', 'logs'));
+		return view('users.show', compact('countNewNotifications', 'user', 'isMyCaregiver', 'logs'));
 	}
 
 	public function create($role)
@@ -219,7 +216,9 @@ class UsersController extends Controller
 			abort(403);
 		}
 
-		return view('users.create', compact('role'));
+		$countNewNotifications = $this->getCountNewNotifications();
+
+		return view('users.create', compact('countNewNotifications', 'role'));
 	}
 
 	public function store(Request $request)
@@ -287,8 +286,10 @@ class UsersController extends Controller
 			abort(403);
 		}
 
+		$countNewNotifications = $this->getCountNewNotifications();
+
 		$this->roleToFullWord($user);
-		return view('users.edit', compact('user'));
+		return view('users.edit', compact('countNewNotifications', 'user'));
 	}
 
 	public function update(Request $request, User $user)
@@ -367,22 +368,6 @@ class UsersController extends Controller
         return back();
 	}
 
-	public function caregivers(User $user)
-	{
-		$caregivers = $user->caregivers()->paginate(10, ['*'], 'caregivers');
-		$caregivers->setPageName('caregivers');
-
-		$otherCaregivers = Caregiver::whereNotIn('id', $user->caregivers->modelKeys())->paginate(10, ['*'], 'otherCaregivers');
-		foreach ($otherCaregivers as $index => $otherCaregiver) {
-			if (count($otherCaregiver->healthcarePros) >= 2) {
-				$otherCaregivers->forget($index);
-			}
-		}
-		$otherCaregivers->setPageName('otherCaregivers');
-
-		return view('users.caregivers', compact('user', 'caregivers', 'otherCaregivers'));
-	}
-
 	public function associate(User $user, Caregiver $caregiver)
     {
 		if (count($caregiver->healthcarePros) >= 2 || $caregiver->healthcarePros->contains('id', $user->id)) {
@@ -405,7 +390,7 @@ class UsersController extends Controller
 		$log->user_id = $user->id;
 		$log->save();
 
-        return redirect()->route('users.caregivers', ['user' => $user->id]); 
+        return redirect('/'); 
     }
 
     public function diassociate(User $user, Caregiver $caregiver)
@@ -430,7 +415,26 @@ class UsersController extends Controller
 		$log->user_id = $user->id;
 		$log->save();
 
-        return redirect()->route('users.caregivers', ['user' => $user->id]); 
+        return redirect('/'); 
+    }
+
+	public function notifications(User $user)
+    {
+		$countNewNotifications = $this->getCountNewNotifications();
+
+		$allNotifications = collect();
+		foreach ($user->caregivers as $caregiver) {
+			foreach ($caregiver->notificationsCreated as $notification) {
+				$replica = $notification->replicate();
+				$replica->created_at = $notification->created_at;
+				$allNotifications->push($replica);
+
+				$notification->viewed = 1;
+				$notification->save();
+			}
+		}
+
+        return view('notifications.index', ['user' => Auth::user()->id], compact('countNewNotifications', 'allNotifications'));
     }
 
 	private function roleToFullWord($user)
@@ -458,6 +462,16 @@ class UsersController extends Controller
 		foreach ($materials as $material) {
 			MaterialsController::changeTypeFormat($material);
 		}
+	}
+
+	public static function getCountNewNotifications()
+	{
+		$countNewNotifications = 0;
+		foreach (Auth::user()->caregivers as $caregiver) {
+			$countNewNotifications += count($caregiver->notificationsCreated->where('viewed', 0));
+		}
+
+		return $countNewNotifications;
 	}
 
 	private function saveDataFieldsToSession(Request $request)

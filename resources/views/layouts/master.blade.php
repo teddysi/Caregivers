@@ -50,7 +50,6 @@
                                 <li><a href="{{ route('users') }}">Utilizadores</a></li>
                                 <li><a href="{{ route('materials') }}">Materiais</a></li>
                             @elseif (Auth::user()->role == 'healthcarepro')
-                                <li><a href="{{ route('users.caregivers', ['user' => Auth::user()->id]) }}">Gerir os meus Cuidadores</a></li>
                                 <li class="dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                         Recursos <span class="caret"></span>
@@ -63,6 +62,14 @@
                                         <li><a href="{{ route('quizs') }}">Questionários</a></li>
                                         <li><a href="{{ route('questions') }}">Questões</a></li>
                                     </ul>
+                                </li>
+                                <li><a href="{{ route('users.notifications', ['user' => Auth::user()->id]) }}">Notificações 
+                                        @if ($countNewNotifications > 0)
+                                            <span style="background-color:#d9534f" class="badge badge-pill´">{{ $countNewNotifications }}</span>
+                                        @else
+                                            <span class="badge badge-pill´">{{ $countNewNotifications }}</span>
+                                        @endif
+                                    </a>
                                 </li>
                             @endif
                         @endif
