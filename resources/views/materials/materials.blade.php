@@ -1,6 +1,6 @@
 @extends ('layouts.master')
 
-@section('title', 'Gerênciar Material Composto')
+@section('title', 'Gerir Material Composto')
 
 @section ('content')
 <div class="container">
@@ -102,7 +102,7 @@
 			</div>
 		</div>
     </div>
-    <p><a class="btn btn-primary" href="{{ url('/') }}">Concluído</a></p>
+    <p><a class="btn btn-primary" href="{{ route('materials') }}">Concluído</a></p>
 </div>
 
 @endsection

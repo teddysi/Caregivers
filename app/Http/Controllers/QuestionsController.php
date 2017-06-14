@@ -25,7 +25,7 @@ class QuestionsController extends Controller
         $pages = '10';
         $col = 'created_at';
         $order = 'desc';
-        $searchData = ['question' => '', 'questionCreator' => '', 'questionSort' => '', 'questionPages' => ''];
+        $searchData = ['question' => '', 'questionCreator' => '', 'questionSort' => '', 'questionPages' => '', 'questionBlocked' => ''];
 
         if ($request->has('dashboard')) {
             $this->saveDataFieldsToSession($request);
@@ -46,6 +46,14 @@ class QuestionsController extends Controller
         if (!empty($searchData['questionCreator'])) {
 			$user = User::where('username','like','%'.$searchData['questionCreator'].'%')->first();
            	$where[] = ['created_by', $user->id];
+        }
+
+        if (!empty($searchData['questionBlocked'])) {
+            if($searchData['questionBlocked'] == 'just_blocked') {
+                $where[] = ['blocked', 1];
+            } elseif($searchData['questionBlocked'] == 'just_unblocked') {
+                $where[] = ['blocked', 0];
+            }
         }
 
 		if (!empty($searchData['questionSort'])) {
@@ -70,14 +78,49 @@ class QuestionsController extends Controller
 
 		$questions = Question::where($where)->orderBy($col, $order)->paginate((int)$pages);
         foreach ($questions as $question) {
-			if (count($question->quizs) < 1) {
-				$question->canBeBlocked = true;
+            $count = 0;
+            foreach ($question->quizs as $quiz) {
+                $count += count($quiz->caregivers);
+                $count += count($quiz->patients);
+                $count += DB::table('quiz_material')->where('quiz_id', $quiz->id)->count();
+            }
+
+			if ($count < 1) {
+				$question->canBeEditedOrBlocked = true;
 			} else {
-				$question->canBeBlocked = false;
+				$question->canBeEditedOrBlocked = false;
 			}
 		}
 
 		return view('questions.index', compact('questions', 'searchData'));
+    }
+
+    public function show(Question $question)
+    {
+        $count = 0;
+        foreach ($question->quizs as $quiz) {
+            $count += count($quiz->caregivers);
+            $count += count($quiz->patients);
+            $count += DB::table('quiz_material')->where('quiz_id', $quiz->id)->count();
+        }
+
+        if ($count < 1) {
+            $question->canBeEditedOrBlocked = true;
+        } else {
+            $question->canBeEditedOrBlocked = false;
+        }
+
+        $logs = $question->logs()->paginate(10, ['*'], 'logs');
+		$logs->setPageName('logs');
+
+        if ($question->type == 'radio') {
+            $values = explode(";", $question->values);
+            array_pop($values);
+            
+            return view('questions.show', compact('question', 'values', 'logs'));
+        }
+
+    	return view('questions.show', compact('question', 'logs'));
     }
 
     public function create()
@@ -91,7 +134,6 @@ class QuestionsController extends Controller
 				'question' => 'required|min:4',
                 'values' => 'required_if:type,radio',
 		], $this->messages);
-
         $errors = $validator->errors();
         
 		$question = new Question();
@@ -110,8 +152,13 @@ class QuestionsController extends Controller
         if (!$errors->isEmpty()) {
             return back()->withErrors($errors)->withInput();
         }
-
 		$question->save();
+
+        $log = new Log();
+		$log->performed_task = 'Foi criada.';
+		$log->done_by = Auth::user()->id;
+		$log->question_id = $question->id;
+		$log->save();
 
 		return redirect()->route('questions');
     }
@@ -137,24 +184,6 @@ class QuestionsController extends Controller
         }
 
         return $errors;
-    }
-
-    public function show(Question $question)
-    {
-        if (count($question->quizs) < 1) {
-            $question->canBeBlocked = true;
-        } else {
-            $question->canBeBlocked = false;
-        }
-
-        if ($question->type == 'radio') {
-            $values = explode(";", $question->values);
-            array_pop($values);
-            
-            return view('questions.show', compact('question', 'values'));
-        }
-
-    	return view('questions.show', compact('question'));
     }
 
     public function edit(Question $question)
@@ -189,6 +218,12 @@ class QuestionsController extends Controller
             return back()->withErrors($errors)->withInput();
         }
 		$question->save();
+
+        $log = new Log();
+		$log->performed_task = 'Foi atualizada.';
+		$log->done_by = Auth::user()->id;
+		$log->question_id = $question->id;
+		$log->save();
 
 		return redirect()->route('questions');
     }
@@ -228,6 +263,7 @@ class QuestionsController extends Controller
         $request->session()->put('questionCreator', $request->input('questionCreator'));
 		$request->session()->put('questionSort', $request->input('questionSort'));
         $request->session()->put('questionPages', $request->input('questionPages'));
+        $request->session()->put('questionBlocked', $request->input('questionBlocked'));
     }
 
     private function retrieveDataFieldsFromSessionToArray(Request $request, $searchData)
@@ -236,13 +272,15 @@ class QuestionsController extends Controller
         $searchData['questionCreator'] = $request->session()->get('questionCreator');
         $searchData['questionSort'] = $request->session()->get('questionSort');
         $searchData['questionPages'] = $request->session()->get('questionPages');
+        $searchData['questionBlocked'] = $request->session()->get('questionBlocked');
         return $searchData;
     }
 
     private function isRequestDataEmpty(Request $request)
     {
         if(!$request->has('question') && !$request->has('questionCreator') 
-			&& !$request->has('questionSort') && !$request->has('questionPages')) {
+			&& !$request->has('questionSort') && !$request->has('questionPages') 
+            && !$request->has('questionBlocked')) {
             return true;
         }
         return false;

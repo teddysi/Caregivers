@@ -45,7 +45,7 @@ class AnswersController extends Controller
             foreach ($quiz["questions"] as $question) {
                 $answer = new Answer();
                 $answer->answered_by = $id;
-                $answer->question_id = $question["id"];
+                $answer->question = $question["question"];
                 $answer->quiz_id = $quiz["id"];
                 if ($question["type"] != "text") {
                     $possible_answers = explode(";", $question["values"]);

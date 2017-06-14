@@ -12,21 +12,22 @@
             <input
                 type="text" class="form-control"
                 name="question" id="inputQuestion"
-                placeholder="Pergunta?" value="{{ old('question') }}" />
+                placeholder="Questão?" value="{{ old('question') }}" />
         </div>
 
         <div class="form-group">
-                <label for="selectType">Tipo de Resposta</label>
-                <select name="selectType" id="selectType" class="form-control selectpicker" onchange="selectTypeChange()">
-                    <option value="text" {{ old('selectType') == 'text' ? 'selected' : '' }}>Texto</option>
-                    <option value="radio" {{ old('selectType') == 'radio' ? 'selected' : '' }}>Opções</option>
-                </select>
-            </div>
-            <div class="form-group" id="inputOptions" style="display:none">
-                <label for="inputOptions">Opções de Resposta</label>
-                <h5>Cada opção deve ser separa e terminada por ";". Exemplo: "Gosto muito;Não gosto;Sim;Não;"</h5>
-                <input type="text" class="form-control" name="values" value="{{ old('values') }}"/>
-            </div>
+            <label for="selectType">Tipo de Resposta</label>
+            <select name="selectType" id="selectType" class="form-control selectpicker" onchange="selectTypeChange()">
+                <option value="text" {{ old('selectType') == 'text' ? 'selected' : '' }}>Texto</option>
+                <option value="radio" {{ old('selectType') == 'radio' ? 'selected' : '' }}>Opções</option>
+            </select>
+        </div>
+
+        <div class="form-group" id="inputOptions" style="display:none">
+            <label for="inputOptions">Opções de Resposta</label>
+            <h5>Cada opção deve ser separa e terminada por ";". Exemplo: "Gosto muito;Não gosto;Sim;Não;"</h5>
+            <input type="text" class="form-control" name="values" value="{{ old('values') }}"/>
+        </div>
         
         <div class="form-group">
             <button type="submit" class="btn btn-primary" name="save">Guardar</button>

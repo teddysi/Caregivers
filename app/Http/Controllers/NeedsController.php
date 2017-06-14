@@ -97,7 +97,7 @@ class NeedsController extends Controller
 		$need->save();
 
         $log = new Log();
-		$log->performed_task = 'Criou a Necessidade: ' . $need->description;
+		$log->performed_task = 'Foi criada.';
 		$log->done_by = Auth::user()->id;
 		$log->need_id = $need->id;
 		$log->save();
@@ -119,7 +119,7 @@ class NeedsController extends Controller
 		$need->save();
 
         $log = new Log();
-		$log->performed_task = 'Atualizou a Necessidade: ' . $need->description;
+		$log->performed_task = 'Foi atualizada.';
 		$log->done_by = Auth::user()->id;
 		$log->need_id = $need->id;
 		$log->save();
@@ -143,13 +143,13 @@ class NeedsController extends Controller
         $need->materials()->detach($material->id);
 
         $log = new Log();
-		$log->performed_task = 'Desassociou o Material: ' . $material->name. ' da Necessiade: ' . $need->description;
+		$log->performed_task = 'Foi desassociado o Material: '.$material->name.'.';
 		$log->done_by = Auth::user()->id;
 		$log->need_id = $need->id;
 		$log->save();
 
         $log = new Log();
-		$log->performed_task = 'Desassociou o Material: ' . $material->name. ' da Necessiade: ' . $need->description;
+		$log->performed_task = 'Foi desassociado da Necessiade: '.$need->description.'.';
 		$log->done_by = Auth::user()->id;
 		$log->material_id = $material->id;
 		$log->save();

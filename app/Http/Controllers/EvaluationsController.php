@@ -50,12 +50,16 @@ class EvaluationsController extends Controller
 		if($typeEval == 'quiz') {
 			if (str_contains(url()->current(), '/patients/')) {
 				$patient = Patient::find($id);
-				$quizs = Quiz::whereNotIn('id', $patient->quizs->modelKeys())->get();
+				$quizs = Quiz::whereNotIn('id', $patient->quizs->modelKeys())
+								->where('blocked', 0)
+								->get();
 				
 				return view('evaluations.create_quiz', compact('id', 'quizs', 'typeEval'));	
 			} else {
 				$caregiver = Caregiver::find($id);
-				$quizs = Quiz::whereNotIn('id', $caregiver->quizs->modelKeys())->get();
+				$quizs = Quiz::whereNotIn('id', $caregiver->quizs->modelKeys())
+								->where('blocked', 0)
+								->get();
 				
 				return view('evaluations.create_quiz', compact('id', 'quizs', 'typeEval'));
 			}
@@ -128,7 +132,7 @@ class EvaluationsController extends Controller
 			}
 
 			$log = new Log();
-			$log->performed_task = 'Criou a Avaliação ' . $evaluation->description;
+			$log->performed_task = 'Foi criada.';
 			$log->done_by = Auth::user()->id;
 			$log->evaluation_id = $evaluation->id;
 			$log->save();
@@ -168,7 +172,7 @@ class EvaluationsController extends Controller
 		$evaluation->save();
 
 		$log = new Log();
-		$log->performed_task = 'Atualizou a Avaliação ' . $evaluation->description;
+		$log->performed_task = 'Foi atualizada.';
 		$log->done_by = Auth::user()->id;
 		$log->evaluation_id = $evaluation->id;
 		$log->save();
@@ -218,7 +222,9 @@ class EvaluationsController extends Controller
 			abort(403);
 		}
 
-		$quizs = Quiz::whereNotIn('id', $material->quizs($id)->get()->modelKeys())->get();
+		$quizs = Quiz::whereNotIn('id', $material->quizs($id)->get()->modelKeys())
+						->where('blocked', 0)
+						->get();
 
 		return view('materials.create_quiz_material', compact('id', 'quizs', 'material'));
 	}
@@ -244,7 +250,7 @@ class EvaluationsController extends Controller
 		$quiz->materials($request->input('caregiver'))->attach([$material->id => ['caregiver_id'=> $request->input('caregiver'), 'evaluation_id'=> $evaluation->id]]);
 
 		$log = new Log();
-		$log->performed_task = 'Criou a Avaliação ' . $evaluation->description;
+		$log->performed_task = 'Foi criada.';
 		$log->done_by = Auth::user()->id;
 		$log->evaluation_id = $evaluation->id;
 		$log->save();

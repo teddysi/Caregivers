@@ -46,13 +46,13 @@ class CaregiversController extends Controller
         }
 
         $log = new Log();
-		$log->performed_task = 'Associou o Paciente: ' . $patient->name. ' ao Cuidador: ' . $caregiver->username;
+		$log->performed_task = 'Foi associado o Paciente: '.$patient->name.'.';
 		$log->done_by = Auth::user()->id;
 		$log->user_id = $caregiver->id;
 		$log->save();
 
         $log = new Log();
-		$log->performed_task = 'Associou o Paciente: ' . $patient->name. ' ao Cuidador: ' . $caregiver->username;
+		$log->performed_task = 'Foi associado ao Cuidador: '.$caregiver->username.'.';
 		$log->done_by = Auth::user()->id;
 		$log->patient_id = $patient->id;
 		$log->save();
@@ -69,13 +69,13 @@ class CaregiversController extends Controller
         $patient->save();
 
         $log = new Log();
-		$log->performed_task = 'Desassociou o Paciente: ' . $patient->name. ' do Cuidador: ' . $caregiver->username;
+		$log->performed_task = 'Foi desassociado o Paciente: '.$patient->name.'.';
 		$log->done_by = Auth::user()->id;
 		$log->user_id = $caregiver->id;
 		$log->save();
 
         $log = new Log();
-		$log->performed_task = 'Desassociou o Paciente: ' . $patient->name. ' do Cuidador: ' . $caregiver->username;
+		$log->performed_task = 'Foi desassociado do Cuidador: '.$caregiver->username.'.';
 		$log->done_by = Auth::user()->id;
 		$log->patient_id = $patient->id;
 		$log->save();
@@ -127,13 +127,13 @@ class CaregiversController extends Controller
             $caregiver->materials()->attach($request->input('material'));
 
             $log = new Log();
-            $log->performed_task = 'Associou o Material: ' . $material->name. ' ao Cuidador: ' . $caregiver->username;
+            $log->performed_task = 'Foi associado o Material: '.$material->name.'.';
             $log->done_by = Auth::user()->id;
 		    $log->user_id = $caregiver->id;
             $log->save();
 
             $log = new Log();
-            $log->performed_task = 'Associou o Material: ' . $material->name. ' ao Cuidador: ' . $caregiver->username;
+            $log->performed_task = 'Foi associado ao Cuidador: '.$caregiver->username.'.';
             $log->done_by = Auth::user()->id;
 		    $log->material_id = $material->id;
             $log->save();
@@ -145,13 +145,13 @@ class CaregiversController extends Controller
                 $need->materials()->attach($request->input('material'));
 
                 $log = new Log();
-                $log->performed_task = 'Associou o Material: ' . $material->name. ' à Necessidade: ' . $need->description;
+                $log->performed_task = 'Foi associado o Material: '.$material->name.'.';
                 $log->done_by = Auth::user()->id;
                 $log->need_id = $need->id;
                 $log->save();
 
                 $log = new Log();
-                $log->performed_task = 'Associou o Material: ' . $material->name. ' à Necessidade: ' . $need->description;
+                $log->performed_task = 'Foi associada à Necessidade: '.$need->description.'.';
                 $log->done_by = Auth::user()->id;
                 $log->material_id = $material->id;
                 $log->save();
@@ -169,13 +169,13 @@ class CaregiversController extends Controller
         $caregiver->materials()->detach($material->id);
 
         $log = new Log();
-        $log->performed_task = 'Desassociou o Material: ' . $material->name. ' do Cuidador: ' . $caregiver->username;
+        $log->performed_task = 'Foi desassociado o Material: '.$material->name.'.';
         $log->done_by = Auth::user()->id;
 		$log->user_id = $caregiver->id;
         $log->save();
 
         $log = new Log();
-        $log->performed_task = 'Desassociou o Material: ' . $material->name. ' do Cuidador: ' . $caregiver->username;
+        $log->performed_task = 'Foi desassociado do Cuidador: '.$caregiver->username.'.';
         $log->done_by = Auth::user()->id;
 		$log->material_id = $material->id;
         $log->save();

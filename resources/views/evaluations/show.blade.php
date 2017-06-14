@@ -54,8 +54,8 @@
                     <tbody>
                         @foreach($evaluation->answers as $answer)
                             <tr>
-                                <td>{{$answer->question->question}}</td>
-                                <td>{{$answer->answer}}</td>
+                                <td>{{ $answer->question }}</td>
+                                <td>{{ $answer->answer }}</td>
                             </tr>
                         @endforeach
                     </tbody>

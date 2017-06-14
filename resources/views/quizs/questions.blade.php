@@ -1,6 +1,6 @@
 @extends ('layouts.master')
 
-@section('title', 'Gerênciar Perguntas do Questionário')
+@section('title', 'Gerir Perguntas do Questionário')
 
 @section ('content')
 <div class="container">
@@ -102,7 +102,7 @@
 			</div>
 		</div>
     </div>
-    <p><a class="btn btn-primary" href="{{ url('/') }}">Concluído</a></p>
+    <p><a class="btn btn-primary" href="{{ route('quizs') }}">Concluído</a></p>
 </div>
 
 @endsection

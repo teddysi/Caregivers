@@ -18,7 +18,7 @@
                     <h3 class="panel-title">Ações</h3>
                 </div>
                 <div class="panel-body">
-                    @if ($quiz->canBeBlocked)
+                    @if ($quiz->canBeEditedOrBlocked)
                         <div class="row">
                             <div class="col-sm-6 col-md-6 col-lg-6">
                                 <a class="btn btn-block btn-warning" href="{{ route('quizs.edit', ['quiz' => $quiz->id]) }}">Editar</a>
@@ -38,7 +38,7 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-6 col-md-6 col-lg-6">
-                                <a class="btn btn-block btn-primary" href="{{ route('quizs.questions', ['quiz' => $quiz->id]) }}">Perguntas</a>
+                                <a class="btn btn-block btn-primary" href="{{ route('quizs.questions', ['quiz' => $quiz->id]) }}">Questões</a>
                             </div>
                             <div class="col-sm-6 col-md-6 col-lg-6">
                                 <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar a atrás</a>
@@ -47,15 +47,9 @@
                     @else
                         <div class="row">
                             <div class="col-sm-6 col-md-6 col-lg-6">
-                                <a class="btn btn-block btn-warning" href="{{ route('quizs.edit', ['quiz' => $quiz->id]) }}">Editar</a>
-                            </div>
-                            <div class="col-sm-6 col-md-6 col-lg-6">
                                 <a class="btn btn-block btn-primary" href="{{ route('quizs.questions', ['quiz' => $quiz->id]) }}">Perguntas</a>
                             </div>
-                        </div>
-                        <br />
-                        <div class="row">
-                            <div class="col-sm-12 col-md-12 col-lg-12">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
                                 <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar a atrás</a>
                             </div>
                         </div>
@@ -93,5 +87,33 @@
             </div>
         </div>
     </div>
+    <br />
+    <div class="row">
+		<div class="col-lg-12">
+            <legend>Registros</legend>
+			@if (count($logs))
+		        <table class="table table-striped">
+			        <thead>
+			            <tr>
+							<th>Tarefa</th>
+							<th>Realizada por</th>
+                            <th>Data</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+						@foreach($logs as $log)
+							<tr>
+					        	<td>{{$log->performed_task}}</td>
+								<td>{{$log->doneBy->username}}</td>
+                                <td>{{$log->created_at}}</td>
+					        </tr>
+				        @endforeach
+					</tbody>
+			    </table>
+			@else
+				<h4>Não existem registros referentes a este Questionário.</h4>
+			@endif
+ 		</div>
+	</div>
 </div>
 @endsection

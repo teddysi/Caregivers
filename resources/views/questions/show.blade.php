@@ -18,7 +18,7 @@
                     <h3 class="panel-title">Ações</h3>
                 </div>
                 <div class="panel-body">
-                    @if(count($question->quizs) == 0 && $question->canBeBlocked)
+                    @if($question->canBeEditedOrBlocked)
                         <div class="row">
                             <div class="col-sm-6 col-md-6 col-lg-6">
                                 <a class="btn btn-block btn-warning" href="{{ route('questions.edit', ['question' => $question->id]) }}">Editar</a>
@@ -47,12 +47,45 @@
  		</div>
 	</div>
     @if($question->type == 'radio')
-        <h2><strong>Opções de resposta:</strong></h2>
-        <div>
-            @foreach($values as $value)
-                <h4>{{ $value }};</h4>
-            @endforeach
-        </div>
+        <br />
+        <div class="row">
+            <div class="col-lg-12">
+                <legend>Opções de resposta</legend>
+                <div>
+                    @foreach($values as $value)
+                        <h5>{{ $value }};</h5>
+                    @endforeach
+                </div>
+            </div>
+	    </div>
     @endif
+    <br />
+    <div class="row">
+		<div class="col-lg-12">
+            <legend>Registros</legend>
+			@if (count($logs))
+		        <table class="table table-striped">
+			        <thead>
+			            <tr>
+							<th>Tarefa</th>
+							<th>Realizada por</th>
+                            <th>Data</th>
+			            </tr>
+			        </thead>
+			        <tbody>
+						@foreach($logs as $log)
+							<tr>
+					        	<td>{{$log->performed_task}}</td>
+								<td>{{$log->doneBy->username}}</td>
+                                <td>{{$log->created_at}}</td>
+					        </tr>
+				        @endforeach
+					</tbody>
+			    </table>
+			@else
+				<h4>Não existem registros referentes a esta Questão.</h4>
+			@endif
+ 		</div>
+	</div>
 </div>
 @endsection

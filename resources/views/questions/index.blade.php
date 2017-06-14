@@ -18,7 +18,7 @@
 			<form class="form" method="POST" action="{{ route('questions') }}">
 				{{ csrf_field() }}
 				<div class="row">
-					<div class="col-lg-6 col-md-6 col-sm-6">
+					<div class="col-lg-4 col-md-4 col-sm-6">
 						<label class="sr-only" for="inputQuestion">Questão</label>
 						<div class="input-group">
 							<div class="input-group-addon">
@@ -27,13 +27,23 @@
 							<input type="text" name="question" class="form-control" id="inputQuestion" placeholder="Pergunta" value="{{ $searchData['question'] }}">
 						</div>
 					</div>
-                    <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="col-lg-4 col-md-4 col-sm-6">
 						<label class="sr-only" for="inputQuestionCreator">Criador</label>
 						<div class="input-group">
 							<div class="input-group-addon">
 								<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
 							</div>
 							<input type="text" name="questionCreator" class="form-control" id="inputQuestionCreator" placeholder="Criador" value="{{ $searchData['questionCreator'] }}">
+						</div>
+					</div>
+					<div class="col-lg-4 col-md-4 col-sm-6">
+						<div class="form-group form-inline	">
+							<label for="blockedItems">Questões:</label>
+							<select name="questionBlocked" class="form-control">
+								<option value="all" {{ $searchData['questionBlocked'] == 'all' ? 'selected' : '' }}>Todos</option>
+								<option value="just_blocked" {{ $searchData['questionBlocked'] == 'just_blocked' ? 'selected' : '' }}>Bloqueados</option>
+								<option value="just_unblocked" {{ $searchData['questionBlocked'] == 'just_unblocked' ? 'selected' : '' }}>Não Bloqueados</option>
+							</select>
 						</div>
 					</div>
 				</div>
@@ -83,15 +93,13 @@
 								<td>{{ $question->creator->username }}</td>
 								<td style="width:35%">
 									<div class="row">
-										<div class="col-sm-6 col-md-4 col-lg-4">
-											<a class="btn btn-block btn-primary" href="{{route('questions.show', ['question' => $question->id])}}">Detalhes</a>
-										</div>
-										@if(count($question->quizs) == 0)
+										@if ($question->canBeEditedOrBlocked)
+											<div class="col-sm-6 col-md-4 col-lg-4">
+												<a class="btn btn-block btn-primary" href="{{route('questions.show', ['question' => $question->id])}}">Detalhes</a>
+											</div>
 											<div class="col-sm-6 col-md-4 col-lg-4">
 												<a class="btn btn-block btn-warning" href="{{route('questions.edit', ['question' => $question->id])}}">Editar</a>
-											</div>
-										@endif
-										@if ($question->canBeBlocked)
+											</div>										
 											<div class="col-sm-6 col-md-4 col-lg-4">
 												<form action="{{ route('questions.toggleBlock', ['question' => $question->id]) }}" method="POST" class="form-group">
 													{{ csrf_field() }}
@@ -103,6 +111,10 @@
 														@endif
 													</div>
 												</form>
+											</div>
+										@else
+											<div class="col-sm-12 col-md-12 col-lg-12">
+												<a class="btn btn-block btn-primary" href="{{route('questions.show', ['question' => $question->id])}}">Detalhes</a>
 											</div>
 										@endif
 									</div>
