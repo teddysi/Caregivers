@@ -4,10 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Proceeding extends Model
+class Access extends Model
 {
     protected $fillable = [
-        'note', 'caregiver_id', 'material_id', 'need_id', 'patient_id',
+        'caregiver_id', 'material_id', 'patient_id',
     ];
 
     public function material()

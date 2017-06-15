@@ -160,13 +160,12 @@ $factory->define(App\Composite::class, function (Faker\Generator $faker) {
     ];
 });
 
-$factory->define(App\Proceeding::class, function (Faker\Generator $faker) {
+$factory->define(App\Access::class, function (Faker\Generator $faker) {
     $patient = App\Patient::all()->random();
     $need = $patient->needs->random();
     $material = $need->materials->random();
 
     return [
-        'note' => $faker->name,
         'caregiver_id' => $patient->caregiver_id,
         'material_id' => $material->id,
         'patient_id' => $patient->id,

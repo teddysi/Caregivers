@@ -40,7 +40,7 @@ class Material extends Model
 
     public function proceedings()
     {
-        return $this->hasMany('App\Proceeding', 'material_id', 'id');
+        return $this->hasMany('App\Access', 'material_id', 'id');
     }
 
     public function materials()

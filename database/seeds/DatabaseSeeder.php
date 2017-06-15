@@ -116,7 +116,7 @@ class DatabaseSeeder extends Seeder
             }
         }
         
-        factory(App\Proceeding::class, 10)->create();
+        factory(App\Access::class, 10)->create();
         $this->buildEvaluations();
         factory(App\Log::class, 50)->create();
 

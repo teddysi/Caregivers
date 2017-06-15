@@ -192,14 +192,14 @@ class CaregiversController extends Controller
         $evaluations = $caregiver->evaluations()->paginate(10, ['*'], 'evaluations');
         $evaluations->setPageName('evaluations');
 
-        $countedProceedings = DB::table('proceedings')
-                                ->join('materials', 'proceedings.material_id', 'materials.id')
+        $countedAccesses = DB::table('accesses')
+                                ->join('materials', 'accesses.material_id', 'materials.id')
                                 ->select('material_id', 'name', DB::raw('count(*) as total'))
                                 ->groupBy('caregiver_id', 'material_id', 'name')
                                 ->where('caregiver_id', $caregiver->id)
                                 ->get();
                                 
-        return view('caregivers.rate',  compact('caregiver', 'evaluations', 'countedProceedings')); 
+        return view('caregivers.rate',  compact('caregiver', 'evaluations', 'countedAccesses')); 
     }
 
     public function login(Request $request)

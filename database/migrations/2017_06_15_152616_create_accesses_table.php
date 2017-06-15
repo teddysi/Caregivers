@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProceedingsTable extends Migration
+class CreateAccessesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class CreateProceedingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('proceedings', function (Blueprint $table) {
+        Schema::create('accesses', function (Blueprint $table) {
             $table->increments('id');
-            $table->text('note')->nullable();
             $table->integer('caregiver_id')->unsigned()->index();
             $table->foreign('caregiver_id')->references('id')->on('users');
             $table->integer('material_id')->unsigned()->index();
@@ -33,6 +32,6 @@ class CreateProceedingsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('proceedings');
+        Schema::drop('accesses');
     }
 }

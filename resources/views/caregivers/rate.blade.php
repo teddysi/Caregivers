@@ -64,7 +64,7 @@
 	<div class="row">
 		<div class="col-lg-6">
 			<legend>Procedimentos</legend>
-            @if (count($countedProceedings))
+            @if (count($countedAccesses))
 		        <table class="table table-striped">
 			        <thead>
 			            <tr>
@@ -73,16 +73,16 @@
 			            </tr>
 			        </thead>
 			        <tbody>
-						@foreach ($countedProceedings as $countedProceeding)
+						@foreach ($countedAccesses as $countedAccess)
 							<tr>
-					        	<td>{{ $countedProceeding->name }}</td>
-								<td>{{ $countedProceeding->total }}</td>
+					        	<td>{{ $countedAccess->name }}</td>
+								<td>{{ $countedAccess->total }}</td>
 					        </tr>
 				        @endforeach
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem procedimentos realizados por este Cuidador.</h4>
+				<h4>Não existem acessos a materiais realizados por este Cuidador.</h4>
 			@endif
         </div>
 	</div>

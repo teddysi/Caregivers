@@ -181,7 +181,9 @@ class EvaluationsController extends Controller
 			return redirect()->route('patients.show', ['patient' => $evaluation->patient_id]);
 		} else if ($evaluation->caregiver_id != null) {
 			return redirect()->route('caregivers.rate', ['caregiver' => $evaluation->caregiver_id]);
-		} 
+		} else if ($evaluation->material_id != null && $evaluation->answered_by != null) {
+			return redirect()->route('materials.rate_materials', ['caregiver' => $evaluation->answered_by, 'material' => $evaluation->material_id]);
+		}
 	}
 
 	public function showEvaluation(Evaluation $evaluation)

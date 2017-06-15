@@ -27,7 +27,7 @@ class Patient extends Model
 
     public function proceedings()
     {
-        return $this->hasMany('App\Proceeding');
+        return $this->hasMany('App\Access');
     }
 
     public function evaluations()
