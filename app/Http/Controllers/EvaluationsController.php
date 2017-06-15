@@ -9,6 +9,7 @@ use App\Quiz;
 use App\Caregiver;
 use App\Patient;
 use App\Material;
+use App\Notification;
 use Auth;
 use Storage;
 use Response;
@@ -258,5 +259,54 @@ class EvaluationsController extends Controller
 		$log->save();
 
 		return redirect()->route('materials.rate_materials', ['caregiver' => $request->input('caregiver'), 'material' => $material]);
+	}
+
+	public function createAPI(Request $request, $id) 
+	{
+	    $caregiver_token = $request->header('Authorization');
+        $material_id = $request->input('material_id');
+		$difficulty;
+		switch ($request->input('evaluation')) {
+			case '-1':
+				$difficulty = 'Difícil';
+				break;
+			case '0':
+				$difficulty = 'Médio';
+				break;
+			case '1':
+				$difficulty = 'Fácil';
+				break;
+			default:
+				break;
+		}
+
+        $caregiver = Caregiver::find($id);
+        $material = Material::find($material_id);
+
+        if ($caregiver == null || $material == null) {
+            return response('Não Encontrado', 404);
+        }
+
+        /*if (!$caregiver_token || $caregiver->caregiver_token != $caregiver_token) {
+            return response('Não Autorizado', 401);
+        }*/
+
+        $evaluation = new Evaluation;
+        $evaluation->description = 'Dificuldade de Utilização';
+        $evaluation->type = 'Através da App';
+        $evaluation->model = 'Escala de Dificuldade';
+		$evaluation->submitted_by = $id;
+		$evaluation->difficulty = $difficulty;
+		$evaluation->created_by = $id;
+        $evaluation->save();
+
+        $notification = new Notification();
+        $notification->text = 'O Cuidador '.$caregiver->username.' classificou o Material '.$material->name.' com a dificuldade '.$difficulty.'.';
+        $notification->created_by = $id;
+        $notification->type = 'evaluation';
+		$notification->evaluation_id = $evaluation->id;
+        $notification->save();
+        
+        return response()->json("Evaluation submitted successfully");
 	}
 }

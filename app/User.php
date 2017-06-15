@@ -77,6 +77,11 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\Evaluation', 'answered_by', 'id');
     }
+
+    public function scaleEvaluationsSubmitted()
+    {
+        return $this->hasMany('App\Evaluation', 'submitted_by', 'id');
+    }
 }
 
 

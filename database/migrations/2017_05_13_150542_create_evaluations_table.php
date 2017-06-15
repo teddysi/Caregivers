@@ -23,6 +23,9 @@ class CreateEvaluationsTable extends Migration
             $table->integer('answered_by')->nullable()->unsigned()->index();
             $table->foreign('answered_by')->references('id')->on('users');
             $table->timestamp('answered_at')->nullable();
+            $table->integer('submitted_by')->nullable()->unsigned()->index();
+            $table->foreign('submitted_by')->references('id')->on('users');
+            $table->string('difficulty')->nullable();
             $table->integer('created_by')->unsigned()->index();
             $table->foreign('created_by')->references('id')->on('users');
             $table->integer('caregiver_id')->nullable()->unsigned()->index();

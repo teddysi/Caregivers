@@ -40,6 +40,11 @@ class Evaluation extends Model
         return $this->belongsTo('App\User', 'answered_by', 'id');
     }
 
+    public function submitter()
+    {
+        return $this->belongsTo('App\User', 'submitter_by', 'id');
+    }
+
     public function logs()
     {
         return $this->hasMany('App\Log', 'evaluation_id', 'id');

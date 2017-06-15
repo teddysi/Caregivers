@@ -379,4 +379,5 @@ Route::post('/caregiversAPI/login', 'CaregiversController@login');
 Route::get('/caregiversAPI/{caregiver}/patients', 'CaregiversController@patientsAPI');
 Route::get('/materialsAPI/{material}/showContent', 'MaterialsController@showMaterialAPI');
 Route::post('/caregiversAPI/{caregiver}/quizs/submit', 'AnswersController@submitQuizs');
+Route::post('/caregiversAPI/{caregiver}/evaluations/create', 'EvaluationsController@createAPI');
 Route::post('/caregiversAPI/{caregiver}/accesses/create', 'AccessesController@create');
