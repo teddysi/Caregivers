@@ -23,7 +23,6 @@ $factory->define(App\Caregiver::class, function (Faker\Generator $faker) {
         'password' => $password ?: $password = bcrypt('carepw'),
         'remember_token' => str_random(10),
         'role' => 'caregiver',
-        'rate' => $faker->randomElement($array = array('Mau', 'Normal', 'Bom', 'Muito Bom', 'Excelente')),
         'location' => $faker->randomElement($array = array('Lisboa', 'Porto', 'Leiria', 'Coimbra', 'Faro')),
         'created_by' => $users->random()->id,
     ];

@@ -213,7 +213,10 @@ class EvaluationsController extends Controller
 			abort(403);
 		}
 
-        $evaluations = $material->evaluations()->where('answered_by', $caregiver->id)->paginate(10, ['*'], 'evaluations');
+        $evaluations = $material->evaluations()
+								->where('answered_by', $caregiver->id)
+								->orWhere('submitted_by', $caregiver->id)
+								->paginate(10, ['*'], 'evaluations');
         $evaluations->setPageName('evaluations');
 
 		return view('materials.rate_materials', compact('caregiver', 'evaluations', 'material'));
@@ -297,6 +300,7 @@ class EvaluationsController extends Controller
         $evaluation->model = 'Escala de Dificuldade';
 		$evaluation->submitted_by = $id;
 		$evaluation->difficulty = $difficulty;
+		$evaluation->material_id = $material_id;
 		$evaluation->created_by = $id;
         $evaluation->save();
 

@@ -220,11 +220,35 @@ class CaregiversController extends Controller
                 $user->caregiver_token = str_random(60);
                 $user->save();
 
-                return response()->json($user);
+                $caregiver = new \stdClass();
+                $this->buildCaregiver($caregiver, $user);
+
+                return response()->json($caregiver);
             }
         }
 
         return response('Não Autorizado', 401);
+    }
+
+    private function buildCaregiver($objectC, $caregiver)
+    {
+        $objectC->id = $caregiver->id;
+        $objectC->username = $caregiver->username;
+        $objectC->name = $caregiver->name;
+        $objectC->email = $caregiver->email;
+        $objectC->role = $caregiver->role;
+        $objectC->location = $caregiver->location;
+        $objectC->login_count = $caregiver->login_count;
+        $objectC->caregiver_token = $caregiver->caregiver_token;
+        $objectC->blocked = $caregiver->blocked;
+        $objectC->created_by = $caregiver->created_by;
+        $objectC->created_at = (string) $caregiver->created_at;
+        $objectC->updated_at = (string) $caregiver->updated_at;
+        $objectC->healthcarepros_emails = [];
+
+        foreach ($caregiver->healthcarePros as $healthcarePro) {
+            array_push($objectC->healthcarepros_emails, $healthcarePro->email);
+        }
     }
 
     public function patientsAPI(Request $request, $id)
@@ -243,7 +267,7 @@ class CaregiversController extends Controller
         $patientsCollection = collect();
         $patients = $user->patients;
         $objectX = new \stdClass();
-        $this->buildJson($objectX, $user);
+        $this->buildJson($objectX);
 
         foreach ($user->quizs as $quiz) {
             if(!$quiz->blocked) {
@@ -260,9 +284,9 @@ class CaregiversController extends Controller
                 $objectN = new \stdClass();
                 $this->buildNeed($objectN, $need);
                 foreach ($need->materials as $material) {
-                    if ($material->blocked != 1) {
+                    if ($material->blocked != 1 && $user->materials->contains('id', $material->id)) {
                         $objectM = new \stdClass();
-                        $this->buildMaterial($objectM, $material);
+                        $this->buildMaterial($objectM, $material, $id);
 
                         array_push($objectN->materials, $objectM);
                     }
@@ -353,7 +377,7 @@ class CaregiversController extends Controller
         $objectN->materials = [];
     }
 
-    private function buildMaterial($objectM, $material)
+    private function buildMaterial($objectM, $material, $caregiver_id)
     {
         $objectM->id = $material->id;
         $objectM->type = $material->type;
@@ -396,6 +420,23 @@ class CaregiversController extends Controller
                 break;
         }
 
+        $lastEvaluationSubmitted = $material->evaluations->where('submitted_by', $caregiver_id)->last();
+        if ($lastEvaluationSubmitted) {
+            switch ($lastEvaluationSubmitted->difficulty) {
+                case 'Fácil':
+                    $objectM->evaluation = 1;
+                    break;
+                case 'Médio':
+                    $objectM->evaluation = 0;
+                    break;
+                case 'Difícil':
+                    $objectM->evaluation = -1;
+                    break;
+                default:
+                    break;
+            }
+        }
+
         $objectM->created_by = $material->created_by;
         $objectM->created_at = (string)$material->created_at;
         $objectM->updated_at = (string)$material->updated_at;
@@ -406,7 +447,7 @@ class CaregiversController extends Controller
             foreach ($compositeMaterials as $compositeMaterial) {
                 if ($compositeMaterial->blocked != 1) {
                     $objectCM = new \stdClass();
-                    $this->buildMaterial($objectCM, $compositeMaterial);
+                    $this->buildMaterial($objectCM, $compositeMaterial, $caregiver_id);
 
                     array_push($objectM->materials, $objectCM);
                 }
@@ -414,22 +455,6 @@ class CaregiversController extends Controller
         }
 
         $objectM->quizs = [];
-    }
-
-    public function proceedings(Request $request, $caregiver_id)
-    {
-        $caregiver_token = $request->header('Authorization');
-        $caregiver = Caregiver::find($caregiver_id);
-
-        if ($caregiver == null) {
-           return response('Não Encontrado', 404);
-        }
-
-        if (!$caregiver_token || $caregiver->caregiver_token != $caregiver_token) {
-            return response('Não Autorizado', 401);
-        }
-
-        return response()->json($caregiver->proceedings);
     }
 
     private function cmp($a, $b)
