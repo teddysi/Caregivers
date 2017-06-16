@@ -244,13 +244,13 @@ class CaregiversController extends Controller
         $objectC->created_by = $caregiver->created_by;
         $objectC->created_at = (string) $caregiver->created_at;
         $objectC->updated_at = (string) $caregiver->updated_at;
-        $objectC->contatos = [];
+        $objectC->contacts = [];
 
         foreach ($caregiver->healthcarePros as $healthcarePro) {
-            $contato = new \stdClass();
-            $contato->nome = $healthcarePro->name;
-            $contato->email = $healthcarePro->email;
-            array_push($objectC->contatos, $contato);
+            $contact = new \stdClass();
+            $contact->name = $healthcarePro->name;
+            $contact->email = $healthcarePro->email;
+            array_push($objectC->contacts, $contact);
         }
     }
 
