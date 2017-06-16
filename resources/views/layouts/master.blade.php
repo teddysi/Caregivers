@@ -51,11 +51,11 @@
                                 <li><a href="{{ route('materials') }}">Materiais</a></li>
                             @elseif (Auth::user()->role == 'healthcarepro')
                                 <li class="dropdown">
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                    <a href="#" class="dropdown-toggle drop_recursos" data-toggle="dropdown" role="button" aria-expanded="false">
                                         Recursos <span class="caret"></span>
                                     </a>
                                     <ul class="dropdown-menu" role="menu">
-                                        <li><a href="{{ route('users') }}">Cuidadores</a></li>
+                                        <li><a href="{{ route('users') }}" class="nav_caregivers">Cuidadores</a></li>
                                         <li><a href="{{ route('patients') }}">Pacientes</a></li>
                                         <li><a href="{{ route('needs') }}">Necessidades</a></li>
                                         <li><a href="{{ route('materials') }}">Materiais</a></li>

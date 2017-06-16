@@ -33,7 +33,7 @@
 											<a class="btn btn-block btn-primary" href="{{ route('caregivers.materials', ['caregiver' => $caregiver->id]) }}">Materiais</a>
 										</div>
 										<div class="col-sm-6 col-md-2 col-lg-2">
-											<a class="btn btn-block btn-warning" href="{{ route('users.edit', ['user' => $caregiver->id]) }}">Editar</a>
+											<a class="btn btn-block btn-warning {{ 'user_update_'.$caregiver->id.'_button' }}" href="{{ route('users.edit', ['user' => $caregiver->id]) }}">Editar</a>
 										</div>
 										<div class="col-sm-6 col-md-2 col-lg-2">
 											<form action="{{ route('users.toggleBlock', ['user' => $caregiver->id]) }}" method="POST" class="form-group">

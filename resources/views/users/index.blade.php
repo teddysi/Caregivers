@@ -30,7 +30,7 @@
 						</div>
 					@endif
 					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'caregiver']) }}">Cuidador</a>
+						<a class="btn btn-block btn-primary create_caregiver" href="{{ route('users.create', ['role' =>'caregiver']) }}">Cuidador</a>
 					</div>
 				</div>
 			</fieldset>
@@ -127,7 +127,7 @@
 			</form>
             @if (count($users))
                 <br />
-                <table class="table table-striped">
+                <table class="table table-striped users_table">
                     <thead>
                         <tr>
                             <th>Nome</th>
@@ -149,7 +149,7 @@
 								<td style="width:35%">
 									<div class="row">
 										<div class="col-sm-6 col-md-4 col-lg-4">
-											<a class="btn btn-block btn-primary" href="{{ route('users.show', ['user' => $user->id]) }}">Detalhes</a>
+											<a class="btn btn-block btn-primary {{'user_details_'.$user->id.'_button'}}" href="{{ route('users.show', ['user' => $user->id]) }}">Detalhes</a>
 										</div>
 										<div class="col-sm-6 col-md-4 col-lg-4">
 											<a class="btn btn-block btn-warning" href="{{ route('users.edit', ['user' => $user->id]) }}">Editar</a>
