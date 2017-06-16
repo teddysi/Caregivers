@@ -98,7 +98,7 @@ class EvaluationsController extends Controller
 		if (str_contains(url()->current(), '/patients/')) {
 			if($request->input('typeEval') == 'quiz') {
 				$quiz = Quiz::find($request->input('quiz'));
-				$evaluation->model = $quiz->name;
+				$evaluation->model = 'Questionário '.$quiz->name;
 				$evaluation->answered_by = $patient->caregiver->id;
 				$evaluation->patient_id = $id;
 				$evaluation->save();
@@ -122,7 +122,7 @@ class EvaluationsController extends Controller
 
 			if($request->input('typeEval') == 'quiz') {
 				$quiz = Quiz::find($request->input('quiz'));
-				$evaluation->model = $quiz->name;
+				$evaluation->model = 'Questionário '.$quiz->name;
 				$evaluation->answered_by = $id;
 				$evaluation->caregiver_id = $id;
 				$evaluation->save();
@@ -184,6 +184,8 @@ class EvaluationsController extends Controller
 			return redirect()->route('caregivers.rate', ['caregiver' => $evaluation->caregiver_id]);
 		} else if ($evaluation->material_id != null && $evaluation->answered_by != null) {
 			return redirect()->route('materials.rate_materials', ['caregiver' => $evaluation->answered_by, 'material' => $evaluation->material_id]);
+		}  else if ($evaluation->material_id != null && $evaluation->submitted_by != null) {
+			return redirect()->route('materials.rate_materials', ['caregiver' => $evaluation->submitted_by, 'material' => $evaluation->material_id]);
 		}
 	}
 
@@ -213,10 +215,14 @@ class EvaluationsController extends Controller
 			abort(403);
 		}
 
-        $evaluations = $material->evaluations()
-								->where('answered_by', $caregiver->id)
-								->orWhere('submitted_by', $caregiver->id)
-								->paginate(10, ['*'], 'evaluations');
+		if (!$caregiver->materials->contains('id', $material->id)) {
+			abort(403);
+		}
+		
+		$evaluations = $material->evaluations()->where(function($query) use($caregiver) {
+			$query->where('answered_by', $caregiver->id)
+				->orWhere('submitted_by', $caregiver->id);
+		})->orderBy('created_at', 'desc')->paginate(10, ['*'], 'evaluations');
         $evaluations->setPageName('evaluations');
 
 		return view('materials.rate_materials', compact('caregiver', 'evaluations', 'material'));
@@ -248,7 +254,7 @@ class EvaluationsController extends Controller
 		$evaluation->description = $request->input('description');
 		$evaluation->type = $request->input('type');
 		$evaluation->created_by = Auth::user()->id;
-		$evaluation->model = $quiz->name;
+		$evaluation->model = 'Questionário '.$quiz->name;
 		$evaluation->material_id = $material->id;
 		$evaluation->answered_by = $request->input('caregiver');
 		$evaluation->save();
@@ -303,6 +309,12 @@ class EvaluationsController extends Controller
 		$evaluation->material_id = $material_id;
 		$evaluation->created_by = $id;
         $evaluation->save();
+
+		$log = new Log();
+		$log->performed_task = 'Foi criada.';
+		$log->done_by = $id;
+		$log->evaluation_id = $evaluation->id;
+		$log->save();
 
         $notification = new Notification();
         $notification->text = 'O Cuidador '.$caregiver->username.' classificou o Material '.$material->name.' com a dificuldade '.$difficulty.'.';

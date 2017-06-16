@@ -189,7 +189,7 @@ class CaregiversController extends Controller
 			abort(403);
 		}
 
-        $evaluations = $caregiver->evaluations()->paginate(10, ['*'], 'evaluations');
+        $evaluations = $caregiver->evaluations()->orderBy('created_at', 'desc')->paginate(10, ['*'], 'evaluations');
         $evaluations->setPageName('evaluations');
 
         $countedAccesses = DB::table('accesses')
@@ -244,10 +244,13 @@ class CaregiversController extends Controller
         $objectC->created_by = $caregiver->created_by;
         $objectC->created_at = (string) $caregiver->created_at;
         $objectC->updated_at = (string) $caregiver->updated_at;
-        $objectC->healthcarepros_emails = [];
+        $objectC->contatos = [];
 
         foreach ($caregiver->healthcarePros as $healthcarePro) {
-            array_push($objectC->healthcarepros_emails, $healthcarePro->email);
+            $contato = new \stdClass();
+            $contato->nome = $healthcarePro->name;
+            $contato->email = $healthcarePro->email;
+            array_push($objectC->contatos, $contato);
         }
     }
 

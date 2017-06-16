@@ -12,12 +12,30 @@
             @if ($evaluation->path)
                 <h4><strong>Ficheiro:</strong> <a href="{{ route('evaluations.showContent', ['evaluation' => $evaluation->id] )}}" target="_blank">{{ $evaluation->description.$evaluation->mime }}</a></h4>
             @endif
+            @if ($evaluation->submitted_by && $evaluation->difficulty)
+                <h4><strong>Dificuldade:</strong> {{ $evaluation->difficulty }}
+                    @if ($evaluation->difficulty == 'Difícil')
+                        <span style="display:inline-block;width:30px;height:1em;margin-left:2em" 
+                            class="label label-danger">
+                        </span>
+                    @elseif ($evaluation->difficulty == 'Fácil')
+                        <span style="display:inline-block;width:30px;height:1em;margin-left:2em" 
+                            class="label label-success">
+                        </span>
+                    @else
+                        <span style="display:inline-block;width:30px;height:1em;margin-left:2em" 
+                            class="label label-warning">
+                        </span>
+                    @endif
+                </h4>
+            @endif
             <h4><strong>Criador:</strong> {{ $evaluation->creator->username }}</h4>
             <h4><strong>Data da criação:</strong> {{ $evaluation->created_at }}</h4>
             <h4><strong>Data da última atualização:</strong> {{ $evaluation->updated_at }}</h4>
-            @if ($evaluation->answered_at)
+            @if ($evaluation->answered_at && $evaluation->answered_by)
+                <h4><strong>Questionado:</strong> {{ $evaluation->inquired->username }}</h4>
                 <h4><strong>Data da resposta:</strong> {{ $evaluation->answered_at }}</h4>
-            @elseif (!$evaluation->answered_at && !$evaluation->path)
+            @elseif (!$evaluation->answered_at && !$evaluation->path && $evaluation->answered_by)
                 <h4><strong>Data da resposta:</strong> À espera de resposta</h4>
             @endif
         </div>

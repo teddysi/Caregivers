@@ -29,7 +29,7 @@
 							<th>Tipo</th>
 							<th>Modelo</th>
 							<th>Realizada por</th>
-							<th>Data</th>
+							<th>Data de Criação</th>
 							<th>Ações</th>
 			            </tr>
 			        </thead>

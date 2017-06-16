@@ -24,7 +24,7 @@
 							<th>Tipo</th>
 							<th>Modelo</th>
 							<th>Realizada por</th>
-							<th>Data</th>
+							<th>Data de Criação</th>
 							<th>Ações</th>
 			            </tr>
 			        </thead>
@@ -51,7 +51,7 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem avaliações realizadas a este Cuidador.</h4>
+				<h4>Não existem avaliações realizadas sobre este Material.</h4>
 			@endif
  		</div>
 	</div>

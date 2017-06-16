@@ -98,7 +98,7 @@ class PatientsController extends Controller
 
     public function show(Patient $patient)
 	{
-        $evaluations = $patient->evaluations()->paginate(10, ['*'], 'evaluations');
+        $evaluations = $patient->evaluations()->orderBy('created_at', 'desc')->paginate(10, ['*'], 'evaluations');
 		$evaluations->setPageName('evaluations');;
 
         $logs = $patient->logs()->paginate(10, ['*'], 'logs');
