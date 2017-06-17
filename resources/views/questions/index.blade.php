@@ -9,7 +9,7 @@
 				<legend>Criar</legend>
 				<div class="row">
 					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('questions.create') }}">Questão</a>
+						<a class="btn btn-block btn-primary create_question_button" href="{{ route('questions.create') }}">Questão</a>
 					</div>
 				</div>
 			</fieldset>

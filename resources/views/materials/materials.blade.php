@@ -23,7 +23,7 @@
 									<form action="{{ route('materials.addMaterial', ['composite' => $material->id, 'material' => $notCompositeMaterial->id]) }}" method="POST" class="form-group">
 									    {{ csrf_field() }}
 										<div class="form-group">
-											<button type="submit" class="btn btn-block btn-success" name="add">Adicionar</button>
+											<button type="submit" class="btn btn-block btn-success {{ 'add_composite_'.$notCompositeMaterial->id.'_button' }}" name="add">Adicionar</button>
 										</div>
 								    </form>
 								</td>
@@ -52,8 +52,8 @@
 			        <tbody>
 						@foreach ($compositeMaterials as $index => $compositeMaterial)
 							<tr>
-                                <td>{{ $index + 1 }}</td>
-					        	<td>{{ $compositeMaterial->name }}</td>
+                                <td class="{{ 'composite_'.$compositeMaterial->id.'_order' }}">{{ $index + 1 }}</td>
+					        	<td class="{{ 'composite_'.$compositeMaterial->id.'_name' }}">{{ $compositeMaterial->name }}</td>
 								<td>
                                     <div class="row">
                                         @if ($index != 0)
@@ -61,7 +61,7 @@
                                                 <form action="{{ route('materials.upMaterial', ['composite' => $material->id, 'material' => $compositeMaterial->id]) }}" method="POST" class="form-group">
                                                     {{ csrf_field() }}
                                                     <div class="form-group">
-                                                        <button type="submit" class="btn btn-block btn-primary" name="up">Cima</button>
+                                                        <button type="submit" class="btn btn-block btn-primary {{ 'up_composite_'.$compositeMaterial->id.'_button' }}" name="up">Cima</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -73,7 +73,7 @@
                                                 <form action="{{ route('materials.downMaterial', ['composite' => $material->id, 'material' => $compositeMaterial->id]) }}" method="POST" class="form-group">
                                                     {{ csrf_field() }}
                                                     <div class="form-group">
-                                                        <button type="submit" class="btn btn-block btn-primary" name="down">Baixo</button>
+                                                        <button type="submit" class="btn btn-block btn-primary {{ 'down_composite_'.$compositeMaterial->id.'_button' }}" name="down">Baixo</button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -84,7 +84,7 @@
                                             <form action="{{ route('materials.removeMaterial', ['composite' => $material->id, 'material' => $compositeMaterial->id]) }}" method="POST" class="form-group">
                                             {{ csrf_field() }}
                                                 <div class="form-group">
-                                                    <button type="submit" class="btn btn-block btn-danger" name="remove">Remover</button>
+                                                    <button type="submit" class="btn btn-block btn-danger {{ 'remove_composite_'.$compositeMaterial->id.'_button' }}" name="remove">Remover</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -102,7 +102,7 @@
 			</div>
 		</div>
     </div>
-    <p><a class="btn btn-primary" href="{{ route('materials') }}">Concluído</a></p>
+    <p><a class="btn btn-primary composite_conclude_button" href="{{ route('materials') }}">Concluído</a></p>
 </div>
 
 @endsection

@@ -36,7 +36,7 @@
 						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'annex']) }}">Anexo</a>
 					</div>
 					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'composite']) }}">Composto</a>
+						<a class="btn btn-block btn-primary create_composite_material_button" href="{{ route('materials.create', ['type' =>'composite']) }}">Composto</a>
 					</div>
 				</div>
 			</fieldset>

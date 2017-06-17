@@ -8,7 +8,7 @@
     <form action="{{route('questions.create')}}" method="POST" class="form-group">
         {{ csrf_field() }}
         <div class="form-group">
-            <label for="inputQuestion">Nome</label>
+            <label for="inputQuestion">Pergunta</label>
             <input
                 type="text" class="form-control"
                 name="question" id="inputQuestion"
@@ -17,9 +17,9 @@
 
         <div class="form-group">
             <label for="selectType">Tipo de Resposta</label>
-            <select name="selectType" id="selectType" class="form-control selectpicker" onchange="selectTypeChange()">
-                <option value="text" {{ old('selectType') == 'text' ? 'selected' : '' }}>Texto</option>
-                <option value="radio" {{ old('selectType') == 'radio' ? 'selected' : '' }}>Opções</option>
+            <select name="selectType" id="selectType" class="form-control selectpicker answer_type" onchange="selectTypeChange()">
+                <option class="text" value="text" {{ old('selectType') == 'text' ? 'selected' : '' }}>Texto</option>
+                <option class="radio" value="radio" {{ old('selectType') == 'radio' ? 'selected' : '' }}>Opções</option>
             </select>
         </div>
 

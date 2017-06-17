@@ -56,11 +56,11 @@
                                     </a>
                                     <ul class="dropdown-menu" role="menu">
                                         <li><a href="{{ route('users') }}" class="nav_caregivers">Cuidadores</a></li>
-                                        <li><a href="{{ route('patients') }}">Pacientes</a></li>
-                                        <li><a href="{{ route('needs') }}">Necessidades</a></li>
-                                        <li><a href="{{ route('materials') }}">Materiais</a></li>
-                                        <li><a href="{{ route('quizs') }}">Questionários</a></li>
-                                        <li><a href="{{ route('questions') }}">Questões</a></li>
+                                        <li><a href="{{ route('patients') }}" class="nav_patients">Pacientes</a></li>
+                                        <li><a href="{{ route('needs') }}" class="nav_needs">Necessidades</a></li>
+                                        <li><a href="{{ route('materials') }}" class="nav_materials">Materiais</a></li>
+                                        <li><a href="{{ route('quizs') }}" class="nav_quizs">Questionários</a></li>
+                                        <li><a href="{{ route('questions') }}" class="nav_questions">Questões</a></li>
                                     </ul>
                                 </li>
                                 <li><a href="{{ route('users.notifications', ['user' => Auth::user()->id]) }}">Notificações 
