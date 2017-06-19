@@ -47,6 +47,9 @@ class SuccessfullyCreateCompositeMaterialTest extends DuskTestCase
 
             $browser->assertPathIs('/caregivers/public/materials/'.$materials_count.'/materials');
 
+            $browser->whenAvailable('.materiais-por-associar table tr:first-child button', function($bt) {
+                $bt->click
+            })
             for($i = 1; $i < 4; $i++) {
                 $material = Material::find($i);
 

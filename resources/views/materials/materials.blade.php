@@ -5,7 +5,7 @@
 @section ('content')
 <div class="container">
     <div class="row">
-        <div class="col-sm-12 col-md-5 col-lg-5">
+        <div class="materiais-para-adicionar col-sm-12 col-md-5 col-lg-5">
             <legend>Outros Materiais</legend>
             @if (count($notCompositeMaterials))
 		        <table class="table table-striped">
@@ -38,7 +38,7 @@
 				{!! $notCompositeMaterials->links() !!}
 			</div>
 		</div>
-        <div class="col-sm-12 col-md-7 col-lg-7">
+        <div class="materiais-adicionados col-sm-12 col-md-7 col-lg-7">
             <legend>Materiais Associados</legend>
             @if (count($compositeMaterials))
 		        <table class="table table-striped">
