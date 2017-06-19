@@ -183,9 +183,9 @@ class EvaluationsController extends Controller
 		} else if ($evaluation->caregiver_id != null) {
 			return redirect()->route('caregivers.rate', ['caregiver' => $evaluation->caregiver_id]);
 		} else if ($evaluation->material_id != null && $evaluation->answered_by != null) {
-			return redirect()->route('materials.rate_materials', ['caregiver' => $evaluation->answered_by, 'material' => $evaluation->material_id]);
+			return redirect()->route('materials.rate', ['caregiver' => $evaluation->answered_by, 'material' => $evaluation->material_id]);
 		}  else if ($evaluation->material_id != null && $evaluation->submitted_by != null) {
-			return redirect()->route('materials.rate_materials', ['caregiver' => $evaluation->submitted_by, 'material' => $evaluation->material_id]);
+			return redirect()->route('materials.rate', ['caregiver' => $evaluation->submitted_by, 'material' => $evaluation->material_id]);
 		}
 	}
 
@@ -209,25 +209,6 @@ class EvaluationsController extends Controller
 		return response($content)->header('Content-Type', $contentType);
 	}
 
-	public function rate_material(Caregiver $caregiver, Material $material)
-	{
-		if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
-			abort(403);
-		}
-
-		if (!$caregiver->materials->contains('id', $material->id)) {
-			abort(403);
-		}
-		
-		$evaluations = $material->evaluations()->where(function($query) use($caregiver) {
-			$query->where('answered_by', $caregiver->id)
-				->orWhere('submitted_by', $caregiver->id);
-		})->orderBy('created_at', 'desc')->paginate(10, ['*'], 'evaluations');
-        $evaluations->setPageName('evaluations');
-
-		return view('materials.rate_materials', compact('caregiver', 'evaluations', 'material'));
-	}
-
 	public function createForMaterial($id, Material $material)
 	{
 		if (!Auth::user()->caregivers->contains('id', $id)) {
@@ -238,7 +219,7 @@ class EvaluationsController extends Controller
 						->where('blocked', 0)
 						->get();
 
-		return view('materials.create_quiz_material', compact('id', 'quizs', 'material'));
+		return view('evaluations.create_quiz_material', compact('id', 'quizs', 'material'));
 	}
 
 	public function storeForMaterial(Request $request, Material $material)
@@ -267,13 +248,13 @@ class EvaluationsController extends Controller
 		$log->evaluation_id = $evaluation->id;
 		$log->save();
 
-		return redirect()->route('materials.rate_materials', ['caregiver' => $request->input('caregiver'), 'material' => $material]);
+		return redirect()->route('materials.rate', ['caregiver' => $request->input('caregiver'), 'material' => $material]);
 	}
 
 	public function createAPI(Request $request, $id) 
 	{
-	    $caregiver_token = $request->header('Authorization');
-        $material_id = $request->input('material_id');
+	    $caregiverToken = $request->header('Authorization');
+        $materialId = $request->input('material_id');
 		$difficulty;
 		switch ($request->input('evaluation')) {
 			case '-1':
@@ -290,13 +271,13 @@ class EvaluationsController extends Controller
 		}
 
         $caregiver = Caregiver::find($id);
-        $material = Material::find($material_id);
+        $material = Material::find($materialId);
 
         if ($caregiver == null || $material == null) {
             return response('Não Encontrado', 404);
         }
 
-        /*if (!$caregiver_token || $caregiver->caregiver_token != $caregiver_token) {
+        /*if (!$caregiverToken || $caregiver->caregiver_token != $caregiverToken) {
             return response('Não Autorizado', 401);
         }*/
 
@@ -306,7 +287,7 @@ class EvaluationsController extends Controller
         $evaluation->model = 'Escala de Dificuldade';
 		$evaluation->submitted_by = $id;
 		$evaluation->difficulty = $difficulty;
-		$evaluation->material_id = $material_id;
+		$evaluation->material_id = $materialId;
 		$evaluation->created_by = $id;
         $evaluation->save();
 

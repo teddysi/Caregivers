@@ -6,7 +6,7 @@
 
 <div class="container">
     <legend>Disponibilizar Questionário para o Material: {{ $material->name }}</legend>
-	<form action="{{route('evaluations.storeForMaterial', ['material' => $material->id])}}" method="POST" class="form-group" enctype="multipart/form-data">
+	<form action="{{route('evaluations.createForMaterial', ['material' => $material->id])}}" method="POST" class="form-group" enctype="multipart/form-data">
         {{ csrf_field() }}
         <input name="caregiver" type="hidden" value="{{ $id }}">
 

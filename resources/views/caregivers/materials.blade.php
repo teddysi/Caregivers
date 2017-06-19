@@ -123,7 +123,7 @@
                                             <a class="btn btn-block btn-warning" href="{{ route('materials.edit', ['id' => $material->id]) }}">Editar</a>
                                         </div>
                                         <div class="col-sm-6 col-md-3 col-lg-3	">
-                                                <a class="btn btn-block btn-primary" href="{{ route('materials.rate_materials', ['caregiver' => $caregiver->id, 'material' => $material->id]) }}">Avaliações</a>
+                                                <a class="btn btn-block btn-primary" href="{{ route('materials.rate', ['caregiver' => $caregiver->id, 'material' => $material->id]) }}">Avaliações</a>
                                         </div>
 										<div class="col-sm-6 col-md-3 col-lg-3">
 											<form action="{{ route('caregivers.diassociateMaterial', ['caregiver' => $caregiver->id, 'material' => $material->id]) }}" method="POST" class="form-group">

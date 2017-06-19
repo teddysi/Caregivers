@@ -15,26 +15,26 @@ class AccessesController extends Controller
 {
     public function create(Request $request, $id)
     {
-        $caregiver_token = $request->header('Authorization');
-        $patient_id = $request->input('patient_id');
-        $material_id = $request->input('material_id');
+        $caregiverToken = $request->header('Authorization');
+        $patientId = $request->input('patient_id');
+        $materialId = $request->input('material_id');
 
         $caregiver = Caregiver::find($id);
-        $patient = Patient::find($patient_id);
-        $material = Material::find($material_id);
+        $patient = Patient::find($patientId);
+        $material = Material::find($materialId);
 
         if ($caregiver == null || $patient == null || $material == null) {
             return response('Não Encontrado', 404);
         }
 
-        /*if (!$caregiver_token || $caregiver->caregiver_token != $caregiver_token) {
+        /*if (!$caregiverToken || $caregiver->caregiver_token != $caregiverToken) {
             return response('Não Autorizado', 401);
         }*/
 
         $access = new Access;
         $access->caregiver_id = $id;
-        $access->patient_id = $patient_id;
-        $access->material_id = $material_id;
+        $access->patient_id = $patientId;
+        $access->material_id = $materialId;
         $access->save();
 
         $notification = new Notification();

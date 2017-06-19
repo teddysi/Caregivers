@@ -12,6 +12,7 @@ use App\EmergencyContact;
 use App\Annex;
 use App\Composite;
 use App\User;
+use App\Caregiver;
 use App\Log;
 use Storage;
 use Response;
@@ -316,6 +317,25 @@ class MaterialsController extends Controller
         }
 
         return back();
+	}
+
+	public function rate(Caregiver $caregiver, Material $material)
+	{
+		if (!$caregiver->healthcarePros->contains('id', Auth::user()->id)) {
+			abort(403);
+		}
+
+		if (!$caregiver->materials->contains('id', $material->id)) {
+			abort(403);
+		}
+		
+		$evaluations = $material->evaluations()->where(function($query) use($caregiver) {
+			$query->where('answered_by', $caregiver->id)
+				->orWhere('submitted_by', $caregiver->id);
+		})->orderBy('created_at', 'desc')->paginate(10, ['*'], 'evaluations');
+        $evaluations->setPageName('evaluations');
+
+		return view('materials.rate', compact('caregiver', 'evaluations', 'material'));
 	}
 
 	public function materials(Material $material)

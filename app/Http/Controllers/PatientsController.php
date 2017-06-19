@@ -224,7 +224,7 @@ class PatientsController extends Controller
         return redirect()->route('patients.needs', ['patient' => $patient->id]);
     }
 
-		private function saveDataFieldsToSession(Request $request)
+	private function saveDataFieldsToSession(Request $request)
     {
         $request->session()->put('patientName', $request->input('patientName'));
         $request->session()->put('patientEmail', $request->input('patientEmail'));

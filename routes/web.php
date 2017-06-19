@@ -97,29 +97,24 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'caregivers
 		'uses' =>'CaregiversController@rate'
 	]);
 
-	Route::get('{id}/evaluation/create/{type}', [
+	Route::get('{id}/evaluations/create/{type}', [
 		'as' => 'caregivers.evaluations.create',
 		'uses' =>'EvaluationsController@create'
 	]);
 
-	Route::post('{id}/evaluation', [
+	Route::post('{id}/evaluations/create', [
 		'as' => 'evaluations.createForCaregiver',
 		'uses' =>'EvaluationsController@store'
 	]);
 
-	Route::get('{caregiver}/material/{material}', [
-		'as' => 'materials.rate_materials',
-		'uses' =>'EvaluationsController@rate_material'
+	Route::get('{caregiver}/materials/{material}', [
+		'as' => 'materials.rate',
+		'uses' =>'MaterialsController@rate'
 	]);
 
-	Route::get('{id}/rate/{material}', [
-		'as' => 'materials.create_for_materials',
+	Route::get('{id}/materials/{material}/rate', [
+		'as' => 'materials.evaluations.create',
 		'uses' =>'EvaluationsController@createForMaterial'
-	]);
-
-	Route::post('materials/{material}/evaluation', [
-		'as' => 'evaluations.storeForMaterial',
-		'uses' =>'EvaluationsController@storeForMaterial'
 	]);
 
 	Route::post('{caregiver}/accesses/export', [
@@ -167,12 +162,12 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'patients']
 		'uses' =>'PatientsController@diassociate'
 	]);
 
-	Route::get('{id}/evaluation/create{type}', [
+	Route::get('{id}/evaluations/create/{type}', [
 		'as' => 'patients.evaluations.create',
 		'uses' =>'EvaluationsController@create'
 	]);
 
-	Route::post('{id}/evaluation', [
+	Route::post('{id}/evaluations/create', [
 		'as' => 'evaluations.createForPatient',
 		'uses' =>'EvaluationsController@store'
 	]);
@@ -271,6 +266,11 @@ Route::group(['middleware' => 'auth', 'prefix' => 'materials'], function () {
 	Route::post('{composite}/add/{material}/down', [
 		'as' => 'materials.downMaterial',
 		'uses' =>'MaterialsController@downMaterial'
+	]);
+
+	Route::post('{material}/evaluations/create', [
+		'as' => 'evaluations.createForMaterial',
+		'uses' =>'EvaluationsController@storeForMaterial'
 	]);
 });
 

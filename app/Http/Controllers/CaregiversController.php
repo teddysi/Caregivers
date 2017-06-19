@@ -256,14 +256,14 @@ class CaregiversController extends Controller
 
     public function patientsAPI(Request $request, $id)
     {
-        $caregiver_token = $request->header('Authorization');
+        $caregiverToken = $request->header('Authorization');
         $user = Caregiver::find($id);
 
         if ($user == null) {
            return response('Não Encontrado', 404);
         }
 
-        if (!$caregiver_token || $user->caregiver_token != $caregiver_token) {
+        if (!$caregiverToken || $user->caregiver_token != $caregiverToken) {
             return response('Não Autorizado', 401);
         }
 

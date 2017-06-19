@@ -165,7 +165,7 @@ class QuestionsController extends Controller
 
     public function validateOptions($values , $errors)
     {
-        $count_values = substr_count($values,";");
+        $countValues = substr_count($values, ";");
 
         if (substr($values, 0, 1) === ';') {
             $errors->add('values','O campo "Opções" não pode começar com ";".');
@@ -179,7 +179,7 @@ class QuestionsController extends Controller
             $errors->add('values', 'O campo "Opções" não deve conter espaços em branco antes de ";".');
         }
 
-        if ($count_values < 2) {
+        if ($countValues < 2) {
             $errors->add('values', 'O campo "Opções" tem que ter pelo menos duas respostas.');
         }
 

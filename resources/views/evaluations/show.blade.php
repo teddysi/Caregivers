@@ -13,6 +13,7 @@
                 <h4><strong>Ficheiro:</strong> <a href="{{ route('evaluations.showContent', ['evaluation' => $evaluation->id] )}}" target="_blank">{{ $evaluation->description.$evaluation->mime }}</a></h4>
             @endif
             @if ($evaluation->submitted_by && $evaluation->difficulty)
+                <h4><strong>Avaliador:</strong> {{ $evaluation->submitter->username }} </h4>
                 <h4><strong>Dificuldade:</strong> {{ $evaluation->difficulty }}
                     @if ($evaluation->difficulty == 'Difícil')
                         <span style="display:inline-block;width:30px;height:1em;margin-left:2em" 
