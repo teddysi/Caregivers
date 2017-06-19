@@ -19,6 +19,11 @@ class Material extends Model
     protected static $singleTableSubclasses = [EmergencyContact::class, Text::class, Video::class, 
         Image::class, Annex::class, Composite::class];
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'description', 'name', 'created_by', 'blocked',
     ];

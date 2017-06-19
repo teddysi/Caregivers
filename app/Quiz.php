@@ -8,6 +8,11 @@ class Quiz extends Model
 {
     protected $table = 'quizs';
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
     protected $fillable = [
         'name', 'blocked',
     ];
