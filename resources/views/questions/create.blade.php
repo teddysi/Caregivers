@@ -9,7 +9,7 @@
     <form action="{{route('questions.create')}}" method="POST" class="form-group">
         {{ csrf_field() }}
         <div class="form-group">
-            <label for="inputQuestion">Nome</label>
+            <label for="inputQuestion">Questão</label>
             <input
                 type="text" class="form-control"
                 name="question" id="inputQuestion"
