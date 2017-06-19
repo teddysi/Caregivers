@@ -22,7 +22,7 @@ class ResourcesDropDownTest extends DuskTestCase
         $loginTest->testBasicExample();
 
         $this->browse(function (Browser $browser) {
-            $browser->click('a.drop_recursos')
+            $browser->clickLink('Recursos')
                     ->assertSee('Cuidadores')
                     ->assertSee('Pacientes')
                     ->assertSee('Necessidades')

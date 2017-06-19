@@ -42,7 +42,7 @@
                     </a>
                 </div>
 
-                <div class="collapse navbar-collapse" id="app-navbar-collapse">
+                <div class="collapse navbar-collapse " id="app-navbar-collapse">
                     <!-- Left Side Of Navbar -->
                     <ul class="nav navbar-nav">
                         @if (Auth::user())
@@ -54,7 +54,7 @@
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                         Recursos <span class="caret"></span>
                                     </a>
-                                    <ul class="dropdown-menu" role="menu">
+                                    <ul class="dropdown-menu resourses" role="menu">
                                         <li><a href="{{ route('users') }}">Cuidadores</a></li>
                                         <li><a href="{{ route('patients') }}">Pacientes</a></li>
                                         <li><a href="{{ route('needs') }}">Necessidades</a></li>
