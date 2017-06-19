@@ -90,7 +90,7 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Os pacientes deste cuidador não têm necessidades.</h4>
+				<h4>Os pacientes deste Cuidador não têm necessidades.</h4>
 			@endif
         </div>
 	</div>
@@ -140,13 +140,15 @@
                     </tbody>
                 </table>
 			@else
-				<h4>Não existem materiais.</h4>
+				<h4>Não existem materiais associados a este Cuidador.</h4>
 			@endif
 			<div class="text-center">
 				{!! $materials->links() !!}
 			</div>
         </div>
 	</div>
+	<br />
+	<p><a class="btn btn-default" href="javascript:history.back()">Voltar Atrás</a></p>
 </div>
 
 @endsection

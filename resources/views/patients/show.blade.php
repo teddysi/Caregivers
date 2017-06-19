@@ -37,7 +37,7 @@
 					<br />
 					<div class="row">
 						<div class="col-sm-12 col-md-12 col-lg-12">
-							<a class="btn btn-block btn-default" href="javascript:history.back()">Voltar a atrás</a>
+							<a class="btn btn-block btn-default" href="javascript:history.back()">Voltar Atrás</a>
 						</div>
 					</div>
                 </div>
@@ -47,20 +47,16 @@
     <br />
     <div class="row">
 		<div class="col-lg-12">
-            <h2>Avaliações</h2>
-            <fieldset>
-				<legend>Criar</legend>
-				<div class="row">
-					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('patients.evaluations.create', ['id' => $patient->id, 'typeEval' => 'eval']) }}">Avaliação</a>
-					</div>
-					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('patients.evaluations.create', ['id' => $patient->id, 'typeEval' => 'quiz']) }}">Disponiblizar Questionário</a>
-					</div>
+            <legend>Avaliações</legend>
+			<div class="row">
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('patients.evaluations.create', ['id' => $patient->id, 'typeEval' => 'eval']) }}">Nova Avaliação</a>
 				</div>
-			</fieldset>
-			<br /><br />
-			<legend>Listar</legend>
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('patients.evaluations.create', ['id' => $patient->id, 'typeEval' => 'quiz']) }}">Disponiblizar Questionário</a>
+				</div>
+			</div>
+			<br />
 			@if (count($evaluations))
 		        <table class="table table-striped">
 			        <thead>

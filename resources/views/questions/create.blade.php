@@ -5,6 +5,7 @@
 @section('content')
 
 <div class="container">
+    <legend>Nova Questão</legend>
     <form action="{{route('questions.create')}}" method="POST" class="form-group">
         {{ csrf_field() }}
         <div class="form-group">
@@ -25,7 +26,7 @@
 
         <div class="form-group" id="inputOptions" style="display:none">
             <label for="inputOptions">Opções de Resposta</label>
-            <h5>Cada opção deve ser separa e terminada por ";". Exemplo: "Gosto muito;Não gosto;Sim;Não;"</h5>
+            <h5>Nota: Cada opção deve ser separada e terminada por ";". Exemplo: "Gosto muito;Não gosto;Sim;Não;"</h5>
             <input type="text" class="form-control" name="values" value="{{ old('values') }}"/>
         </div>
         

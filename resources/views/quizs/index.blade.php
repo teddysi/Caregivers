@@ -4,80 +4,77 @@
 <div class="container">
 	<div class="row">
 		<div class="col-lg-12">
-            <h1>Questionários</h1>
-			<fieldset>
-				<legend>Criar</legend>
-				<div class="row">
-					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('quizs.create') }}">Questionário</a>
-					</div>
+            <legend>Questionários</legend>
+			<div class="row">
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('quizs.create') }}">Novo Questionário</a>
 				</div>
-			</fieldset>
+			</div>
 			<br />
-			<legend>Listar</legend>
-			<form class="form" method="POST" action="{{ route('quizs') }}">
-				{{ csrf_field() }}
-				<div class="row">
-					<div class="col-lg-4 col-md-4 col-sm-6">
-						<label class="sr-only" for="inputQuizName">Nome</label>
-						<div class="input-group">
-							<div class="input-group-addon">
-								<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+			@if (count($quizs))
+				<form class="form" method="POST" action="{{ route('quizs') }}">
+					{{ csrf_field() }}
+					<div class="row">
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<label class="sr-only" for="inputQuizName">Nome</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+								</div>
+								<input type="text" name="quizName" class="form-control" id="inputQuizName" placeholder="Nome" value="{{ $searchData['quizName'] }}">
 							</div>
-							<input type="text" name="quizName" class="form-control" id="inputQuizName" placeholder="Nome" value="{{ $searchData['quizName'] }}">
 						</div>
-					</div>
-                    <div class="col-lg-4 col-md-4 col-sm-6">
-						<label class="sr-only" for="inputQuizCreator">Criador</label>
-						<div class="input-group">
-							<div class="input-group-addon">
-								<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<label class="sr-only" for="inputQuizCreator">Criador</label>
+							<div class="input-group">
+								<div class="input-group-addon">
+									<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+								</div>
+								<input type="text" name="quizCreator" class="form-control" id="inputQuizCreator" placeholder="Criador" value="{{ $searchData['quizCreator'] }}">
 							</div>
-							<input type="text" name="quizCreator" class="form-control" id="inputQuizCreator" placeholder="Criador" value="{{ $searchData['quizCreator'] }}">
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<div class="form-group form-inline	">
+								<label for="blockedItems">Questionários:</label>
+								<select name="quizBlocked" class="form-control">
+									<option value="all" {{ $searchData['quizBlocked'] == 'all' ? 'selected' : '' }}>Todos</option>
+									<option value="just_blocked" {{ $searchData['quizBlocked'] == 'just_blocked' ? 'selected' : '' }}>Bloqueados</option>
+									<option value="just_unblocked" {{ $searchData['quizBlocked'] == 'just_unblocked' ? 'selected' : '' }}>Não Bloqueados</option>
+								</select>
+							</div>
 						</div>
 					</div>
-					<div class="col-lg-4 col-md-4 col-sm-6">
-						<div class="form-group form-inline	">
-							<label for="blockedItems">Questionários:</label>
-							<select name="quizBlocked" class="form-control">
-								<option value="all" {{ $searchData['quizBlocked'] == 'all' ? 'selected' : '' }}>Todos</option>
-								<option value="just_blocked" {{ $searchData['quizBlocked'] == 'just_blocked' ? 'selected' : '' }}>Bloqueados</option>
-								<option value="just_unblocked" {{ $searchData['quizBlocked'] == 'just_unblocked' ? 'selected' : '' }}>Não Bloqueados</option>
-							</select>
+					<br />
+					<div class="row">
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<div class="form-group form-inline">
+								<label for="searchOrder">Ordenar por:</label>
+								<select name="quizSort" class="form-control">
+									<option value="mrc" {{ $searchData['quizSort'] == 'mrc' ? 'selected' : '' }}>Mais Recentes</option>
+									<option value="lrc" {{ $searchData['quizSort'] == 'lrc' ? 'selected' : '' }}>Menos Recentes</option>
+									<option value="name_az" {{ $searchData['quizSort'] == 'name_az' ? 'selected' : '' }}>Nome (A-Z)</option>
+									<option value="name_za" {{ $searchData['quizSort'] == 'name_za' ? 'selected' : '' }}>Nome (Z-A)</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6">
+							<div class="form-group form-inline	">
+								<label for="searchItemsPerPage">Nº questionários por página:</label>
+								<select name="quizPages" class="form-control">
+									<option value="10" {{ $searchData['quizPages'] == '10' ? 'selected' : '' }}>10</option>
+									<option value="20" {{ $searchData['quizPages'] == '20' ? 'selected' : '' }}>20</option>
+									<option value="30" {{ $searchData['quizPages'] == '30' ? 'selected' : '' }}>30</option>
+								</select>
+							</div>
+						</div>
+						<div class="col-lg-4 col-md-4 col-sm-6 pull-right">
+							<button type="submit" class="btn btn-default btn-block">
+								<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Procurar
+							</button>
 						</div>
 					</div>
-				</div>
-                <br />
-                <div class="row">
-					<div class="col-lg-4 col-md-4 col-sm-6">
-						<div class="form-group form-inline">
-							<label for="searchOrder">Ordenar por:</label>
-							<select name="quizSort" class="form-control">
-								<option value="mrc" {{ $searchData['quizSort'] == 'mrc' ? 'selected' : '' }}>Mais Recentes</option>
-								<option value="lrc" {{ $searchData['quizSort'] == 'lrc' ? 'selected' : '' }}>Menos Recentes</option>
-								<option value="name_az" {{ $searchData['quizSort'] == 'name_az' ? 'selected' : '' }}>Nome (A-Z)</option>
-								<option value="name_za" {{ $searchData['quizSort'] == 'name_za' ? 'selected' : '' }}>Nome (Z-A)</option>
-							</select>
-						</div>
-					</div>
-					<div class="col-lg-4 col-md-4 col-sm-6">
-						<div class="form-group form-inline	">
-							<label for="searchItemsPerPage">Nº questionários por página:</label>
-							<select name="quizPages" class="form-control">
-								<option value="10" {{ $searchData['quizPages'] == '10' ? 'selected' : '' }}>10</option>
-								<option value="20" {{ $searchData['quizPages'] == '20' ? 'selected' : '' }}>20</option>
-								<option value="30" {{ $searchData['quizPages'] == '30' ? 'selected' : '' }}>30</option>
-							</select>
-						</div>
-					</div>
-					<div class="col-lg-4 col-md-4 col-sm-6 pull-right">
-						<button type="submit" class="btn btn-default btn-block">
-							<span class="glyphicon glyphicon-search" aria-hidden="true"></span> Procurar
-						</button>
-					</div>
-				</div>
-			</form>
-            @if (count($quizs))
+				</form>
+				<br />
                 <table class="table table-striped">
 			        <thead>
 			            <tr>

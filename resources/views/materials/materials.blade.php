@@ -32,7 +32,7 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem materiais para adicionar.</h4>
+				<h4>Não existem materiais para adicionar a este Material Composto.</h4>
 			@endif
 			<div class="text-center">
 				{!! $notCompositeMaterials->links() !!}
@@ -95,7 +95,7 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem materiais associados.</h4>
+				<h4>Não existem materiais neste Material Composto.</h4>
 			@endif
 			<div class="text-center">
 				{!! $compositeMaterials->links() !!}

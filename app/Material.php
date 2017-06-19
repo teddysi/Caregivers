@@ -38,7 +38,7 @@ class Material extends Model
         return $this->belongsToMany('App\Need');
     }
 
-    public function proceedings()
+    public function accesses()
     {
         return $this->hasMany('App\Access', 'material_id', 'id');
     }

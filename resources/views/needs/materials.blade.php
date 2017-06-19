@@ -7,10 +7,8 @@
 <div class="container">
 	<div class="row">
 		<div class="col-lg-12">
-			<h1>Materiais de {{ $need->description }}</h1>
+			<legend>Materiais de {{ $need->description }}</legend>
 			@if (count($materials))
-				<br /><br />
-				<legend>Listar</legend>
 		        <table class="table table-striped">
 			        <thead>
 			            <tr>
@@ -61,12 +59,12 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem materiais.</h4>
+				<h4>Não existem materiais associados a esta Necessidade.</h4>
 			@endif
 			<div class="text-center">
 				{!! $materials->links() !!}
 			</div>
-			<p><a class="btn btn-default" href="javascript:history.back()">Voltar a atrás</a></p>
+			<p><a class="btn btn-default" href="javascript:history.back()">Voltar Atrás</a></p>
         </div>
 	</div>
 </div>

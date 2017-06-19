@@ -5,7 +5,7 @@
 @section ('content')
 
 <div class="container">
-    <h2><strong>Nome:</strong> {{ $quiz->name }}</h2>
+    <h2><strong>Questionário:</strong> {{ $quiz->name }}</h2>
     <div class="row">
 		<div class="col-sm-12 col-md-8 col-lg-8">
             <h4><strong>Criador:</strong> {{ $quiz->creator->username }}</h4>
@@ -36,24 +36,15 @@
                                 </form>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-sm-6 col-md-6 col-lg-6">
-                                <a class="btn btn-block btn-primary" href="{{ route('quizs.questions', ['quiz' => $quiz->id]) }}">Questões</a>
-                            </div>
-                            <div class="col-sm-6 col-md-6 col-lg-6">
-                                <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar a atrás</a>
-                            </div>
-                        </div>
-                    @else
-                        <div class="row">
-                            <div class="col-sm-6 col-md-6 col-lg-6">
-                                <a class="btn btn-block btn-primary" href="{{ route('quizs.questions', ['quiz' => $quiz->id]) }}">Perguntas</a>
-                            </div>
-                            <div class="col-sm-6 col-md-6 col-lg-6">
-                                <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar a atrás</a>
-                            </div>
-                        </div>
                     @endif
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6 col-lg-6">
+                            <a class="btn btn-block btn-primary" href="{{ route('quizs.questions', ['quiz' => $quiz->id]) }}">Questões</a>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-6">
+                            <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar Atrás</a>
+                        </div>
+                    </div>
                 </div>
             </div>
  		</div>
@@ -61,13 +52,13 @@
     <br />
     <div class="row">
         <div class="col-lg-12">
-            <legend>Perguntas Associadas</legend>
+            <legend>Questões Associadas</legend>
             @if (count($quizQuestions))
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th>Ordem</th>
-                            <th>Pergunta</th>
+                            <th>Questão</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -80,7 +71,7 @@
                     </tbody>
                 </table>
             @else
-                <h4>Não existem perguntas associadas.</h4>
+                <h4>Não existem questões associadas a este Questionário.</h4>
             @endif
             <div class="text-center">
                 {!! $quizQuestions->links() !!}

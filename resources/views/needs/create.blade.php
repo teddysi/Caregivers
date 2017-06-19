@@ -4,6 +4,7 @@
 
 @section('content')
 <div class="container">
+    <legend>Nova Necessidade</legend>
     <form action="{{url('/needs/create')}}" method="POST" class="form-group">
         {{ csrf_field() }}
 

@@ -5,6 +5,7 @@
 @section('content')
 
 <div class="container">
+    <legend>Novo Questionário</legend>
     <form action="{{route('quizs.create')}}" method="POST" class="form-group" enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="form-group">

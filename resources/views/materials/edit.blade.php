@@ -5,7 +5,19 @@
 @section('content')
 
 <div class="container">
-    <h2>Editar {{ $material->type }}</h2>
+    @if ($material->type == 'text')
+        <legend>Editar Texto</legend>
+    @elseif ($material->type == 'image')
+        <legend>Editar Imagem</legend>
+    @elseif ($material->type == 'video')
+        <legend>Editar Video</legend>
+    @elseif ($material->type == 'emergencyContact')
+        <legend>Editar Contacto de Emergência</legend>
+    @elseif ($material->type == 'annex')
+        <legend>Editar Anexo</legend>
+    @else
+        <legend>Editar Material Composto</legend>
+    @endif
     <form action="{{ url('/materials', ['material' => $material->id] )}}" method="POST" class="form-group"  enctype="multipart/form-data">
         {{ method_field('PATCH') }}
         {{ csrf_field() }}
@@ -41,6 +53,7 @@
         @if ($material->type == 'Imagem')
             <div class="form-group">
                 <label for="inputFile">Ficheiro</label>
+                <h5>Nota: Caso não pretenda alterar o ficheiro, não necessita selecionar um. Manter-se-á o atual.</h5>
                 <input type="file" name="pathImage" accept="image/*"/>
             </div>
         @endif
@@ -48,6 +61,7 @@
         @if ($material->type == 'Video')
             <div class="form-group">
                 <label for="inputFile">Ficheiro</label>
+                <h5>Nota: Caso não pretenda alterar o ficheiro, não necessita selecionar um. Manter-se-á o atual.</h5>
                 <input type="file" name="pathVideo" accept="video/mp4"/>
             </div>
         @endif

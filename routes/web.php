@@ -122,6 +122,10 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'caregivers
 		'uses' =>'EvaluationsController@storeForMaterial'
 	]);
 
+	Route::post('{caregiver}/accesses/export', [
+		'as' => 'accesses.export',
+		'uses' =>'AccessesController@export'
+	]);
 });
 
 Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'patients'], function () {

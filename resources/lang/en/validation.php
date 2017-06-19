@@ -98,8 +98,11 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'username' => [
+            'required' => 'O nome de utilizador tem que ser preenchido.',
+        ],
+        'password' => [
+            'required' => 'A password tem que ser preenchida.',
         ],
     ],
 

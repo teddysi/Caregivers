@@ -55,14 +55,14 @@ class EvaluationsController extends Controller
 								->where('blocked', 0)
 								->get();
 				
-				return view('evaluations.create_quiz', compact('id', 'quizs', 'typeEval'));	
+				return view('evaluations.create_quiz', compact('patient', 'quizs', 'typeEval'));	
 			} else {
 				$caregiver = Caregiver::find($id);
 				$quizs = Quiz::whereNotIn('id', $caregiver->quizs->modelKeys())
 								->where('blocked', 0)
 								->get();
 				
-				return view('evaluations.create_quiz', compact('id', 'quizs', 'typeEval'));
+				return view('evaluations.create_quiz', compact('caregiver', 'quizs', 'typeEval'));
 			}
 		}
 

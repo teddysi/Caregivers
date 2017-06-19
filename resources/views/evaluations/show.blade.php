@@ -4,7 +4,7 @@
 
 @section ('content')
 <div class="container">
-    <h2><strong>Descrição:</strong> {{ $evaluation->description }}</h2>
+    <h2><strong>Avaliação:</strong> {{ $evaluation->description }}</h2>
     <div class="row">
 		<div class="col-sm-12 col-md-8 col-lg-8">
             <h4><strong>Tipo de Avaliação:</strong> {{ $evaluation->type }}</h4>
@@ -50,7 +50,7 @@
                             <a class="btn btn-block btn-warning" href="{{ route('evaluations.edit', ['evaluation' => $evaluation->id]) }}">Editar</a>
                         </div>
                         <div class="col-sm-6 col-md-6 col-lg-6">
-                            <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar a atrás</a>
+                            <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar Atrás</a>
                         </div>
                     </div>
                 </div>

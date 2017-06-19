@@ -7,20 +7,16 @@
 <div class="container">
 	<div class="row">
 		<div class="col-lg-12">
-            <h1>Avaliações de {{ $caregiver->name }}</h1>
-            <fieldset>
-				<legend>Criar</legend>
-				<div class="row">
-					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('caregivers.evaluations.create', ['id' => $caregiver->id, 'type' => 'eval']) }}">Avaliação</a>
-					</div>
-					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('caregivers.evaluations.create', ['id' => $caregiver->id, 'type' => 'quiz']) }}">Disponiblizar Questionário</a>
-					</div>
+            <legend>Avaliações de {{ $caregiver->name }}</legend>
+            <div class="row">
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('caregivers.evaluations.create', ['id' => $caregiver->id, 'type' => 'eval']) }}">Nova Avaliação</a>
 				</div>
-			</fieldset>
-			<br /><br />
-			<legend>Listar</legend>
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('caregivers.evaluations.create', ['id' => $caregiver->id, 'type' => 'quiz']) }}">Disponiblizar Questionário</a>
+				</div>
+			</div>
+			<br />
 			@if (count($evaluations))
 		        <table class="table table-striped">
 			        <thead>
@@ -63,7 +59,7 @@
 	<br />
 	<div class="row">
 		<div class="col-lg-6">
-			<legend>Procedimentos</legend>
+			<legend>Acessos a Materiais</legend>
             @if (count($countedAccesses))
 		        <table class="table table-striped">
 			        <thead>
@@ -85,6 +81,28 @@
 				<h4>Não existem acessos a materiais realizados por este Cuidador.</h4>
 			@endif
         </div>
+		<div class="col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Ações</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6 col-lg-6">
+                            <form action="{{ route('accesses.export', ['caregiver' => $caregiver->id]) }}" method="POST" class="form-group">
+								{{ csrf_field() }}
+								<div class="form-group">
+									<button type="submit" class="btn btn-block btn-primary" name="block">Exportar Acessos para Excell</button>
+								</div>
+							</form>
+                        </div>
+                        <div class="col-sm-6 col-md-6 col-lg-6">
+							<a class="btn btn-block btn-default" href="javascript:history.back()">Voltar Atrás</a>
+                        </div>
+                    </div>
+				</div>
+			</div>
+		</div>
 	</div>
 </div>
 

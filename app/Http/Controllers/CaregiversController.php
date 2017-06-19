@@ -267,7 +267,6 @@ class CaregiversController extends Controller
             return response('Não Autorizado', 401);
         }
 
-        $patientsCollection = collect();
         $patients = $user->patients;
         $objectX = new \stdClass();
         $this->buildJson($objectX);

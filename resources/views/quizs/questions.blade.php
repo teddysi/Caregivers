@@ -6,12 +6,12 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12 col-md-5 col-lg-5">
-            <legend>Outras Perguntas</legend>
+            <legend>Outras Questões</legend>
             @if (count($notQuizQuestions))
 		        <table class="table table-striped">
 			        <thead>
 			            <tr>
-			                <th>Pergunta</th>
+			                <th>Questão</th>
 							<th>Ações</th>
 			            </tr>
 			        </thead>
@@ -32,20 +32,20 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem perguntas para adicionar.</h4>
+				<h4>Não existem questões para adicionar a este Questionário.</h4>
 			@endif
 			<div class="text-center">
 				{!! $notQuizQuestions->links() !!}
 			</div>
 		</div>
         <div class="col-sm-12 col-md-7 col-lg-7">
-            <legend>Perguntas Associadas</legend>
+            <legend>Questões Associadas</legend>
             @if (count($quizQuestions))
 		        <table class="table table-striped">
 			        <thead>
 			            <tr>
                             <th>Ordem</th>
-			                <th>Pergunta</th>
+			                <th>Questão</th>
 							<th>Ações</th>
 			            </tr>
 			        </thead>
@@ -95,7 +95,7 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem materiais associados.</h4>
+				<h4>Não existem questões neste Questionário.</h4>
 			@endif
 			<div class="text-center">
 				{!! $quizQuestions->links() !!}

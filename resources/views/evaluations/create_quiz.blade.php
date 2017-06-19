@@ -6,12 +6,13 @@
 
 <div class="container">
     @if (str_contains(Request::url(), '/patients/'))
-        <form action="{{route('evaluations.createForPatient', ['id' => $id])}}" method="POST" class="form-group" enctype="multipart/form-data">
-    @else 
-        <form action="{{route('evaluations.createForCaregiver', ['id' => $id])}}" method="POST" class="form-group" enctype="multipart/form-data">
+        <legend>Disponibilizar Questionário para o Paciente: {{ $patient->name }}</legend>
+        <form action="{{route('evaluations.createForPatient', ['id' => $patient->id])}}" method="POST" class="form-group" enctype="multipart/form-data">
+    @else
+        <legend>Disponibilizar Questionário para o Cuidador: {{ $caregiver->name }}</legend>
+        <form action="{{route('evaluations.createForCaregiver', ['id' => $caregiver->id])}}" method="POST" class="form-group" enctype="multipart/form-data">
     @endif
         {{ csrf_field() }}
-
         <input name="typeEval" type="hidden" value="{{ $typeEval }}">
 
         <div class="form-group">
@@ -34,7 +35,7 @@
             <label for="inputQuiz">Questionário</label>
             <select name="quiz" class="form-control">
                 @foreach($quizs as $quiz)
-                <option value="{{$quiz->id}}">{{$quiz->name}}</option>
+                    <option value="{{$quiz->id}}">{{$quiz->name}}</option>
                 @endforeach
             </select>
         </div>

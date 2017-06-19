@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="container">
-    <h2>Editar Paciente:</h2>
+    <legend>Editar Paciente</legend>
     <form action="{{ url('/patients', ['patient' => $patient->id]) }}" method="POST" class="form-group">
         {{ method_field('PATCH') }}
         {{ csrf_field() }}

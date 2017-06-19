@@ -347,7 +347,7 @@ class MaterialsController extends Controller
 		$log = new Log();
         $log->performed_task = 'Foi criado.';
         $log->done_by = Auth::user()->id;
-		$log->material_id = $material->id;
+		$log->material_id = $composite->id;
         $log->save();
 
 		return redirect()->route('materials.materials', ['material' => $composite->id]); 

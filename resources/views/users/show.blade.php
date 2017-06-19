@@ -17,7 +17,6 @@
             @if ($user->role == 'Cuidador')
                 <h4><strong>Localização:</strong> {{ $user->location }}</h4>
                 <h4><strong>Nº Profissionais de Saúde:</strong> {{ count($user->healthcarePros) }}/2</h4>
-                <h4><strong>Classificação:</strong> {{ $user->rate }}</h4>
                 <h4><strong>Criador:</strong> {{ $user->creator->username }}</h4>
             @endif
             <h4><strong>Data da criação:</strong> {{ $user->created_at }}</h4>
@@ -61,13 +60,13 @@
                                 <a class="btn btn-block btn-primary" href="{{ route('caregivers.rate', ['caregiver' => $user->id]) }}">Avaliações</a>
                             </div>
                             <div class="col-sm-6 col-md-6 col-lg-6">
-                                <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar a atrás</a>
+                                <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar Atrás</a>
                             </div>
                         </div>
                     @else
                         <div class="row">
                             <div class="col-sm-12 col-md-12 col-lg-12">
-                                <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar a atrás</a>
+                                <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar Atrás</a>
                             </div>
                         </div>
                     @endif
@@ -99,10 +98,10 @@
 					</tbody>
 			    </table>
 			@else
-                @if (Auth::user()->role == 'healthcarepro')
-                    <h4>Não existem registros referentes a este Cuidador.</h4>
-                @else
+                @if (Auth::user()->role == 'admin')
 				    <h4>Não existem registros referentes a este Utilizador.</h4>
+                @elseif (Auth::user()->role == 'healthcarepro')
+                    <h4>Não existem registros referentes a este Cuidador.</h4>
                 @endif
 			@endif
  		</div>

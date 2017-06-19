@@ -5,6 +5,19 @@
 @section('content')
 
 <div class="container">
+    @if ($type == 'text')
+        <legend>Novo Texto</legend>
+    @elseif ($type == 'image')
+        <legend>Nova Imagem</legend>
+    @elseif ($type == 'video')
+        <legend>Novo Video</legend>
+    @elseif ($type == 'emergencyContact')
+        <legend>Novo Contacto de Emergência</legend>
+    @elseif ($type == 'annex')
+        <legend>Novo Anexo</legend>
+    @else
+        <legend>Novo Material Composto</legend>
+    @endif
     @if ($type == 'composite')
         <form action="{{url('/materials/add')}}" method="POST" class="form-group">
     @else

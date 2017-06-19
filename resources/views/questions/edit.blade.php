@@ -5,6 +5,7 @@
 @section('content')
 
 <div class="container">
+    <legend>Editar Questão</legend>
     <form action="{{ url('/questions', ['question' => $question->id]) }}" method="POST" class="form-group">
         {{ method_field('PATCH') }}
         {{ csrf_field() }}
@@ -20,7 +21,7 @@
         @if($question->type == 'radio')
             <div class="form-group" id="inputOptions">
                 <label for="inputOptions">Opções de Resposta</label>
-                <h5>Cada opção deve ser separa e terminada por ";". Exemplo: "Gosto muito;Não gosto;Sim;Não;"</h5>
+                <h5>Nota: Cada opção deve ser separada e terminada por ";". Exemplo: "Gosto muito;Não gosto;Sim;Não;"</h5>
                 <input type="text" class="form-control" name="values" value="{{ $question->values }}"/>
             </div>
         @endif

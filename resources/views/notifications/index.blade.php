@@ -4,9 +4,8 @@
 <div class="container">
 	<div class="row">
 		<div class="col-lg-12">
-            <h1>Notificações</h1>
+            <legend>Notificações</legend>
             @if (count($notifications))
-                <br />
                 <table class="table table-striped">
                     <thead>
                         <tr>

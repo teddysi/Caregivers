@@ -5,6 +5,7 @@
 @section('content')
 
 <div class="container">
+    <legend>Editar Questionário</legend>
     <form action="{{ url('/quizs', ['quiz' => $quiz->id]) }}" method="POST" class="form-group" enctype="multipart/form-data">
         {{ method_field('PATCH') }}
         {{ csrf_field() }}

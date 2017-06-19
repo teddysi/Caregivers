@@ -4,6 +4,13 @@
 
 @section('content')
 <div class="container">
+    @if ($role == 'admin')
+        <legend>Novo Administrador</legend>
+    @elseif ($role == 'healthcarepro')
+        <legend>Novo Profissional de Saúde</legend>
+    @else
+        <legend>Novo Cuidador</legend>
+    @endif
     <form action="{{url('/users/create')}}" method="POST" class="form-group">
         {{ csrf_field() }}
         <input name="role" type="hidden" value="{{ $role }}">

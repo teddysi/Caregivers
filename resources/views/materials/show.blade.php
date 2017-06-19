@@ -64,13 +64,13 @@
                                 <a class="btn btn-block btn-primary" href="{{ route('materials.materials', ['material' => $material->id]) }}">Materiais</a>
                             </div>
                             <div class="col-sm-6 col-md-6 col-lg-6">
-                                <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar a atrás</a>
+                                <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar Atrás</a>
                             </div>
                         </div>
                     @else
                         <div class="row">
                             <div class="col-sm-12 col-md-12 col-lg-12">
-                                <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar a atrás</a>
+                                <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar Atrás</a>
                             </div>
                         </div>
                     @endif
@@ -128,7 +128,7 @@
                         </tbody>
                     </table>
                 @else
-                    <h4>Não existem materiais associados.</h4>
+                    <h4>Não existem materiais associados a este Material Composto.</h4>
                 @endif
                 <div class="text-center">
                     {!! $compositeMaterials->links() !!}

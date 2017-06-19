@@ -7,7 +7,6 @@
 		<div class="col-lg-12">
             <legend>Os meus Cuidadores</legend>
             @if (count($caregivers))
-                <br />
                 <table class="table table-striped">
                     <thead>
                         <tr>
@@ -74,7 +73,6 @@
 		<div class="col-lg-12">
             <legend>Outros cuidadores que necessitam de Profissionais de Saúde</legend>
             @if (count($otherCaregivers))
-                <br />
                 <table class="table table-striped">
                     <thead>
                         <tr>

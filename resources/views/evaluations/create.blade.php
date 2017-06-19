@@ -5,13 +5,13 @@
 @section('content')
 
 <div class="container">
+    <legend>Nova Avaliação</legend>
     @if (str_contains(Request::url(), '/patients/'))
         <form action="{{route('evaluations.createForPatient', ['id' => $id])}}" method="POST" class="form-group" enctype="multipart/form-data">
     @else 
         <form action="{{route('evaluations.createForCaregiver', ['id' => $id])}}" method="POST" class="form-group" enctype="multipart/form-data">
     @endif
         {{ csrf_field() }}
-
         <input name="typeEval" type="hidden" value="{{ $typeEval }}">
 
         <div class="form-group">

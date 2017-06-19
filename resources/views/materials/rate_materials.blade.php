@@ -7,15 +7,13 @@
 <div class="container">
 	<div class="row">
 		<div class="col-lg-12">
-            <h1>Avaliações do Material {{ $material->name }}</h1>
-            <fieldset>
-				<legend>Criar</legend>
-					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('materials.create_for_materials', ['id' => $caregiver->id, 'material' => $material->id]) }}">Disponiblizar Questionário</a>
-					</div>
-			</fieldset>
-			<br /><br />
-			<legend>Listar</legend>
+            <legend>Avaliações do Material {{ $material->name }}</legend>
+			<div class="row">
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('materials.create_for_materials', ['id' => $caregiver->id, 'material' => $material->id]) }}">Disponiblizar Questionário</a>
+				</div>
+			</div>
+			<br />
 			@if (count($evaluations))
 		        <table class="table table-striped">
 			        <thead>
@@ -55,6 +53,8 @@
 			@endif
  		</div>
 	</div>
+	<br />
+	<p><a class="btn btn-default" href="javascript:history.back()">Voltar Atrás</a></p>
 </div>
 
 @endsection

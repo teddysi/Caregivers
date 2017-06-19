@@ -13,23 +13,19 @@
 <div class="container">
 	<div class="row">
 		<div class="col-lg-12">
-            <h1>Utilizadores</h1>
-			<fieldset>
-				<legend>Criar</legend>
-				<div class="row">
-					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'admin']) }}">Administrador</a>
-					</div>
-					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'healthcarepro']) }}">Profissional de Saúde</a>
-					</div>
-					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'caregiver']) }}">Cuidador</a>
-					</div>
+            <legend>Utilizadores</legend>
+			<div class="row">
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'admin']) }}">Novo Administrador</a>
 				</div>
-			</fieldset>
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'healthcarepro']) }}">Novo Profissional de Saúde</a>
+				</div>
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('users.create', ['role' =>'caregiver']) }}">Novo Cuidador</a>
+				</div>
+			</div>
 			<br />
-			<legend>Listar</legend>
 			@if (count($users))
 				<form class="form" method="POST" action="{{ route('users') }}">
 					{{ csrf_field() }}
@@ -123,35 +119,31 @@
 	</div>
 	<div class="row">
 		<div class="col-lg-12">
-            <h1>Materiais</h1>
-			<fieldset>
-				<legend>Criar</legend>
-				<div class="row">
-					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'text']) }}">Texto</a>
-					</div>
-					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'image']) }}">Imagem</a>
-					</div>
-					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'video']) }}">Video</a>
-					</div>
+            <legend>Materiais</legend>
+			<div class="row">
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'text']) }}">Novo Texto</a>
 				</div>
-				<br />
-				<div class="row">
-					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'emergencyContact']) }}">Contacto de Emergência</a>
-					</div>
-					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'annex']) }}">Anexo</a>
-					</div>
-					<div class="col-4 col-sm-4 col-md-4">
-						<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'composite']) }}">Composto</a>
-					</div>
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'image']) }}">Nova Imagem</a>
 				</div>
-			</fieldset>
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'video']) }}">Novo Video</a>
+				</div>
+			</div>
 			<br />
-			<legend>Listar</legend>
+			<div class="row">
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'emergencyContact']) }}">Novo Contacto de Emergência</a>
+				</div>
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'annex']) }}">Novo Anexo</a>
+				</div>
+				<div class="col-4 col-sm-4 col-md-4">
+					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'composite']) }}">Novo Composto</a>
+				</div>
+			</div>
+			<br />
 			@if (count($materials))
 				<form class="form" method="POST" action="{{ route('materials') }}">
 					{{ csrf_field() }}

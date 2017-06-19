@@ -5,7 +5,7 @@
 @section('content')
 
 <div class="container">
-    <h2>Editar Necessidade:</h2>
+    <legend>Editar Necessidade</legend>
     <form action="{{ url('/needs', ['need' => $need->id]) }}" method="POST" class="form-group">
         {{ method_field('PATCH') }}
         {{ csrf_field() }}

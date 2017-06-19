@@ -39,7 +39,7 @@
                     @endif
                     <div class="row">
                         <div class="col-sm-12 col-md-12 col-lg-12">
-                            <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar a atrás</a>
+                            <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar Atrás</a>
                         </div>
                     </div>
                 </div>

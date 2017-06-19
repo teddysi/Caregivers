@@ -7,9 +7,8 @@
 <div class="container">
 	<div class="row">
 		<div class="col-lg-12">
-			<h1>Necessidades de {{ $patient->name }}</h1>
+			<legend>Necessidades de {{ $patient->name }}</legend>
 			@if (count($needs))
-				<br />
 		        <table class="table table-striped">
 			        <thead>
 			            <tr>
@@ -49,7 +48,7 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem necessidades associadas a este paciente.</h4>
+				<h4>Não existem necessidades associadas a este Paciente.</h4>
 			@endif
 			<div class="text-center">
 				{!! $needs->links() !!}
@@ -58,9 +57,8 @@
 	</div>
 	<div class="row">
 		<div class="col-lg-12">
-			<h1>Outras Necessidades</h1>
+			<legend>Outras Necessidades</legend>
 			@if (count($notMyNeeds))
-				<br />
 		        <table class="table table-striped">
 			        <thead>
 			            <tr>
@@ -100,14 +98,14 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem necessidades por associar a este paciente.</h4>
+				<h4>Não existem necessidades por associar a este Paciente.</h4>
 			@endif
 			<div class="text-center">
 				{!! $notMyNeeds->links() !!}
 			</div>
         </div>
 	</div>
-	<p><a class="btn btn-default" href="javascript:history.back()">Voltar a atrás</a></p>
+	<p><a class="btn btn-default" href="javascript:history.back()">Voltar Atrás</a></p>
 </div>
 
 @endsection
