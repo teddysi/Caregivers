@@ -8,7 +8,7 @@
         <div class="col-sm-12 col-md-5 col-lg-5">
             <legend>Outros Materiais</legend>
             @if (count($notCompositeMaterials))
-		        <table class="table table-striped">
+		        <table class="table table-striped materials-to-associate">
 			        <thead>
 			            <tr>
 			                <th>Nome</th>
@@ -41,7 +41,7 @@
         <div class="col-sm-12 col-md-7 col-lg-7">
             <legend>Materiais Associados</legend>
             @if (count($compositeMaterials))
-		        <table class="table table-striped">
+		        <table class="table table-striped materials-associated">
 			        <thead>
 			            <tr>
                             <th>Ordem</th>

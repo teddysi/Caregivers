@@ -27,16 +27,18 @@ class SuccessfullyCreateQuestionTest extends DuskTestCase
         ];
 
         $this->browse(function (Browser $browser) use ($new_question){
-            $browser->click('a.nav_questions')
+            $browser->clickLink('Questões')
                     ->assertPathIs('/caregivers/public/questions')
-                    ->click('a.create_question_button')
+                    ->clickLink('Nova Questão')
                     ->assertPathIs('/caregivers/public/questions/create')
-                    ->assertSeeIn('select.answer_type','Texto')
+                    ->assertSeeIn('select option:first-child','Texto')
                     ->type('question', $new_question[0])
-                    ->click('option.text')
+                    ->click('select option:first-child','Texto')
+                    ->pause(1500)
+                    ->click('select option:last-child','Opções')
                     ->pause(5000)
-                    ->click('option.radio')
-                    ->pause(5000)
+                    ->assertSeeIn('#inputOptions label', 'Opções de Resposta')
+                    ->assertSeeIn('#inputOptions h5', 'Nota: Cada opção deve ser separada e terminada por ";". Exemplo: "Gosto muito;Não gosto;Sim;Não;"')
                     ->type('values', $new_question[1])
                     ->press('Guardar')
                     ->assertPathIs('/caregivers/public/questions');
@@ -44,9 +46,23 @@ class SuccessfullyCreateQuestionTest extends DuskTestCase
             $count_questions = count(Question::all());
             $question = Question::find($count_questions);
 
-            if($question->question !== $new_question[0]) {
-                $browser->assertSee('Error Creating Question! DB not updated');
+            if($question->question != $new_question[0]) {
+                $this->assertTrue(false);
             }
+
+            $browser->assertSeeIn('table tr:first-child td:first-child', $question->question)
+                    ->assertSeeIn('table tr:first-child td:last-child .btn-primary', 'Detalhes')
+                    ->click('table tr:first-child td:last-child .btn-primary', 'Detalhes')
+                    ->assertSeeIn('h2', 'Questão: '.$question->question);
+
+            $answers = explode(";" ,$question->values);
+
+            for($i = 0; $i < (count($answers)-2); $i++) {
+                $browser->assertSeeIn('.answers', $answers[$i]);
+            }
+
+                    
+            $browser->pause(3000);
 
         });
     }

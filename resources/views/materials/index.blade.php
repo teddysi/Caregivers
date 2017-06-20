@@ -26,7 +26,7 @@
 				</div>
 			</div>
 			<br />
-			<div class="row">
+			<div class="row second-options">
 				<div class="col-4 col-sm-4 col-md-4">
 					<a class="btn btn-block btn-primary" href="{{ route('materials.create', ['type' =>'emergencyContact']) }}">Novo Contacto de Emergência</a>
 				</div>

@@ -49,7 +49,7 @@
     @if($question->type == 'radio')
         <br />
         <div class="row">
-            <div class="col-lg-12">
+            <div class="col-lg-12 answers">
                 <legend>Opções de resposta</legend>
                 <div>
                     @foreach($values as $value)

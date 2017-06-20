@@ -60,7 +60,6 @@ class SuccessfullyCreateCaregiverTest extends DuskTestCase
                     ->assertSeeIn('div.details h4:nth-child(3)', 'Função: Cuidador')
                     ->assertSeeIn('div.details h4:nth-child(4)', 'Localização: '.$new_user->location)
                     ->assertSeeIn('div.details h4:nth-child(5)', 'Nº Profissionais de Saúde: 1/2')
-                    ->assertSeeIn('div.details h4:nth-child(6)', 'Criador: healthcarePro') 
                     ->pause(5000);
         });
     }
