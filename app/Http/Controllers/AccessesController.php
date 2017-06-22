@@ -10,6 +10,7 @@ use App\Access;
 use App\User;
 use App\Notification;
 use Carbon\Carbon;
+use Auth;
 
 class AccessesController extends Controller
 {
@@ -46,21 +47,24 @@ class AccessesController extends Controller
         return response()->json("Access created successfully");
     }
 
-    public function export(Caregiver $caregiver)
+    public function export()
     {
-        $filename = 'Acessos de '.$caregiver->username.' em '.Carbon::now();
+        $filename = 'Acessos dos cuidadores de '.Auth::user()->name.' em '.Carbon::now();
         $headers = [
                 'Content-Type'        => 'text/csv; charset=utf-8',
                 'Content-Disposition' => 'attachment; filename='.$filename.'.csv'
         ];
         
         $accesses = collect();
-        foreach ($caregiver->accesses as $access) {
-            $arrayAccess = [];
-            $arrayAccess['Paciente'] = $access->patient->name;
-            $arrayAccess['Material'] = $access->material->name;
-            $arrayAccess['Acedido Em'] = (string)$access->created_at;
-            $accesses->push($arrayAccess);
+        foreach (Auth::user()->caregivers as $caregiver) {
+            foreach ($caregiver->accesses as $access) {
+                $arrayAccess = [];
+                $arrayAccess['Cuidador'] = $access->caregiver->name;
+                $arrayAccess['Paciente'] = $access->patient->name;
+                $arrayAccess['Material'] = $access->material->name;
+                $arrayAccess['Acedido Em'] = (string)$access->created_at;
+                $accesses->push($arrayAccess);
+            }
         }
         $accesses = $accesses->toArray();
 

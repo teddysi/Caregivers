@@ -47,7 +47,7 @@ class Evaluation extends Model
 
     public function submitter()
     {
-        return $this->belongsTo('App\User', 'submitter_by', 'id');
+        return $this->belongsTo('App\User', 'submitted_by', 'id');
     }
 
     public function logs()

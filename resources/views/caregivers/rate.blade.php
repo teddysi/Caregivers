@@ -80,30 +80,13 @@
 			@else
 				<h4>Não existem acessos a materiais realizados por este Cuidador.</h4>
 			@endif
-        </div>
-		<div class="col-lg-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Ações</h3>
-                </div>
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-sm-6 col-md-6 col-lg-6">
-                            <form action="{{ route('accesses.export', ['caregiver' => $caregiver->id]) }}" method="POST" class="form-group">
-								{{ csrf_field() }}
-								<div class="form-group">
-									<button type="submit" class="btn btn-block btn-primary" name="block">Exportar Acessos para Excell</button>
-								</div>
-							</form>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-lg-6">
-							<a class="btn btn-block btn-default" href="javascript:history.back()">Voltar Atrás</a>
-                        </div>
-                    </div>
-				</div>
+			<div class="text-center">
+				{!! $countedAccesses->links() !!}
 			</div>
-		</div>
+        </div>
 	</div>
+	<br />
+	<p><a class="btn btn-default" href="javascript:history.back()">Voltar Atrás</a></p>
 </div>
 
 @endsection

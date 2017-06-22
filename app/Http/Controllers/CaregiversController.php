@@ -197,7 +197,9 @@ class CaregiversController extends Controller
                                 ->select('material_id', 'name', DB::raw('count(*) as total'))
                                 ->groupBy('caregiver_id', 'material_id', 'name')
                                 ->where('caregiver_id', $caregiver->id)
-                                ->get();
+                                ->orderBy('total', 'desc')
+                                ->paginate(10, ['*'], 'countedAccesses');
+        $countedAccesses->setPageName('countedAccesses');
                                 
         return view('caregivers.rate',  compact('caregiver', 'evaluations', 'countedAccesses')); 
     }

@@ -107,19 +107,14 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'caregivers
 		'uses' =>'EvaluationsController@store'
 	]);
 
-	Route::get('{caregiver}/materials/{material}', [
+	Route::get('{caregiver}/materials/{material}/rate', [
 		'as' => 'materials.rate',
 		'uses' =>'MaterialsController@rate'
 	]);
 
-	Route::get('{id}/materials/{material}/rate', [
+	Route::get('{id}/materials/{material}/evaluations/create', [
 		'as' => 'materials.evaluations.create',
 		'uses' =>'EvaluationsController@createForMaterial'
-	]);
-
-	Route::post('{caregiver}/accesses/export', [
-		'as' => 'accesses.export',
-		'uses' =>'AccessesController@export'
 	]);
 });
 
@@ -347,7 +342,6 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'quizs'], f
 	]);
 });
 
-
 Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'questions'], function () {
 	Route::get('/', [
 		'as' => 'questions',
@@ -375,6 +369,13 @@ Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'questions'
 	Route::post('{question}/toggleBlock', [
 		'as' => 'questions.toggleBlock',
 		'uses' =>'QuestionsController@toggleBlock'
+	]);
+});
+
+Route::group(['middleware' => ['auth', 'healthcarepro'], 'prefix' => 'accesses'], function () {
+	Route::post('export', [
+		'as' => 'accesses.export',
+		'uses' =>'AccessesController@export'
 	]);
 });
 

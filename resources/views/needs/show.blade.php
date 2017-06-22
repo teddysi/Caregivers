@@ -38,7 +38,7 @@
     <br />
     <div class="row">
 		<div class="col-lg-12">
-            <legend>Registros</legend>
+            <legend>Registos</legend>
 			@if (count($logs))
 		        <table class="table table-striped">
 			        <thead>
@@ -59,7 +59,7 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem registros referentes a esta Necessidade.</h4>
+				<h4>Não existem registos referentes a esta Necessidade.</h4>
 			@endif
  		</div>
 	</div>
