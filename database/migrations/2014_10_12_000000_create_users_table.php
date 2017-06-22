@@ -28,7 +28,6 @@ class CreateUsersTable extends Migration
             $table->boolean('blocked')->default(false);
             $table->integer('created_by')->nullable()->unsigned()->index();
             $table->foreign('created_by')->references('id')->on('users');
-            $table->rememberToken();
             $table->timestamps();
         });
     }
