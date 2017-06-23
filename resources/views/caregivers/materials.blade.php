@@ -59,7 +59,7 @@
 		<div class="col-lg-12">
 			<legend>Necessidades dos Pacientes de {{ $caregiver->name }}</legend>
 			@if (count($patientsNeeds))
-		        <table class="table table-striped">
+		        <table class="table table-striped patients-needs">
 			        <thead>
 			            <tr>
 							<th>Descrição</th>
@@ -99,7 +99,7 @@
 		<div class="col-lg-12">
 			<legend>Materiais de {{ $caregiver->name }}</legend>
 			@if (count($materials))
-		        <table class="table table-striped">
+		        <table class="table table-striped caregiver-materials">
                     <thead>
                         <tr>
                             <th>Nome</th>

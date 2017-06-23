@@ -15,7 +15,7 @@ class LoginPageTest extends DuskTestCase
      *
      * @return void
      */
-    public function testExample()
+    public function testBasicExample()
     {
         $this->browse(function (Browser $browser) {
             $browser->visit('/caregivers/public/')

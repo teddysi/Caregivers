@@ -18,7 +18,7 @@
 			</div>
 			<br />
 			@if (count($evaluations))
-		        <table class="table table-striped">
+		        <table class="table table-striped evaluations">
 			        <thead>
 			            <tr>
 							<th>Descrição</th>
@@ -61,7 +61,7 @@
 		<div class="col-lg-6">
 			<legend>Acessos a Materiais</legend>
             @if (count($countedAccesses))
-		        <table class="table table-striped">
+		        <table class="table table-striped materials-access">
 			        <thead>
 			            <tr>
 							<th>Material utilizado</th>

@@ -77,9 +77,9 @@
     <br />
     <div class="row">
 		<div class="col-lg-12">
-            <legend>Registros</legend>
+            <legend>Registos</legend>
 			@if (count($logs))
-		        <table class="table table-striped">
+		        <table class="table table-striped tasks">
 			        <thead>
 			            <tr>
 							<th>Tarefa</th>
@@ -99,9 +99,9 @@
 			    </table>
 			@else
                 @if (Auth::user()->role == 'admin')
-				    <h4>Não existem registros referentes a este Utilizador.</h4>
+				    <h4>Não existem registos referentes a este Utilizador.</h4>
                 @elseif (Auth::user()->role == 'healthcarepro')
-                    <h4>Não existem registros referentes a este Cuidador.</h4>
+                    <h4>Não existem registos referentes a este Cuidador.</h4>
                 @endif
 			@endif
  		</div>
