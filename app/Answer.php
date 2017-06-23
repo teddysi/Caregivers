@@ -17,7 +17,7 @@ class Answer extends Model
 
     public function answeredBy()
     {
-        return $this->belongsTo('App\User', 'answered_by', 'id');
+        return $this->belongsTo('App\Caregiver', 'answered_by', 'id');
     }
 
     public function quiz()

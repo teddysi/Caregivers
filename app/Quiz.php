@@ -29,7 +29,7 @@ class Quiz extends Model
 
     public function creator()
     {
-        return $this->belongsTo('App\User', 'created_by', 'id');
+        return $this->belongsTo('App\HealthcarePro', 'created_by', 'id');
     }
 
     public function caregivers()

@@ -48,14 +48,9 @@ class Material extends Model
         return $this->hasMany('App\Access', 'material_id', 'id');
     }
 
-    public function materials()
-    {
-        return $this->belongsToMany('App\Material', 'composite_material', 'composite_id', 'material_id');
-    }
-
     public function composites()
     {
-        return $this->belongsToMany('App\Material', 'composite_material', 'material_id', 'composite_id');
+        return $this->belongsToMany('App\Composite', 'composite_material', 'material_id', 'composite_id');
     }
 
     public function logs()
