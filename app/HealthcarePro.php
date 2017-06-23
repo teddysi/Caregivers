@@ -24,18 +24,23 @@ class HealthcarePro extends User
         return $this->belongsToMany('App\Caregiver');
     }
 
-    public function patients()
+    public function patientsCreated()
     {
         return $this->hasMany('App\Patient', 'created_by', 'id');
     }
 
-    public function needs()
+    public function needsCreated()
     {
         return $this->hasMany('App\Need', 'created_by', 'id');
     }
 
-    public function materials()
+    public function questionsCreated()
     {
-        return $this->hasMany('App\Material', 'created_by', 'id');
+        return $this->hasMany('App\Question', 'created_by', 'id');
+    }
+
+    public function quizsCreated()
+    {
+        return $this->hasMany('App\Quiz', 'created_by', 'id');
     }
 }

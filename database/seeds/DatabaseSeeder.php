@@ -160,8 +160,6 @@ class DatabaseSeeder extends Seeder
                 'evaluation_id' => $qz_p[$i][2],
             ]);
         }
-
-        //$this->buildAnswers();
     }
 
     private function buildCustomUsers()
@@ -371,26 +369,5 @@ class DatabaseSeeder extends Seeder
             $quiz->save();
         }
 
-    }
-
-    public function buildAnswers()
-    {
-        $caregivers = App\Caregiver::all();
-        $questions = App\Question::all();
-        $answers_text = [
-            'Sim.', 'Não.', 'Amanhã vai estar sol.', 'Bem.', 'Com dores.', '14h.'
-        ];
-        $quizs = App\Quiz::all();
-
-        foreach ($answers_text as $answer_text) {
-            $answer = new App\Answer();
-            $answer->answer = $answer_text;
-            $answer->answered_by = $caregivers->random()->id;
-            $answer->question_id = $questions->random()->id;
-            $answer->quiz_id = $quizs->random()->id;
-            //$answer->evaluation_id = 0;
-            $answer->save();
-
-        }
     }
 }

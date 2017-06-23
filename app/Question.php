@@ -20,11 +20,6 @@ class Question extends Model
         return $this->belongsTo('App\User', 'created_by', 'id');
     }
 
-    public function answers()
-    {
-    	return $this->hasMany('App\Answer');
-    }
-
     public function quizs()
     {
         return $this->belongsToMany('App\Quiz', 'quiz_question', 'question_id', 'quiz_id');

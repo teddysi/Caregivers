@@ -38,7 +38,7 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function caregiverCreated()
+    public function caregiversCreated()
     {
         return $this->hasMany('App\Caregiver', 'created_by', 'id');
     }
@@ -61,26 +61,6 @@ class User extends Authenticatable
     public function evaluationsCreated()
     {
         return $this->hasMany('App\Evaluation', 'created_by', 'id');
-    }
-
-    public function questionsCreated()
-    {
-        return $this->hasMany('App\Question', 'created_by', 'id');
-    }
-
-    public function quizsCreated()
-    {
-        return $this->hasMany('App\Quiz', 'created_by', 'id');
-    }
-
-    public function quizsAnswered()
-    {
-        return $this->hasMany('App\Evaluation', 'answered_by', 'id');
-    }
-
-    public function scaleEvaluationsSubmitted()
-    {
-        return $this->hasMany('App\Evaluation', 'submitted_by', 'id');
     }
 }
 

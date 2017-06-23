@@ -20,11 +20,6 @@ class Answer extends Model
         return $this->belongsTo('App\User', 'answered_by', 'id');
     }
 
-    public function question()
-    {
-        return $this->belongsTo('App\Question', 'question_id', 'id');
-    }
-
     public function quiz()
     {
         return $this->belongsTo('App\Quiz', 'quiz_id', 'id');

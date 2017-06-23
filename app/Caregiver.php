@@ -49,7 +49,7 @@ class Caregiver extends User
         return $this->hasMany('App\Evaluation');
     }
 
-    public function answeredBy()
+    public function answers()
     {
         return $this->hasMany('App\Answer', 'answered_by', 'id');
     }
@@ -62,5 +62,15 @@ class Caregiver extends User
     public function notificationsCreated()
     {
         return $this->hasMany('App\Notification', 'created_by', 'id');
+    }
+
+    public function quizsAnswered()
+    {
+        return $this->hasMany('App\Evaluation', 'answered_by', 'id');
+    }
+
+    public function scaleEvaluationsSubmitted()
+    {
+        return $this->hasMany('App\Evaluation', 'submitted_by', 'id');
     }
 }
