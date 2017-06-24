@@ -23,72 +23,77 @@ class SuccessfullyCreateCompositeMaterialTest extends DuskTestCase
         $resources = new ResourcesDropDownTest();
         $resources->testBasicExample();
 
+        $materials_count = count(Material::all());
+
         $new_material = [
             'Test Material Composite', //name
             'This is a test' //description
         ];
         
 
-        $this->browse(function (Browser $browser) use ($new_material){
-            $browser->click('a.nav_materials')
+        $this->browse(function (Browser $browser) use ($new_material, $materials_count){
+            $browser->clickLink('Materiais')
                     ->assertPathIs('/caregivers/public/materials')
-                    ->click('a.create_composite_material_button')
+                    ->assertSeeIn('div.second-options div:last-child a', 'Novo Composto')
+                    ->clickLink('Novo Composto')
                     ->assertPathIs('/caregivers/public/materials/create/composite')
                     ->type('name', $new_material[0])
                     ->type('description', $new_material[1])
-                    ->press('Adicionar Materiais');
+                    ->press('Adicionar Materiais')
+                    ->pause(2000);
 
-            $materials_count = count(Material::all());
-            $composite = Material::find($materials_count);
-
-            if($composite->name !== 'Test Material Composite') {
-                $browser->assertSee('Error Creating Composite Material. DB not updated!!');
-            }
+            $materials_count += 1;
 
             $browser->assertPathIs('/caregivers/public/materials/'.$materials_count.'/materials');
 
-            $browser->whenAvailable('.materiais-por-associar table tr:first-child button', function($bt) {
-                $bt->click
-            })
-            for($i = 1; $i < 4; $i++) {
-                $material = Material::find($i);
+            $composite = Material::find($materials_count);
 
-                $browser->assertSee($material->name)
-                        ->click('button.add_composite_'.$material->id.'_button')
-                        ->assertPathIs('/caregivers/public/materials/'.$materials_count.'/materials')
-                        ->assertSeeIn('td.composite_'.$material->id.'_order', $i)
-                        ->assertSeeIn('td.composite_'.$material->id.'_name', $material->name)
-                        ->assertSeeIn('button.remove_composite_'.$material->id.'_button', 'Remover');
+            if($composite->name !== $new_material[0]) {
+                $this->assertTrue(false);
+            }
+
+            for($i = 1; $i < 4; $i++) {
+                $browser->assertSeeIn('.materials-to-associate tr:first-child td:last-child button', 'Adicionar')
+                        ->click('.materials-to-associate tr:first-child td:last-child button', 'Adicionar')
+                        ->assertPathIs('/caregivers/public/materials/'.$materials_count.'/materials');
+                if($i === 1) {
+                    $browser->assertSeeIn('.materials-associated tr:first-child td:last-child button', 'Remover');
+                } else {
+                    $browser->assertSeeIn('.materials-associated tr:nth-child('.$i.') td:last-child div.col-lg-4:last-child button', 'Remover');
+                }
             }
 
             if(count($composite->materials) !== 3) {
-                    $browser->assertSee('Error Assoating materials to Composite. DB not updated!!');
+                    $this->assertTrue(false);
                 }
 
-            foreach($composite->materials as $material) {
-                if($material->id === 1) {
-                    $browser->assertSeeIn('button.down_composite_'.$material->id.'_button', 'Baixo');    
-                } else if($material->id === count($composite->materials)) {
-                    $browser->assertSeeIn('button.up_composite_'.$material->id.'_button', 'Cima');
-                } else {
-                    $browser->assertSeeIn('button.down_composite_'.$material->id.'_button', 'Baixo')
-                            ->assertSeeIn('button.up_composite_'.$material->id.'_button', 'Cima');
-                }
-                
-            }
+            $browser->assertSeeIn('.materials-associated tr:first-child td:last-child div.col-lg-4:nth-child(2) button', 'Baixo')
+                    ->assertSeeIn('.materials-associated tr:nth-child(2) td:last-child div.col-lg-4:first-child button', 'Cima')
+                    ->assertSeeIn('.materials-associated tr:nth-child(2) td:last-child div.col-lg-4:nth-child(2) button', 'Baixo')
+                    ->assertSeeIn('.materials-associated tr:last-child td:last-child div.col-lg-4:first-child button', 'Cima');
 
             $mat1 = $composite->materials->get(0);
             $mat2 = $composite->materials->get(1);
             $mat3 = $composite->materials->get(2);
 
-            $browser->click('button.down_composite_'.$mat1->id.'_button')
+            $browser->assertSeeIn('.materials-associated tr:first-child td:first-child', '1')
+                    ->assertSeeIn('.materials-associated tr:first-child td:nth-child(2)', $mat1->name)
+                    ->assertSeeIn('.materials-associated tr:nth-child(2) td:first-child', '2')
+                    ->assertSeeIn('.materials-associated tr:nth-child(2) td:nth-child(2)', $mat2->name)
+                    ->assertSeeIn('.materials-associated tr:last-child td:first-child', '3')
+                    ->assertSeeIn('.materials-associated tr:last-child td:nth-child(2)', $mat3->name)
+                    ->click('.materials-associated tr:first-child td:last-child div.col-lg-4:nth-child(2) button', 'Baixo')
                     ->assertPathIs('/caregivers/public/materials/'.$materials_count.'/materials')
-                    ->assertSeeIn('td.composite_'.$mat1->id.'_order', '2')
-                    ->assertSeeIn('td.composite_'.$mat2->id.'_order', '1')
-                    ->click('button.up_composite_'.$mat3->id.'_button')
+                    ->assertSeeIn('.materials-associated tr:first-child td:first-child', '1')
+                    ->assertSeeIn('.materials-associated tr:first-child td:nth-child(2)', $mat2->name)
+                    ->assertSeeIn('.materials-associated tr:nth-child(2) td:first-child', '2')
+                    ->assertSeeIn('.materials-associated tr:nth-child(2) td:nth-child(2)', $mat1->name)
+                    ->click('.materials-associated tr:last-child td:last-child div.col-lg-4:first-child button', 'Cima')
                     ->assertPathIs('/caregivers/public/materials/'.$materials_count.'/materials')
-                    ->assertSeeIn('td.composite_'.$mat3->id.'_order', '2')
-                    ->assertSeeIn('td.composite_'.$mat1->id.'_order', '3');
+                    ->assertSeeIn('.materials-associated tr:nth-child(2) td:first-child', '2')
+                    ->assertSeeIn('.materials-associated tr:nth-child(2) td:nth-child(2)', $mat3->name)
+                    ->assertSeeIn('.materials-associated tr:last-child td:first-child', '3')
+                    ->assertSeeIn('.materials-associated tr:last-child td:nth-child(2)', $mat1->name);
 
             $orderMat1 = $orderOfMaterial = DB::table('composite_material')->select('order')->where([['composite_id', $composite->id], ['material_id', $mat1->id]])->first()->order;
 
@@ -96,20 +101,23 @@ class SuccessfullyCreateCompositeMaterialTest extends DuskTestCase
 
             $orderMat3 = $orderOfMaterial = DB::table('composite_material')->select('order')->where([['composite_id', $composite->id], ['material_id', $mat3->id]])->first()->order;
 
-            if($orderMat1 !== 3 || $orderMat2 !== 1 || $orderMat3 !==2) {
-                $browser->assertSee('Error updating materials order in DB!!!!');
+            if($orderMat1 != 3 || $orderMat2 != 1 || $orderMat3 != 2) {
+                $this->assertTrue(false);
             }
 
-            $browser->click('button.remove_composite_'.$mat3->id.'_button')
+            $browser->click('.materials-associated tr:nth-child(2) td:last-child div.col-lg-4:last-child button', 'Remover')
                     ->assertPathIs('/caregivers/public/materials/'.$materials_count.'/materials')
-                    ->assertSeeIn('td.composite_'.$mat1->id.'_order', '2')
-                    ->assertSeeIn('td.composite_'.$mat2->id.'_order', '1')
-                    ->assertSeeIn('button.add_composite_'.$mat3->id.'_button', 'Adicionar');
+                    ->assertSeeIn('.materials-associated tr:first-child td:first-child', '1')
+                    ->assertSeeIn('.materials-associated tr:first-child td:nth-child(2)', $mat2->name)
+                    ->assertSeeIn('.materials-associated tr:nth-child(2) td:first-child', '2')
+                    ->assertSeeIn('.materials-associated tr:nth-child(2) td:nth-child(2)', $mat1->name)
+                    ->assertSeeIn('.materials-to-associate tr:first-child td:first-child', $mat3->name)
+                    ->assertSeeIn('.materials-to-associate tr:first-child td:last-child button', 'Adicionar');
 
             $composite = Material::find($materials_count);
 
             if(count($composite->materials) !== 2) {
-                    $browser->assertSee('Error Deleting material from Composite. DB not updated!!');
+                    $this->assertTrue(false);
                 }
 
             $mat1 = $composite->materials->get(0);
@@ -119,14 +127,12 @@ class SuccessfullyCreateCompositeMaterialTest extends DuskTestCase
 
             $orderMat2 = $orderOfMaterial = DB::table('composite_material')->select('order')->where([['composite_id', $composite->id], ['material_id', $mat2->id]])->first()->order;
 
-            if($orderMat1 !== 2 || $orderMat2 !== 1) {
-                $browser->assertSee('Error updating materials order after deleting in DB!!!!');
+            if($orderMat1 != 2 || $orderMat2 != 1) {
+                $this->assertTrue(false);
             }
 
             $browser->pause(2000)
-                    ->assertSeeIn('button.down_composite_'.$mat2->id.'_button', 'Baixo')
-                    ->assertSeeIn('button.up_composite_'.$mat1->id.'_button', 'Cima')
-                    ->click('a.composite_conclude_button')
+                    ->clickLink('Concluído')
                     ->assertPathIs('/caregivers/public/materials')
                     ->pause(2000);
         });
