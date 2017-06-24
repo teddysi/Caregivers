@@ -39,8 +39,8 @@ class HealthcareProDashboardCaregiverDetailsTest extends DuskTestCase
             $caregiver = Caregiver::find(15);
 
             $browser->assertSeeIn('div.details h4:nth-child(6)', 'Criador: '.$caregiver->creator->username)
-                    ->assertSeeIn('div.details h4:nth-child(7)', 'Data da criação: '.$caregiver->created_at)
-                    ->assertSeeIn('div.details h4:last-child', 'Data da última atualização: '.$caregiver->updated_at)
+                    ->assertSeeIn('div.details h4:nth-child(7)', 'Data da criação: '.(string)$caregiver->created_at)
+                    ->assertSeeIn('div.details h4:last-child', 'Data da última atualização: '.(string)$caregiver->updated_at)
                     ->assertSeeIn('div.panel-heading h3', 'Ações')
                     ->assertSeeIn('div.panel-body','Editar')
                     ->assertSeeIn('div.panel-body','Bloquear')
@@ -59,15 +59,15 @@ class HealthcareProDashboardCaregiverDetailsTest extends DuskTestCase
                     if( $i == 1) {
                         $browser->assertSeeIn('table.tasks tr:first-child td:first-child', $log->performed_task)
                                 ->assertSeeIn('table.tasks tr:first-child td:nth-child(2)', $log->doneBy->username)
-                                ->assertSeeIn('table.tasks tr:first-child td:last-child', $log->created_at);
+                                ->assertSeeIn('table.tasks tr:first-child td:last-child', (string)$log->created_at);
                     } else if( $i == count($caregiver->logs) && count($caregiver->logs) > 1) {
                         $browser->assertSeeIn('table.tasks tr:last-child td:first-child', $log->performed_task)
                                 ->assertSeeIn('table.tasks tr:last-child td:nth-child(2)', $log->doneBy->username)
-                                ->assertSeeIn('table.tasks tr:last-child td:last-child', $log->created_at);
+                                ->assertSeeIn('table.tasks tr:last-child td:last-child', (string)$log->created_at);
                     } else {
                         $browser->assertSeeIn('table.tasks tr:nth-child('.$i.') td:first-child', $log->performed_task)
                                 ->assertSeeIn('table.tasks tr:nth-child('.$i.') td:nth-child(2)', $log->doneBy->username)
-                                ->assertSeeIn('table.tasks tr:nth-child('.$i.') td:last-child', $log->created_at);
+                                ->assertSeeIn('table.tasks tr:nth-child('.$i.') td:last-child', (string)$log->created_at);
                     }
                     $i++;
                 }

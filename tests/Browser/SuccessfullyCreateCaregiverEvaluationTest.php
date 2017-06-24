@@ -67,7 +67,7 @@ class SuccessfullyCreateCaregiverEvaluationTest extends DuskTestCase
                 $this->assertTrue(false);
             }
 
-            $browser->assertSeeIn('table.evaluations tr:first-child td:nth-child(5)', $evaluation->created_at)
+            $browser->assertSeeIn('table.evaluations tr:first-child td:nth-child(5)', (string)$evaluation->created_at)
                     ->click('table.evaluations tr:first-child td:last-child a:first-child', 'Detalhes')
                     ->assertSee('This is a test.jpg')
                     ->pause(3000);
