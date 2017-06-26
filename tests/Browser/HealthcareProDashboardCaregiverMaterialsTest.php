@@ -25,6 +25,7 @@ class HealthcareProDashboardCaregiverMaterialsTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) {
             $browser->assertSee('Caregiver')
+                    ->assertSeeIn('table tr:first-child td:first-child', 'Caregiver')
                     ->assertSeeIn('table tr:first-child td:last-child div:nth-child(3) a', 'Materiais')
                     ->click('table tr:first-child td:last-child div:nth-child(3) a', 'Materiais')
                     ->assertPathIs('/caregivers/public/caregivers/15/materials')
@@ -149,7 +150,31 @@ class HealthcareProDashboardCaregiverMaterialsTest extends DuskTestCase
             }
 
             $browser->assertSeeIn('a.btn-default', 'Voltar Atrás')
-                    ->assertVisible('a.btn-default');
+                    ->assertVisible('a.btn-default')
+                    ->click('select[name=\'material\'] option:last-child', 'Composto 48')
+                    ->press('Associar')
+                    ->assertPathIs('/caregivers/public/caregivers/15/materials');
+
+            $materials_count = count(Material::all());
+            $material_associated = Material::find($materials_count);
+
+            $caregiver = Caregiver::find(15);
+            $index_material_associated = count($caregiver->materials) - 1;
+            $m = $caregiver->materials->get($index_material_associated);
+
+            if($material_associated->name != $m->name) {
+                $this->assertTrue(false);
+            }
+            
+            $this->changeTypeFormat($material_associated);
+
+            $browser->assertSeeIn('table.caregiver-materials tr:last-child td:first-child',        $material_associated->name)
+                    ->assertSeeIn('table.caregiver-materials tr:last-child td:nth-child(2)', $material_associated->type)
+                    ->assertSeeIn('table.caregiver-materials tr:last-child td:nth-child(3)', $material_associated->creator->username)
+                    ->assertSeeIn('table.caregiver-materials tr:last-child td:last-child div div:first-child a', 'Detalhes')
+                    ->assertSeeIn('table.caregiver-materials tr:last-child td:last-child div div:nth-child(2) a', 'Editar')
+                    ->assertSeeIn('table.caregiver-materials tr:last-child td:last-child div div:nth-child(3) a', 'Avaliações')
+                    ->assertSeeIn('table.caregiver-materials tr:last-child td:last-child div div:last-child button', 'Desassociar');
 
         });
     }

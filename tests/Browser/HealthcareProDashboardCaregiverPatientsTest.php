@@ -24,6 +24,7 @@ class HealthcareProDashboardCaregiverPatientsTest extends DuskTestCase
 
         $this->browse(function (Browser $browser) {
             $browser->assertSee('Caregiver')
+                    ->assertSeeIn('table tr:first-child td:first-child', 'Caregiver')
                     ->assertSeeIn('table tr:first-child td:last-child div:nth-child(2) a', 'Pacientes')
                     ->click('table tr:first-child td:last-child div:nth-child(2) a', 'Pacientes')
                     ->assertPathIs('/caregivers/public/caregivers/15/patients')
