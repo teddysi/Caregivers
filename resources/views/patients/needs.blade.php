@@ -9,7 +9,7 @@
 		<div class="col-lg-12">
 			<legend>Necessidades de {{ $patient->name }}</legend>
 			@if (count($needs))
-		        <table class="table table-striped">
+		        <table class="table table-striped patient-needs">
 			        <thead>
 			            <tr>
 							<th>Descrição</th>
@@ -59,7 +59,7 @@
 		<div class="col-lg-12">
 			<legend>Outras Necessidades</legend>
 			@if (count($notMyNeeds))
-		        <table class="table table-striped">
+		        <table class="table table-striped other-needs">
 			        <thead>
 			            <tr>
 							<th>Descrição</th>
