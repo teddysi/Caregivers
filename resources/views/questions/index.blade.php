@@ -21,7 +21,7 @@
 								<div class="input-group-addon">
 									<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
 								</div>
-								<input type="text" name="question" class="form-control" id="inputQuestion" placeholder="Pergunta" value="{{ $searchData['question'] }}">
+								<input type="text" name="question" class="form-control" id="inputQuestion" placeholder="Questão" value="{{ $searchData['question'] }}">
 							</div>
 						</div>
 						<div class="col-lg-4 col-md-4 col-sm-6">
