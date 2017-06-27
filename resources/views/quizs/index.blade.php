@@ -88,16 +88,19 @@
 							<tr>
 					        	<td>{{ $quiz->name }}</td>
 								<td>{{ $quiz->creator->username }}</td>
-								<td style="width:35%">
+								<td style="width:45%">
 									<div class="row">
 										@if ($quiz->canBeEditedOrBlocked)
-											<div class="col-sm-6 col-md-4 col-lg-4">
+											<div class="col-sm-6 col-md-3 col-lg-3">
 												<a class="btn btn-block btn-primary" href="{{route('quizs.show', ['quiz' => $quiz->id])}}">Detalhes</a>
 											</div>
-											<div class="col-sm-6 col-md-4 col-lg-4">
+											<div class="col-sm-6 col-md-3 col-lg-3">
+					                            <a class="btn btn-block btn-primary" href="{{ route('quizs.questions', ['quiz' => $quiz->id]) }}">Questões</a>
+					                        </div>
+											<div class="col-sm-6 col-md-3 col-lg-3">
 												<a class="btn btn-block btn-warning" href="{{route('quizs.edit', ['quiz' => $quiz->id])}}">Editar</a>
 											</div>
-											<div class="col-sm-6 col-md-4 col-lg-4">
+											<div class="col-sm-6 col-md-3 col-lg-3">
 												<form action="{{ route('quizs.toggleBlock', ['quiz' => $quiz->id]) }}" method="POST" class="form-group">
 													{{ csrf_field() }}
 													<div class="form-group">
