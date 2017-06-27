@@ -66,6 +66,7 @@
             @else
                 <div class="form-group">
                     <label for="inputFile">Ficheiro</label>
+                    <h5>Nota: Caso não pretenda alterar o ficheiro, não necessita selecionar um. Manter-se-á o atual.</h5>
                     <input type="file" name="pathAnnex"/>
                 </div>
             @endif

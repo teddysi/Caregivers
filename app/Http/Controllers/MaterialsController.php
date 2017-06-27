@@ -225,33 +225,41 @@ class MaterialsController extends Controller
 			'name' => 'required|min:4|unique:materials,name,'.$material->id,
 			'description' => 'required|min:4',
 			'body' => 'nullable|required_if:type,Texto',
-			'pathImage' => 'nullable|required_if:type,Imagem|mimes:jpeg,png,jpg,gif,svg',
-			'pathVideo' => 'nullable|required_if:type,Video|mimes:mp4',
+			'pathImage' => 'nullable|mimes:jpeg,png,jpg,gif,svg',
+			'pathVideo' => 'nullable|mimes:mp4',
 			'pathAnnex' => 'nullable',
 			'url' => 'nullable|url',
 			'mime' => 'nullable',
 			'number' => 'nullable|required_if:type,Contacto de Emergência',
 		], $this->messages);
 
-		$material->name = $request->input('name');
-		$material->description = $request->input('description');
 		switch ($material->type) {
 			case 'text':
 				$material->body = $request->input('body');
 				break;
 
 			case 'image':
-				$originalName = $request->pathImage->getClientOriginalName();
-				$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
-				$material->path = $request->file('pathImage')->storeAs('images', $request->input('name') . '.' . $whatIWant);
-				$material->mime = '.' . $whatIWant;
+				if ($request->pathImage) {
+					$originalName = $request->pathImage->getClientOriginalName();
+					$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
+					$material->path = $request->file('pathImage')->storeAs('images', $request->input('name') . '.' . $whatIWant);
+					$material->mime = '.' . $whatIWant;
+				} else if ($material->path && $material->name != $request->input('name')) {
+					Storage::move($material->path, 'images/'. $request->input('name').$material->mime);
+					$material->path = 'images/'. $request->input('name').$material->mime;
+				}
 				break;
 
 			case 'video':
-				$originalName = $request->pathVideo->getClientOriginalName();
-				$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
-				$material->path = $request->file('pathVideo')->storeAs('videos', $request->input('name') . '.' . $whatIWant);
-				$material->mime = '.' . $whatIWant;
+				if ($request->pathVideo) {
+					$originalName = $request->pathVideo->getClientOriginalName();
+					$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
+					$material->path = $request->file('pathVideo')->storeAs('videos', $request->input('name') . '.' . $whatIWant);
+					$material->mime = '.' . $whatIWant;
+				} else if ($material->path && $material->name != $request->input('name')) {
+					Storage::move($material->path, 'videos/'. $request->input('name').$material->mime);
+					$material->path = 'videos/'. $request->input('name').$material->mime;
+				}
 				break;
 
 			case 'annex':
@@ -260,7 +268,7 @@ class MaterialsController extends Controller
 					$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
 					$material->path = $request->file('pathAnnex')->storeAs('annexs', $request->input('name') . '.' . $whatIWant);
 					$material->mime = '.' . $whatIWant;
-				} else if ($material->path) {
+				} else if ($material->path && $material->name != $request->input('name')) {
 					Storage::move($material->path, 'annexs/'. $request->input('name').$material->mime);
 					$material->path = 'annexs/'. $request->input('name').$material->mime;
 				}
@@ -277,6 +285,8 @@ class MaterialsController extends Controller
 			default:
 				break;
 		}
+		$material->name = $request->input('name');
+		$material->description = $request->input('description');
 		$material->save();
 
 		$log = new Log();
