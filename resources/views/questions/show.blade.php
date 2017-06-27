@@ -9,9 +9,9 @@
     <div class="row">
 		<div class="col-sm-12 col-md-8 col-lg-8">
             @if ($question->type == 'radio')
-                <h4><strong>Tipo:</strong> Escolher uma opção de resposta</h4>
+                <h4><strong>Tipo de Resposta:</strong> Opções</h4>
             @elseif ($question->type == 'text')
-                <h4><strong>Tipo:</strong> Resposta em Texto</h4>
+                <h4><strong>Tipo de Resposta:</strong> Texto</h4>
             @endif
             <h4><strong>Criador:</strong> {{ $question->creator->username }}</h4>
             <h4><strong>Data da criação:</strong> {{ $question->created_at }}</h4>
