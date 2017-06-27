@@ -8,7 +8,7 @@ use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\Browser\SuccessfullyLoginTest;
 
-class HealthcareProDashboardCaregiverUnblockTest extends DuskTestCase
+class HealthcareProCaregiverUnblockTest extends DuskTestCase
 {
 
     use DatabaseMigrations;   

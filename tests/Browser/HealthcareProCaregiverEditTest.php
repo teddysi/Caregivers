@@ -8,7 +8,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Tests\Browser\SuccessfullyLoginTest;
 use App\User;
 
-class HealthcareProDashboardCaregiverEdit extends DuskTestCase
+class HealthcareProCaregiverEdit extends DuskTestCase
 {
     use DatabaseMigrations;
 

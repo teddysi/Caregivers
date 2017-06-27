@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Material;
 use DB;
 
-class SuccessfullyCreateCompositeMaterialTest extends DuskTestCase
+class HealthcareProCompositeMaterialCreateTest extends DuskTestCase
 {
     use DatabaseMigrations;
 

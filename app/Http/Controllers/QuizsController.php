@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Quiz;
 use App\Question;
 use App\Answer;
+use App\User;
 use App\Log;
 use Auth;
 use DB;

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Question;
 use App\Answer;
 use App\Log;
+use App\User;
 use Auth;
 use DB;
 
