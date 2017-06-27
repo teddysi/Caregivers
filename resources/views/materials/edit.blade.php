@@ -5,19 +5,7 @@
 @section('content')
 
 <div class="container">
-    @if ($material->type == 'text')
-        <legend>Editar Texto</legend>
-    @elseif ($material->type == 'image')
-        <legend>Editar Imagem</legend>
-    @elseif ($material->type == 'video')
-        <legend>Editar Video</legend>
-    @elseif ($material->type == 'emergencyContact')
-        <legend>Editar Contacto de Emergência</legend>
-    @elseif ($material->type == 'annex')
-        <legend>Editar Anexo</legend>
-    @else
-        <legend>Editar Material Composto</legend>
-    @endif
+    <legend>Editar {{ $material->type }}</legend>
     <form action="{{ url('/materials', ['material' => $material->id] )}}" method="POST" class="form-group"  enctype="multipart/form-data">
         {{ method_field('PATCH') }}
         {{ csrf_field() }}
