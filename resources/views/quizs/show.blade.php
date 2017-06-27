@@ -36,12 +36,17 @@
                                 </form>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                <a class="btn btn-block btn-primary" href="{{ route('quizs.questions', ['quiz' => $quiz->id]) }}">Questões</a>
+                            </div>
+                            <div class="col-sm-6 col-md-6 col-lg-6">
+                                <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar Atrás</a>
+                            </div>
+                        </div>
                     @endif
                     <div class="row">
-                        <div class="col-sm-6 col-md-6 col-lg-6">
-                            <a class="btn btn-block btn-primary" href="{{ route('quizs.questions', ['quiz' => $quiz->id]) }}">Questões</a>
-                        </div>
-                        <div class="col-sm-6 col-md-6 col-lg-6">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
                             <a class="btn btn-block btn-default" href="javascript:history.back()">Voltar Atrás</a>
                         </div>
                     </div>
