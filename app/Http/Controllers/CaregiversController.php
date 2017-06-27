@@ -211,6 +211,10 @@ class CaregiversController extends Controller
 
         if (Auth::attempt(['username' => $username, 'password' => $password])) {
             $user = Auth::user();
+            
+            if ($user->blocked) {
+                return response('Utilizador Bloqueado', 401);
+            }
 
             if ($user->role == 'caregiver') {
                 if (!$user->login_count) {
@@ -267,6 +271,10 @@ class CaregiversController extends Controller
 
         if (!$caregiverToken || $user->caregiver_token != $caregiverToken) {
             return response('Não Autorizado', 401);
+        }
+
+        if ($user->blocked) {
+            return response('Utilizador Bloqueado', 401);
         }
 
         $patients = $user->patients;
