@@ -39,7 +39,7 @@
 			</div>
 		</div>
         <div class="col-sm-12 col-md-7 col-lg-7">
-            <legend>Materiais Associados</legend>
+            <legend>Materiais Associados ao Material {{ $material->name }}</legend>
             @if (count($compositeMaterials))
 		        <table class="table table-striped materials-associated">
 			        <thead>
