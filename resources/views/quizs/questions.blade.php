@@ -39,7 +39,7 @@
 			</div>
 		</div>
         <div class="col-sm-12 col-md-7 col-lg-7">
-            <legend>Questões Associadas</legend>
+            <legend>Questões Associadas ao Questionário {{ $quiz->name }}</legend>
             @if (count($quizQuestions))
 		        <table class="table table-striped">
 			        <thead>
