@@ -48,7 +48,7 @@ class UsersController extends Controller
 		
 		if (Auth::user()->blocked == 1) {
             Auth::logout();
-           	Session::flash('blockedAccount', "Your account as been blocked.");
+           	Session::flash('blockedAccount', "A sua conta foi bloqueada.");
             return back();
         }
 

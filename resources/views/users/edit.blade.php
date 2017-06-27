@@ -6,11 +6,11 @@
 
 <div class="container">
     @if ($user->role == 'admin')
-        <legend>Editar Administrador {{ $user->username }}</legend>
+        <legend>Editar {{ $user->role }} {{ $user->username }}</legend>
     @elseif ($user->role == 'healthcarepro')
-        <legend>Editar Profissional de Saúde {{ $user->username }}</legend>
+        <legend>Editar {{ $user->role }} {{ $user->username }}</legend>
     @else
-        <legend>Editar Cuidador {{ $user->username }}</legend>
+        <legend>Editar {{ $user->role }} {{ $user->username }}</legend>
     @endif
     <h5>Nota: Se pretender manter a password atual, então deixe os campos Nova Password e Confirmar Password em branco.</h5>
     <form action="{{ url('/users', ['user' => $user->id]) }}" method="POST" class="form-group">
