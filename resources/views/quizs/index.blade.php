@@ -88,7 +88,7 @@
 							<tr>
 					        	<td>{{ $quiz->name }}</td>
 								<td>{{ $quiz->creator->username }}</td>
-								<td style="width:45%">
+								<td style="width:50%">
 									<div class="row">
 										@if ($quiz->canBeEditedOrBlocked)
 											<div class="col-sm-6 col-md-3 col-lg-3">
