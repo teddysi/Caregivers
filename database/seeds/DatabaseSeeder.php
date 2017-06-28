@@ -346,7 +346,6 @@ class DatabaseSeeder extends Seeder
             $question = new App\Question();
             $question->question = $question_text;
             $question->created_by = $healthcare_pros->random()->id;
-            $question->blocked = false;
             if($i >= 3) {
                 $index = 1;
             } else {
@@ -355,13 +354,13 @@ class DatabaseSeeder extends Seeder
 
             $question->type = $question_type[$index];
 
-            if($question->type == 'radio') {
-                $i++;
+            if($question->type == 'radio') {       
                 $index = array_rand($question_values_radio,1);
                 $question->values = $question_values_radio[$index];
             }
 
             $question->save();
+            $i++;
         }
     }
 
