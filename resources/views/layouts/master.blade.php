@@ -87,6 +87,7 @@
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
+                                    <li><a href="{{ route('profile', ['user' => Auth::user()->id]) }}">Perfil</a></li>
                                     <li>
                                         <a href="{{ route('logout') }}"
                                             onclick="event.preventDefault();
@@ -114,11 +115,11 @@
             <br>
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-3 col-md-3"></div>
-                    <div class="col-lg-6 col-md-6">
-                        <p>Copyright @ IPL-ESTG - João Caroço, Nuno Gomes</p>
+                    <div class="col-lg-2 col-md-2"></div>
+                    <div class="col-lg-8 col-md-8">
+                        <p>Copyright @ IPL-ESTG-DEI - João Caroço, Nuno Gomes, Teddy Simões e Tiago Estácio</p>
                     </div>
-                    <div class="col-lg-3 col-md-3"></div>
+                    <div class="col-lg-2 col-md-2"></div>
                 </div>
                 <br>
             </div>

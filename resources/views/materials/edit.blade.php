@@ -32,9 +32,7 @@
                 <label for="inputBody">Texto</label>
                 <textarea class="form-control" rows="5" 
                     type="text" name="body"
-                    id="inputBody">
-                    {{ $material->body }}
-                </textarea>
+                    id="inputBody">{{ $material->body }}</textarea>
             </div>
         @endif
 

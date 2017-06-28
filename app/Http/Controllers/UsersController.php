@@ -201,6 +201,13 @@ class UsersController extends Controller
 		return view('users.show', compact('user', 'isMyCaregiver', 'logs'));
 	}
 
+	public function showProfile(User $user)
+	{
+		$this->roleToFullWord($user);
+
+		return view('users.profile', compact('user'));
+	}
+
 	public function create($role)
 	{	
 		if (Auth::user()->role == 'healthcarepro' && $role != 'caregiver') {

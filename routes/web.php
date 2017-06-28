@@ -46,6 +46,11 @@ Route::group(['middleware' => 'auth', 'prefix' => 'users'], function () {
 		'uses' =>'UsersController@toggleBlock'
 	]);
 
+	Route::get('{user}/profile', [
+		'as' => 'profile',
+		'uses' =>'UsersController@showProfile'
+	]);
+
 	Route::group(['middleware' => 'healthcarepro'], function () {
 		Route::post('{user}/caregivers/{caregiver}/associate', [
 			'as' => 'users.associateCaregiver',
