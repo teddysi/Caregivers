@@ -6,7 +6,7 @@
 
 <div class="container">
     @if (str_contains(Request::url(), '/patients/'))
-        <legend>Disponibilizar Questionário para o Paciente: {{ $patient->name }}</legend>
+        <legend>Disponibilizar Questionário para o Utente: {{ $patient->name }}</legend>
         <form action="{{route('evaluations.createForPatient', ['id' => $patient->id])}}" method="POST" class="form-group" enctype="multipart/form-data">
     @else
         <legend>Disponibilizar Questionário para o Cuidador: {{ $caregiver->name }}</legend>

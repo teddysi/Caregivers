@@ -194,7 +194,7 @@ class PatientsController extends Controller
 		$log->save();
 
         $log = new Log();
-		$log->performed_task = 'Foi associada ao Paciente: '.$patient->name.'.';
+		$log->performed_task = 'Foi associada ao Utente: '.$patient->name.'.';
 		$log->done_by = Auth::user()->id;
 		$log->need_id = $need->id;
 		$log->save();
@@ -216,7 +216,7 @@ class PatientsController extends Controller
 		$log->save();
 
         $log = new Log();
-		$log->performed_task = 'Foi desassociada do Paciente: '.$patient->name.'.';
+		$log->performed_task = 'Foi desassociada do Utente: '.$patient->name.'.';
 		$log->done_by = Auth::user()->id;
 		$log->need_id = $need->id;
 		$log->save();

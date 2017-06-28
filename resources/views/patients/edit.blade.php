@@ -1,11 +1,11 @@
 @extends('layouts.master')
 
-@section('tittle', 'Editar Paciente')
+@section('tittle', 'Editar Utente')
 
 @section('content')
 
 <div class="container">
-    <legend>Editar Paciente</legend>
+    <legend>Editar Utente</legend>
     <form action="{{ url('/patients', ['patient' => $patient->id]) }}" method="POST" class="form-group">
         {{ method_field('PATCH') }}
         {{ csrf_field() }}

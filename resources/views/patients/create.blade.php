@@ -1,10 +1,10 @@
 @extends('layouts.master')
 
-@section('tittle', 'Criar Paciente')
+@section('tittle', 'Criar Utente')
 
 @section('content')
 <div class="container">
-    <legend>Novo Paciente</legend>
+    <legend>Novo Utente</legend>
     <form action="{{url('/patients/create')}}" method="POST" class="form-group">
         {{ csrf_field() }}
 

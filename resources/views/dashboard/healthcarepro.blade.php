@@ -37,7 +37,7 @@
 											<a class="btn btn-block btn-primary" href="{{ route('users.show', ['user' => $caregiver->id]) }}">Detalhes</a>
 										</div>
 										<div class="col-sm-6 col-md-2 col-lg-2">
-											<a class="btn btn-block btn-primary" href="{{ route('caregivers.patients', ['caregiver' => $caregiver->id]) }}">Pacientes</a>
+											<a class="btn btn-block btn-primary" href="{{ route('caregivers.patients', ['caregiver' => $caregiver->id]) }}">Utentes</a>
 										</div>
 										<div class="col-sm-6 col-md-2 col-lg-2">
 											<a class="btn btn-block btn-primary" href="{{ route('caregivers.materials', ['caregiver' => $caregiver->id]) }}">Materiais</a>

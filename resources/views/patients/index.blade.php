@@ -5,10 +5,10 @@
 <div class="container">
 	<div class="row">
 		<div class="col-lg-12">
-            <legend>Pacientes</legend>
+            <legend>Utentes</legend>
 			<div class="row">
 				<div class="col-4 col-sm-4 col-md-4">
-					<a class="btn btn-block btn-primary" href="{{ route('patients.create') }}">Novo Paciente</a>
+					<a class="btn btn-block btn-primary" href="{{ route('patients.create') }}">Novo Utente</a>
 				</div>
 			</div>
 			<br />
@@ -72,7 +72,7 @@
 						</div>
 						<div class="col-lg-4 col-md-4 col-sm-6">
 							<div class="form-group form-inline	">
-								<label for="searchItemsPerPage">Nº pacientes por página:</label>
+								<label for="searchItemsPerPage">Nº utentes por página:</label>
 								<select name="patientPages" class="form-control">
 									<option value="10" {{ $searchData['patientPages'] == '10' ? 'selected' : '' }}>10</option>
 									<option value="20" {{ $searchData['patientPages'] == '20' ? 'selected' : '' }}>20</option>
@@ -123,7 +123,7 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem pacientes.</h4>
+				<h4>Não existem utentes.</h4>
 			@endif
 			<div class="text-center">
 				{!! $patients->links() !!}

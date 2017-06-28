@@ -39,7 +39,7 @@ class AccessesController extends Controller
         $access->save();
 
         $notification = new Notification();
-        $notification->text = 'O Cuidador '.$caregiver->username.' acedeu ao Material '.$material->name.' para cuidar o paciente '.$patient->name.'.';
+        $notification->text = 'O Cuidador '.$caregiver->username.' acedeu ao Material '.$material->name.' para cuidar o utente '.$patient->name.'.';
         $notification->created_by = $id;
         $notification->type = 'access';
         $notification->save();
@@ -60,7 +60,7 @@ class AccessesController extends Controller
             foreach ($caregiver->accesses as $access) {
                 $arrayAccess = [];
                 $arrayAccess['Cuidador'] = $access->caregiver->name;
-                $arrayAccess['Paciente'] = $access->patient->name;
+                $arrayAccess['Utente'] = $access->patient->name;
                 $arrayAccess['Material'] = $access->material->name;
                 $arrayAccess['Acedido Em'] = (string)$access->created_at;
                 $accesses->push($arrayAccess);

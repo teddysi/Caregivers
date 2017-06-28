@@ -57,7 +57,7 @@
 	<br />
 	<div class="row">
 		<div class="col-lg-12">
-			<legend>Necessidades dos Pacientes de {{ $caregiver->name }}</legend>
+			<legend>Necessidades dos Utentes de {{ $caregiver->name }}</legend>
 			@if (count($patientsNeeds))
 		        <table class="table table-striped patients-needs">
 			        <thead>
@@ -90,7 +90,7 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Os pacientes deste Cuidador não têm necessidades.</h4>
+				<h4>Os utentes deste Cuidador não têm necessidades.</h4>
 			@endif
         </div>
 	</div>

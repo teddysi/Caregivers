@@ -48,7 +48,7 @@
                     @if (Auth::user()->role == 'healthcarepro' && $user->role == 'Cuidador' && $isMyCaregiver)
                         <div class="row">
                             <div class="col-sm-6 col-md-6 col-lg-6">
-                                <a class="btn btn-block btn-primary" href="{{ route('caregivers.patients', ['caregiver' => $user->id]) }}">Pacientes</a>
+                                <a class="btn btn-block btn-primary" href="{{ route('caregivers.patients', ['caregiver' => $user->id]) }}">Utentes</a>
                             </div>
                             <div class="col-sm-6 col-md-6 col-lg-6">
                                 <a class="btn btn-block btn-primary" href="{{ route('caregivers.materials', ['caregiver' => $user->id]) }}">Materiais</a>

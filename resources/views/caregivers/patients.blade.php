@@ -1,13 +1,13 @@
 @extends ('layouts.master')
 
-@section('title', 'Lista de Pacientes')
+@section('title', 'Lista de Utentes')
 
 @section ('content')
 
 <div class="container">
 	<div class="row">
 		<div class="col-lg-12">
-			<legend>Pacientes de {{ $caregiver->name }}</legend>
+			<legend>Utentes de {{ $caregiver->name }}</legend>
 			@if (count($patients))
 		        <table class="table table-striped">
 			        <thead>
@@ -50,7 +50,7 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem pacientes associados a este Cuidador.</h4>
+				<h4>Não existem utentes associados a este Cuidador.</h4>
 			@endif
 			<div class="text-center">
 				{!! $patients->links() !!}
@@ -59,7 +59,7 @@
 	</div>
 	<div class="row">
 		<div class="col-lg-12">
-			<legend>Pacientes Sem Cuidador</legend>
+			<legend>Utentes Sem Cuidador</legend>
 			@if (count($notMyPatients))
 		        <table class="table table-striped">
 			        <thead>
@@ -102,7 +102,7 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem pacientes sem Cuidador.</h4>
+				<h4>Não existem utentes sem Cuidador.</h4>
 			@endif
 			<div class="text-center">
 				{!! $notMyPatients->links() !!}

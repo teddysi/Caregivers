@@ -1,10 +1,10 @@
 @extends ('layouts.master')
 
-@section('title', 'Paciente')
+@section('title', 'Utente')
 
 @section ('content')
 <div class="container">
-    <h2><strong>Paciente:</strong> {{ $patient->name }}</h2>
+    <h2><strong>Utente:</strong> {{ $patient->name }}</h2>
 	<div class="row">
 		<div class="col-sm-12 col-md-8 col-lg-8">
 			<h4><strong>Email:</strong> {{ $patient->email }}</h4>
@@ -92,7 +92,7 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem avaliações realizadas a este Paciente.</h4>
+				<h4>Não existem avaliações realizadas a este Utente.</h4>
 			@endif
  		</div>
 	</div>
@@ -120,7 +120,7 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem registos referentes a este Paciente.</h4>
+				<h4>Não existem registos referentes a este Utente.</h4>
 			@endif
  		</div>
 	</div>

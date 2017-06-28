@@ -56,7 +56,7 @@
                                     </a>
                                     <ul class="dropdown-menu resourses" role="menu">
                                         <li><a href="{{ route('users') }}">Cuidadores</a></li>
-                                        <li><a href="{{ route('patients') }}">Pacientes</a></li>
+                                        <li><a href="{{ route('patients') }}">Utentes</a></li>
                                         <li><a href="{{ route('needs') }}">Necessidades</a></li>
                                         <li><a href="{{ route('materials') }}">Materiais</a></li>
                                         <li><a href="{{ route('quizs') }}">Questionários</a></li>

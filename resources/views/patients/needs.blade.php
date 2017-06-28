@@ -48,7 +48,7 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem necessidades associadas a este Paciente.</h4>
+				<h4>Não existem necessidades associadas a este Utente.</h4>
 			@endif
 			<div class="text-center">
 				{!! $needs->links() !!}
@@ -98,7 +98,7 @@
 					</tbody>
 			    </table>
 			@else
-				<h4>Não existem necessidades por associar a este Paciente.</h4>
+				<h4>Não existem necessidades por associar a este Utente.</h4>
 			@endif
 			<div class="text-center">
 				{!! $notMyNeeds->links() !!}
