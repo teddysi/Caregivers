@@ -267,12 +267,12 @@ class DatabaseSeeder extends Seeder
 
     private function buildEvaluations()
     {
-        $patients = App\Patient::all();
+        /*$patients = App\Patient::all();
         $i = 0;
         $evaluationsName = [
             'Evaluation-1', 'Evaluation-2', 'Evaluation-3', 'Evaluation-4', 'Evaluation-5'
         ];
-        $evaluationsQuizs = ['eval-quiz1', 'eval-quiz2'];
+        
       
         foreach ($evaluationsName as $name) {
             $healthcare_pro;
@@ -297,12 +297,15 @@ class DatabaseSeeder extends Seeder
 
 
             $evaluation->save();
-        }
-        
+        }*/
+        $evaluationsQuizs = ['Evaluation-1', 'Evaluation-2'];
+
         $evaluationC = new App\Evaluation();
         $evaluationC->type = 'Pela aplicação';
         $evaluationC->description = $evaluationsQuizs[0];
         $evaluationC->model = 'Model X';
+        $evaluationC->path = 'evaluations/'.$evaluationsQuizs[0].'.pdf';
+        $evaluationC->mime = '.pdf';
         $evaluationC->created_by = 14;
         $evaluationC->caregiver_id = 15;
         $evaluationC->save();
@@ -311,6 +314,8 @@ class DatabaseSeeder extends Seeder
         $evaluationP->type = 'Pela aplicação';
         $evaluationP->description = $evaluationsQuizs[1];
         $evaluationP->model = 'Model X';
+        $evaluationP->path = 'evaluations/'.$evaluationsQuizs[0].'.pdf';
+        $evaluationP->mime = '.pdf';
         $evaluationP->created_by = 14;
         $evaluationP->patient_id = 10;
         $evaluationP->save();
