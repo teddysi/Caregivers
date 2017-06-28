@@ -17,7 +17,7 @@
         </div>
         
         <div class="form-group">
-            <button type="submit" class="btn btn-primary" name="save">Adicionar Perguntas</button>
+            <button type="submit" class="btn btn-primary" name="save">Adicionar Questões</button>
             <a class="btn btn-default" href="javascript:history.back()">Cancelar</a>
         </div>
     @include('layouts.errors')
