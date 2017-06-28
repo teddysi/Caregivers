@@ -8,7 +8,7 @@ use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\User;
 
-class SuccessfullyCreateCaregiverTest extends DuskTestCase
+class HealthcareProCaregiverCreateTest extends DuskTestCase
 {
     use DatabaseMigrations;
 
@@ -49,7 +49,7 @@ class SuccessfullyCreateCaregiverTest extends DuskTestCase
             
 
             $browser->assertSeeIn('table tr:first-child td:first-child', $new_user->name)
-                    ->assertSeeIn('table tr:first-child td:nth-child(2)', $new_user->name)
+                    ->assertSeeIn('table tr:first-child td:nth-child(2)', $new_user->email)
                     ->assertSeeIn('table tr:first-child td:last-child a:first-child', 'Detalhes')
                     ->assertSeeIn('table tr:first-child td:last-child .btn-warning', 'Editar')
                     ->assertSeeIn('table tr:first-child td:last-child button:first-child', 'Bloquear')

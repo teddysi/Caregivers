@@ -267,12 +267,12 @@ class DatabaseSeeder extends Seeder
 
     private function buildEvaluations()
     {
-        $patients = App\Patient::all();
+        /*$patients = App\Patient::all();
         $i = 0;
         $evaluationsName = [
             'Evaluation-1', 'Evaluation-2', 'Evaluation-3', 'Evaluation-4', 'Evaluation-5'
         ];
-        $evaluationsQuizs = ['eval-quiz1', 'eval-quiz2'];
+        
       
         foreach ($evaluationsName as $name) {
             $healthcare_pro;
@@ -297,12 +297,15 @@ class DatabaseSeeder extends Seeder
 
 
             $evaluation->save();
-        }
-        
+        }*/
+        $evaluationsQuizs = ['Evaluation-1', 'Evaluation-2'];
+
         $evaluationC = new App\Evaluation();
         $evaluationC->type = 'Pela aplicação';
         $evaluationC->description = $evaluationsQuizs[0];
         $evaluationC->model = 'Model X';
+        $evaluationC->path = 'evaluations/'.$evaluationsQuizs[0].'.pdf';
+        $evaluationC->mime = '.pdf';
         $evaluationC->created_by = 14;
         $evaluationC->caregiver_id = 15;
         $evaluationC->save();
@@ -311,6 +314,8 @@ class DatabaseSeeder extends Seeder
         $evaluationP->type = 'Pela aplicação';
         $evaluationP->description = $evaluationsQuizs[1];
         $evaluationP->model = 'Model X';
+        $evaluationP->path = 'evaluations/'.$evaluationsQuizs[0].'.pdf';
+        $evaluationP->mime = '.pdf';
         $evaluationP->created_by = 14;
         $evaluationP->patient_id = 10;
         $evaluationP->save();
@@ -334,22 +339,28 @@ class DatabaseSeeder extends Seeder
         /*$question_values_multiple_choice = [
             'Sei realizar;Não sei realizar;Percebi, mas não consigo realizar;Não percebi;O material não é esclarecedor;Não é possível compreender o material;O material é fácil de perceber'
         ];*/
-
+        $i = 0;
+        $index = 1;
         foreach ($questions_text as $question_text) {
 
             $question = new App\Question();
             $question->question = $question_text;
             $question->created_by = $healthcare_pros->random()->id;
-            $question->blocked = false;
-            $index = array_rand($question_type, 1);
+            if($i >= 3) {
+                $index = 1;
+            } else {
+                $index = 0;
+            }
+
             $question->type = $question_type[$index];
 
-            if($question->type == 'radio') {
+            if($question->type == 'radio') {       
                 $index = array_rand($question_values_radio,1);
                 $question->values = $question_values_radio[$index];
             }
 
             $question->save();
+            $i++;
         }
     }
 

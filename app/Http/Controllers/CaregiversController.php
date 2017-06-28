@@ -216,6 +216,10 @@ class CaregiversController extends Controller
                 return response('Utilizador Bloqueado', 401);
             }
 
+            if ($user->blocked) {
+                return response('Utilizador Bloqueado', 401);
+            }
+
             if ($user->role == 'caregiver') {
                 if (!$user->login_count) {
                     $user->login_count = 1;

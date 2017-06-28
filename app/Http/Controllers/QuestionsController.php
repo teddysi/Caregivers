@@ -7,6 +7,7 @@ use App\User;
 use App\Question;
 use App\Answer;
 use App\Log;
+use App\User;
 use Auth;
 use DB;
 
