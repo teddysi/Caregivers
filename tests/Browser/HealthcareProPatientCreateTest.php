@@ -17,7 +17,7 @@ class HealthcareProPatientCreateTest extends DuskTestCase
      *
      * @return void
      */
-    public function testExample()
+    public function testBasicExample()
     {
         $loginTest = new SuccessfullyLoginTest();
         $loginTest->testBasicExample();

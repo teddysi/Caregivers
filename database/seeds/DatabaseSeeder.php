@@ -339,17 +339,24 @@ class DatabaseSeeder extends Seeder
         /*$question_values_multiple_choice = [
             'Sei realizar;Não sei realizar;Percebi, mas não consigo realizar;Não percebi;O material não é esclarecedor;Não é possível compreender o material;O material é fácil de perceber'
         ];*/
-
+        $i = 0;
+        $index = 1;
         foreach ($questions_text as $question_text) {
 
             $question = new App\Question();
             $question->question = $question_text;
             $question->created_by = $healthcare_pros->random()->id;
             $question->blocked = false;
-            $index = array_rand($question_type, 1);
+            if($i >= 3) {
+                $index = 1;
+            } else {
+                $index = 0;
+            }
+
             $question->type = $question_type[$index];
 
             if($question->type == 'radio') {
+                $i++;
                 $index = array_rand($question_values_radio,1);
                 $question->values = $question_values_radio[$index];
             }

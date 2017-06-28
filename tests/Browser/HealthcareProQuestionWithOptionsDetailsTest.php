@@ -58,7 +58,7 @@ class HealthcareProQuestionWithOptionsDetailsTest extends DuskTestCase
 
             $answers = explode(";" ,$question->values);
 
-            for($i = 0; $i < (count($answers)-1); $i++) {
+            for($i = 0; $i <= (count($answers)-2); $i++) {
                 $browser->assertSeeIn('.answers', $answers[$i]);
             }
         });

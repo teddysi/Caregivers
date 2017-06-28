@@ -7,7 +7,7 @@ use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-class HealthcareProQuestionCreateTest extends DuskTestCase
+class HealthcareProQuestionWithOptionsCreateTest extends DuskTestCase
 {
     use DatabaseMigrations;
 
@@ -57,7 +57,7 @@ class HealthcareProQuestionCreateTest extends DuskTestCase
 
             $answers = explode(";" ,$question->values);
 
-            for($i = 0; $i < (count($answers)-2); $i++) {
+            for($i = 0; $i <= (count($answers)-2); $i++) {
                 $browser->assertSeeIn('.answers', $answers[$i]);
             }
 
