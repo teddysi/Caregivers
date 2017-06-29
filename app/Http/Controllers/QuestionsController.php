@@ -189,18 +189,26 @@ class QuestionsController extends Controller
 
     public function edit(Question $question)
     {
-        if (count($question->quizs) == 0) {
-            if($question->type == 'radio') {
-                $values = $question->values;
-                return view('questions.edit', compact('question', 'values'));
-            }
-
-    	   return view('questions.edit', compact('question'));
+        $canBeEditedOrBlocked = $this->questionCanBeEditedOrBlocked($question);
+        if (!$canBeEditedOrBlocked) {
+            abort(403);
         }
+
+        if($question->type == 'radio') {
+            $values = $question->values;
+            return view('questions.edit', compact('question', 'values'));
+        }
+
+        return view('questions.edit', compact('question'));
     }
 
     public function update(Request $request, Question $question)
     {
+        $canBeEditedOrBlocked = $this->questionCanBeEditedOrBlocked($question);
+        if (!$canBeEditedOrBlocked) {
+            abort(403);
+        }
+
     	$validator = \Validator::make($request->all(), [
                 'question' => 'required|min:4',
                 'values' => 'required_if:type,radio',
@@ -231,6 +239,11 @@ class QuestionsController extends Controller
 
     public function toggleBlock(Request $request, Question $question)
     {
+        $canBeEditedOrBlocked = $this->questionCanBeEditedOrBlocked($question);
+        if (!$canBeEditedOrBlocked) {
+            abort(403);
+        }
+
 		if ($question->blocked == 0) {
             $question->blocked = 1;
             $question->save();
@@ -286,5 +299,21 @@ class QuestionsController extends Controller
         }
         return false;
     }
+
+    private function questionCanBeEditedOrBlocked(Question $question) {
+        $count = 0;
+        foreach ($question->quizs as $quiz) {
+            $count += count($quiz->caregivers);
+            $count += count($quiz->patients);
+            $count += DB::table('quiz_material')->where('quiz_id', $quiz->id)->count();
+        }
+
+        if ($count < 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
 
 }

@@ -140,11 +140,21 @@ class QuizsController extends Controller
 
 	public function edit(Quiz $quiz)
     {
+		$canBeEditedOrBlocked = $this->quizCanBeEditedOrBlocked($quiz);
+        if (!$canBeEditedOrBlocked) {
+            abort(403);
+        }
+
     	return view('quizs.edit', compact('quiz'));
     }
 
     public function update(Request $request, Quiz $quiz)
     {
+		$canBeEditedOrBlocked = $this->quizCanBeEditedOrBlocked($quiz);
+        if (!$canBeEditedOrBlocked) {
+            abort(403);
+        }
+
     	$this->validate($request, [
 			'name' => 'required|min:4',
 		], $this->messages);
@@ -163,6 +173,11 @@ class QuizsController extends Controller
 
 	public function toggleBlock(Request $request, Quiz $quiz)
     {
+		$canBeEditedOrBlocked = $this->quizCanBeEditedOrBlocked($quiz);
+        if (!$canBeEditedOrBlocked) {
+            abort(403);
+        }
+
 		if ($quiz->blocked == 0) {
             $quiz->blocked = 1;
             $quiz->save();
@@ -192,6 +207,11 @@ class QuizsController extends Controller
 
 	public function questions(Quiz $quiz)
 	{
+		$canBeEditedOrBlocked = $this->quizCanBeEditedOrBlocked($quiz);
+        if (!$canBeEditedOrBlocked) {
+            abort(403);
+        }
+
 		$quizQuestions = $quiz->questions()->withPivot('order')->orderBy('pivot_order', 'asc')->paginate(10, ['*'], 'quizQuestions');
 		$quizQuestions->setPageName('quizQuestions');
 
@@ -205,9 +225,10 @@ class QuizsController extends Controller
 
     public function addQuestion(Quiz $quiz, Question $question)
     {
-		if ($question->blocked == 1) {
-			abort(403);
-		}
+		$canBeEditedOrBlocked = $this->quizCanBeEditedOrBlocked($quiz);
+        if (!$canBeEditedOrBlocked) {
+            abort(403);
+        }
 		
     	$count = count($quiz->questions);
 		$quiz->questions()->attach([$question->id => ['order'=> $count + 1]]);
@@ -229,6 +250,11 @@ class QuizsController extends Controller
 
     public function removeQuestion(Quiz $quiz, Question $question)
 	{
+		$canBeEditedOrBlocked = $this->quizCanBeEditedOrBlocked($quiz);
+        if (!$canBeEditedOrBlocked) {
+            abort(403);
+        }
+
 		$orderOfQuestion = DB::table('quiz_question')->select('order')->where([['quiz_id', $quiz->id], ['question_id', $question->id]])->first()->order;
 		$quiz->questions()->detach($question->id);
 
@@ -255,6 +281,11 @@ class QuizsController extends Controller
 
 	public function upQuestion(Quiz $quiz, Question $question)
 	{
+		$canBeEditedOrBlocked = $this->quizCanBeEditedOrBlocked($quiz);
+        if (!$canBeEditedOrBlocked) {
+            abort(403);
+        }
+
 		$orderOfQuestion = DB::table('quiz_question')->select('order')->where([['quiz_id', $quiz->id], ['question_id', $question->id]])->first()->order;
 		$aboveQuestion = $quiz->questions()->where('order', $orderOfQuestion - 1)->first();
 		$quiz->questions()->updateExistingPivot($question->id, ['order' => $orderOfQuestion - 1]);
@@ -271,6 +302,11 @@ class QuizsController extends Controller
 
 	public function downQuestion(Quiz $quiz, Question $question)
 	{
+		$canBeEditedOrBlocked = $this->quizCanBeEditedOrBlocked($quiz);
+        if (!$canBeEditedOrBlocked) {
+            abort(403);
+        }
+
 		$orderOfQuestion = DB::table('quiz_question')->select('order')->where([['quiz_id', $quiz->id], ['question_id', $question->id]])->first()->order;
 		$aboveQuestion = $quiz->questions()->where('order', $orderOfQuestion + 1)->first();
 		$quiz->questions()->updateExistingPivot($question->id, ['order' => $orderOfQuestion + 1]);
@@ -313,4 +349,17 @@ class QuizsController extends Controller
         }
         return false;
     }
+
+	private function quizCanBeEditedOrBlocked(Quiz $quiz) {
+		$count = 0;
+		$count += count($quiz->caregivers);
+		$count += count($quiz->patients);
+		$count += DB::table('quiz_material')->where('quiz_id', $quiz->id)->count();
+
+		if ($count < 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
