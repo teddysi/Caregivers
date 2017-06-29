@@ -272,6 +272,7 @@ class DatabaseSeeder extends Seeder
                 $evaluation->created_by = 14;
                 $evaluation->patient_id = 10;
             } else {
+                $evaluation->created_by = App\HealthcarePro::all()->random()->id;
                 $evaluation->patient_id = $patients->random()->id;
             }
 
