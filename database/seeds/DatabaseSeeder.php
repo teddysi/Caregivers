@@ -289,7 +289,7 @@ class DatabaseSeeder extends Seeder
         $evaluationC->save();
 
         $qz_c = [
-            [3, 15, 6]
+            [1, 15, 6]
         ];
 
         for($i = 0; $i < count($qz_c); $i++) {
@@ -331,7 +331,7 @@ class DatabaseSeeder extends Seeder
         $evaluationM->save();
 
         $qz_m = [
-            [2, 1, 15, 8]
+            [1, 1, 15, 8]
         ];
 
         for($i = 0; $i < count($qz_m); $i++) {
