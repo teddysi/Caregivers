@@ -246,25 +246,31 @@ class DatabaseSeeder extends Seeder
         $evaluationsName = [
             'Evaluation-1', 'Evaluation-2', 'Evaluation-3', 'Evaluation-4', 'Evaluation-5'
         ];
-        
       
         foreach ($evaluationsName as $name) {
-            $healthcare_pro;
-            do {
-                $healthcare_pro = App\HealthcarePro::all()->random();
-            } while (count($healthcare_pro->caregivers) == 0);
-            
-            $caregiver = $healthcare_pro->caregivers->random();
             $evaluation = new App\Evaluation();
             $evaluation->type = 'Pela aplicação';
             $evaluation->description = $name;
             $evaluation->model = 'Model X';
             $evaluation->path = 'evaluations/'.$name.'.pdf';
             $evaluation->mime = '.pdf';
-            $evaluation->created_by = $healthcare_pro->id;
+            
             if($i < 2) {
+                $healthcare_pro;
+                do {
+                    $healthcare_pro = App\HealthcarePro::all()->random();
+                } while (count($healthcare_pro->caregivers) == 0);
+                
+                $caregiver = $healthcare_pro->caregivers->random();
+                $evaluation->created_by = $healthcare_pro->id;
                 $evaluation->caregiver_id = $caregiver->id;
                 $i++;
+            } elseif ($i == 3) {
+                $evaluation->created_by = 14;
+                $evaluation->caregiver_id = 15;
+            } elseif ($i == 4) {
+                $evaluation->created_by = 14;
+                $evaluation->patient_id = 10;
             } else {
                 $evaluation->patient_id = $patients->random()->id;
             }
@@ -342,7 +348,7 @@ class DatabaseSeeder extends Seeder
     {
         $healthcare_pros = App\HealthcarePro::all();
         $questions_text = [
-            'Como está?', 'Tem comido?', 'Que horas são?', 'Choveu ontem?', 'Gosta de frango?', 
+            'Como está?', 'Tem comido?', 'Que horas são?', 'Choveu ontem?', 'Está com dores?', 
             'Amanhã chove?'
         ];
         $question_type = [
