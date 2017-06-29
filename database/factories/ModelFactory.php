@@ -95,7 +95,7 @@ $factory->define(App\Text::class, function (Faker\Generator $faker) {
 $factory->define(App\Image::class, function (Faker\Generator $faker) {
     $countMaterials = count(App\Material::all());
     $healthcare_pros = App\HealthcarePro::all();
-    $rndNumber = $faker->randomNumber;
+    $rndNumber = $faker->unique()->randomNumber;
     
     return [
         'name' => 'Imagem ' . $rndNumber,
@@ -111,7 +111,7 @@ $factory->define(App\Image::class, function (Faker\Generator $faker) {
 $factory->define(App\Video::class, function (Faker\Generator $faker) {
     $countMaterials = count(App\Material::all());
     $healthcare_pros = App\HealthcarePro::all();
-    $rndNumber = $faker->randomNumber;
+    $rndNumber = $faker->unique()->randomNumber;
     
     return [
         'name' => 'Video ' . $rndNumber,
@@ -128,7 +128,7 @@ $factory->define(App\EmergencyContact::class, function (Faker\Generator $faker) 
     $healthcare_pros = App\HealthcarePro::all();
     
     return [
-        'name' => 'Contacto de Emergência ' . $faker->randomNumber,
+        'name' => 'Contacto de Emergência ' . $faker->unique()->randomNumber,
         'description' => 'Contacto de Emergência de ' . $faker->name,
         'type' => 'emergencyContact',
         'number' => $faker->phoneNumber,
@@ -140,7 +140,7 @@ $factory->define(App\Annex::class, function (Faker\Generator $faker) {
     $healthcare_pros = App\HealthcarePro::all();
     
     return [
-        'name' => 'Anexo ' . $faker->randomNumber,
+        'name' => 'Anexo ' . $faker->unique()->randomNumber,
         'description' => 'Anexo de ' . $faker->name,
         'type' => 'annex',
         'url' => 'https://www.youtube.com/watch?v=RoXmMD1rVP0',
@@ -152,7 +152,7 @@ $factory->define(App\Composite::class, function (Faker\Generator $faker) {
     $healthcare_pros = App\HealthcarePro::all();
     
     return [
-        'name' => 'Composto ' . $faker->randomNumber,
+        'name' => 'Composto ' . $faker->unique()->randomNumber,
         'description' => 'Composto de ' . $faker->name,
         'type' => 'composite',
         'created_by' => $healthcare_pros->random()->id,

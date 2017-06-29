@@ -2,8 +2,8 @@
 
 namespace Tests\Browser;
 
+use App\HealthcarePro;
 use App\Caregiver;
-use Tests\Browser\SuccessfullyLoginTest;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -19,16 +19,16 @@ class HealthcareProDashboardCaregiverPatientsTest extends DuskTestCase
      */
     public function testBasicExample()
     {
-        $loginTest = new SuccessfullyLoginTest();
-        $loginTest->testBasicExample();
 
         $this->browse(function (Browser $browser) {
-            $browser->assertSee('Caregiver')
+            $browser->loginAs(HealthcarePro::find(14))
+                    ->visit('/')
+                    ->assertSee('Caregiver')
                     ->assertSeeIn('table tr:first-child td:first-child', 'Caregiver')
-                    ->assertSeeIn('table tr:first-child td:last-child div:nth-child(2) a', 'Pacientes')
-                    ->click('table tr:first-child td:last-child div:nth-child(2) a', 'Pacientes')
-                    ->assertPathIs('/caregivers/public/caregivers/15/patients')
-                    ->assertSee('Pacientes de Caregiver')
+                    ->assertSeeIn('table tr:first-child td:last-child div:nth-child(2) a', 'Utentes')
+                    ->click('table tr:first-child td:last-child div:nth-child(2) a', 'Utentes')
+                    ->assertPathIs('/caregivers/15/patients')
+                    ->assertSee('Utentes de Caregiver')
                     ->assertSeeIn('table th:first-child', 'Nome')
                     ->assertSeeIn('table th:nth-child(2)', 'Email')
                     ->assertSeeIn('table th:nth-child(3)', 'Localização')
@@ -38,9 +38,9 @@ class HealthcareProDashboardCaregiverPatientsTest extends DuskTestCase
             $caregiver = Caregiver::find(15);
 
             if(!count($caregiver->patients)) {
-                $browser->assertSee('Não existem pacientes associados a este Cuidador.');
+                $browser->assertSee('Não existem utentes associados a este Cuidador.');
             } else {
-                $browser->assertDontSee('Não existem pacientes associados a este Cuidador.');
+                $browser->assertDontSee('Não existem utentes associados a este Cuidador.');
                 $i = 1;
                 foreach ($caregiver->patients as $patient) {
                     if( $i == 1) {

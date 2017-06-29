@@ -3,7 +3,7 @@
 namespace Tests\Browser;
 
 use App\Question;
-use Tests\Browser\SuccessfullyLoginTest;
+use App\HealthcarePro;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -19,28 +19,27 @@ class HealthcareProQuestionWithoutOptionsDetailsTest extends DuskTestCase
      */
     public function testBasicExample()
     {
-        $login = new SuccessfullyLoginTest();
-        $login->testBasicExample();
-
         
-        for($i = 1; $i <= count(Question::all()); $i++) {
-            $question = Question::find($i);
-            if($question->type == 'text') {
+        //for($i = 1; $i <= count(Question::all()); $i++) {
+        $question = Question::find(1);
+        /*    if($question->type == 'text') {
                 break;
             }
-        } 
+        } */
 
-        $this->browse(function (Browser $browser) use ($question, $i){
-            $browser->clickLink('Recursos')
+        $this->browse(function (Browser $browser) use ($question){
+            $browser->loginAs(HealthcarePro::find(14))
+                    ->visit('/')
+                    ->clickLink('Recursos')
                     ->assertSee('Questões')
                     ->clickLink('Questões')
-                    ->assertPathIs('/caregivers/public/questions');
+                    ->assertPathIs('/questions');
 
-            if($i == 1) {
-                $browser->assertSeeIn('table tr:first-child td:first-child', $question->question)
-                        ->assertSeeIn('table tr:first-child td:last-child div div:first-child a', 'Detalhes')
-                        ->click('table tr:first-child td:last-child div div:first-child a', 'Detalhes');
-            } else if ($i == count(Question::all())) {
+            //if($i == 1) {
+                $browser->assertSeeIn('table', $question->question)
+                        ->assertSeeIn('a[href=\'http://192.168.99.100/questions/1\']', 'Detalhes')
+                        ->click('a[href=\'http://192.168.99.100/questions/1\']', 'Detalhes');
+           /* } else if ($i == count(Question::all())) {
                 $browser->assertSeeIn('table tr:last-child td:first-child', $question->question)
                         ->assertSeeIn('table tr:last-child td:last-child div div:first-child a', 'Detalhes')
                         ->click('table tr:last-child td:last-child div div:first-child a', 'Detalhes');   
@@ -48,13 +47,14 @@ class HealthcareProQuestionWithoutOptionsDetailsTest extends DuskTestCase
                 $browser->assertSeeIn('table tr:nth-child('.$i.') td:first-child', $question->question)
                         ->assertSeeIn('table tr:nth-child('.$i.') td:last-child div div:first-child a', 'Detalhes')
                         ->click('table tr:nth-child('.$i.') td:last-child div div:first-child a', 'Detalhes');
-            }
+            }*/
 
-            $browser->assertPathIs('/caregivers/public/questions/'.$question->id)
+            $browser->assertPathIs('/'.'questions/'.$question->id)
                     ->assertSeeIn('h2', 'Questão: '.$question->question)
-                    ->assertSeeIn('h4:first-child', 'Criador: '.$question->creator->username)
-                    ->assertSeeIn('h4:nth-child(2)', 'Data da criação: '.(string)$question->created_at)
-                    ->assertSeeIn('h4:nth-child(3)', 'Data da última atualização: '.(string)$question->updated_at);
+                    ->assertSeeIn('h4:first-child', 'Tipo de Resposta: Texto')
+                    ->assertSeeIn('h4:nth-child(2)', 'Criador: '.$question->creator->username)
+                    ->assertSeeIn('h4:nth-child(3)', 'Data da criação: '.(string)$question->created_at)
+                    ->assertSeeIn('h4:nth-child(4)', 'Data da última atualização: '.(string)$question->updated_at);
         });
     }
 }

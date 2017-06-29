@@ -3,7 +3,7 @@
 namespace Tests\Browser;
 
 use App\Caregiver;
-use Tests\Browser\SuccessfullyLoginTest;
+use App\HealthcarePro;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -19,19 +19,17 @@ class HealthcareProPatientsDetailsTest extends DuskTestCase
      */
     public function testBasicExample()
     {
-        $login = new SuccessfullyLoginTest();
-        $login->testBasicExample();
-
         $caregiver = Caregiver::find(15);
         $patient = $caregiver->patients->get(0);
 
         $this->browse(function (Browser $browser) use ($patient){
-            $browser->visit('/caregivers/public/caregivers/15/patients')
-                    ->assertSeeIn('table tr:first-child td:first-child', $patient->name)
-                    ->assertSeeIn('table tr:first-child td:last-child div div:first-child a', 'Detalhes')
-                    ->click('table tr:first-child td:last-child div div:first-child a', 'Detalhes')
-                    ->assertPathIs('/caregivers/public/patients/'.$patient->id)
-                    ->assertSeeIn('h2', 'Paciente: '.$patient->name)
+            $browser->loginAs(HealthcarePro::find(14))
+                    ->visit('/caregivers/15/patients')
+                    ->assertSeeIn('table', $patient->name)
+                    ->assertSeeIn('a[href=\'http://192.168.99.100/patients/'.$patient->id.'\']', 'Detalhes')
+                    ->click('a[href=\'http://192.168.99.100/patients/'.$patient->id.'\']', 'Detalhes')
+                    ->assertPathIs('/'.'patients/'.$patient->id)
+                    ->assertSeeIn('h2', 'Utente: '.$patient->name)
                     ->assertSeeIn('h4:first-child', 'Email: '.$patient->email)
                     ->assertSeeIn('h4:nth-child(2)', 'Localização: '.$patient->location)
                     ->assertSeeIn('h4:nth-child(3)', 'Cuidador: '.$patient->caregiver->username)

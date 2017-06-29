@@ -2,10 +2,10 @@
 
 namespace Tests\Browser;
 
+use App\HealthcarePro;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Tests\Browser\SuccessfullyLoginTest;
 use App\User;
 
 class HealthcareProCaregiverEdit extends DuskTestCase
@@ -20,9 +20,6 @@ class HealthcareProCaregiverEdit extends DuskTestCase
     public function testBasicExample()
     {
 
-        $login = new SuccessfullyLoginTest();
-        $login->testBasicExample();
-
         $fields_to_update = [
             'test',
             'test@gmail.com',
@@ -32,16 +29,18 @@ class HealthcareProCaregiverEdit extends DuskTestCase
         $user = User::find(15);
 
         $this->browse(function (Browser $browser) use ($user, $fields_to_update)  {
-            $browser->assertSeeIn('table tr:first-child td:first-child', $user->name)
+            $browser->loginAs(HealthcarePro::find(14))
+                    ->visit('/')
+                    ->assertSeeIn('table tr:first-child td:first-child', $user->name)
                     ->assertSeeIn('table tr:first-child td:nth-child(2)', $user->email)
                     ->assertSeeIn('table tr:first-child td:last-child .btn-primary', 'Detalhes')
                     ->click('table tr:first-child td:last-child .btn-warning', 'Editar')
-                    ->assertPathIs('/caregivers/public/users/'.$user->id.'/edit')
+                    ->assertPathIs('/'.'users/'.$user->id.'/edit')
                     ->type('name', $fields_to_update[0])
                     ->type('email', $fields_to_update[1])
                     ->type('location', $fields_to_update[2])
                     ->press('Guardar')
-                    ->assertPathIs('/caregivers/public/users')
+                    ->assertPathIs('/users')
                     ->pause(2000);
 
             $user = User::find(15);
@@ -53,9 +52,9 @@ class HealthcareProCaregiverEdit extends DuskTestCase
                     
             $browser->assertSeeIn('table ', $user->name)
                     ->assertSeeIn('table ', $user->email)
-                    ->assertSeeIn('a[href=\'http://192.168.99.100/caregivers/public/users/15\']', 'Detalhes')
-                    ->click('a[href=\'http://192.168.99.100/caregivers/public/users/15\']', 'Detalhes')
-                    ->assertPathIs('/caregivers/public/users/'.$user->id)
+                    ->assertSeeIn('a[href=\'http://192.168.99.100/users/15\']', 'Detalhes')
+                    ->click('a[href=\'http://192.168.99.100/users/15\']', 'Detalhes')
+                    ->assertPathIs('/'.'users/'.$user->id)
                     ->assertSeeIn('div.details h4:first-child', 'Nome: '.$user->name)
                     ->assertSeeIn('div.details h4:nth-child(2)', 'Email: '.$user->email)
                     ->assertSeeIn('div.details h4:nth-child(3)', 'Função: Cuidador')

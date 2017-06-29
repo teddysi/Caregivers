@@ -2,8 +2,8 @@
 
 namespace Tests\Browser;
 
-use Tests\Browser\ResourcesDropDownTest;
 use Tests\DuskTestCase;
+use App\HealthcarePro;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use App\Material;
@@ -20,8 +20,6 @@ class HealthcareProCompositeMaterialCreateTest extends DuskTestCase
      */
     public function testBasicExample()
     {
-        $resources = new ResourcesDropDownTest();
-        $resources->testBasicExample();
 
         $materials_count = count(Material::all());
 
@@ -32,11 +30,13 @@ class HealthcareProCompositeMaterialCreateTest extends DuskTestCase
         
 
         $this->browse(function (Browser $browser) use ($new_material, $materials_count){
-            $browser->clickLink('Materiais')
-                    ->assertPathIs('/caregivers/public/materials')
+            $browser->loginAs(HealthcarePro::find(14))
+                    ->visit('/')
+                    ->clickLink('Materiais')
+                    ->assertPathIs('/materials')
                     ->assertSeeIn('div.second-options div:last-child a', 'Novo Composto')
                     ->clickLink('Novo Composto')
-                    ->assertPathIs('/caregivers/public/materials/create/composite')
+                    ->assertPathIs('/materials/create/composite')
                     ->type('name', $new_material[0])
                     ->type('description', $new_material[1])
                     ->press('Adicionar Materiais')
@@ -44,7 +44,7 @@ class HealthcareProCompositeMaterialCreateTest extends DuskTestCase
 
             $materials_count += 1;
 
-            $browser->assertPathIs('/caregivers/public/materials/'.$materials_count.'/materials');
+            $browser->assertPathIs('/'.'materials/'.$materials_count.'/materials');
 
             $composite = Material::find($materials_count);
 
@@ -55,7 +55,7 @@ class HealthcareProCompositeMaterialCreateTest extends DuskTestCase
             for($i = 1; $i < 4; $i++) {
                 $browser->assertSeeIn('.materials-to-associate tr:first-child td:last-child button', 'Adicionar')
                         ->click('.materials-to-associate tr:first-child td:last-child button', 'Adicionar')
-                        ->assertPathIs('/caregivers/public/materials/'.$materials_count.'/materials');
+                        ->assertPathIs('/'.'materials/'.$materials_count.'/materials');
                 if($i === 1) {
                     $browser->assertSeeIn('.materials-associated tr:first-child td:last-child button', 'Remover');
                 } else {
@@ -83,13 +83,13 @@ class HealthcareProCompositeMaterialCreateTest extends DuskTestCase
                     ->assertSeeIn('.materials-associated tr:last-child td:first-child', '3')
                     ->assertSeeIn('.materials-associated tr:last-child td:nth-child(2)', $mat3->name)
                     ->click('.materials-associated tr:first-child td:last-child div.col-lg-4:nth-child(2) button', 'Baixo')
-                    ->assertPathIs('/caregivers/public/materials/'.$materials_count.'/materials')
+                    ->assertPathIs('/'.'materials/'.$materials_count.'/materials')
                     ->assertSeeIn('.materials-associated tr:first-child td:first-child', '1')
                     ->assertSeeIn('.materials-associated tr:first-child td:nth-child(2)', $mat2->name)
                     ->assertSeeIn('.materials-associated tr:nth-child(2) td:first-child', '2')
                     ->assertSeeIn('.materials-associated tr:nth-child(2) td:nth-child(2)', $mat1->name)
                     ->click('.materials-associated tr:last-child td:last-child div.col-lg-4:first-child button', 'Cima')
-                    ->assertPathIs('/caregivers/public/materials/'.$materials_count.'/materials')
+                    ->assertPathIs('/'.'materials/'.$materials_count.'/materials')
                     ->assertSeeIn('.materials-associated tr:nth-child(2) td:first-child', '2')
                     ->assertSeeIn('.materials-associated tr:nth-child(2) td:nth-child(2)', $mat3->name)
                     ->assertSeeIn('.materials-associated tr:last-child td:first-child', '3')
@@ -106,7 +106,7 @@ class HealthcareProCompositeMaterialCreateTest extends DuskTestCase
             }
 
             $browser->click('.materials-associated tr:nth-child(2) td:last-child div.col-lg-4:last-child button', 'Remover')
-                    ->assertPathIs('/caregivers/public/materials/'.$materials_count.'/materials')
+                    ->assertPathIs('/'.'materials/'.$materials_count.'/materials')
                     ->assertSeeIn('.materials-associated tr:first-child td:first-child', '1')
                     ->assertSeeIn('.materials-associated tr:first-child td:nth-child(2)', $mat2->name)
                     ->assertSeeIn('.materials-associated tr:nth-child(2) td:first-child', '2')
@@ -133,7 +133,7 @@ class HealthcareProCompositeMaterialCreateTest extends DuskTestCase
 
             $browser->pause(2000)
                     ->clickLink('Concluído')
-                    ->assertPathIs('/caregivers/public/materials')
+                    ->assertPathIs('/materials')
                     ->pause(2000);
         });
     }

@@ -3,7 +3,7 @@
 namespace Tests\Browser;
 
 use App\Patient;
-use Tests\Browser\SuccessfullyLoginTest;
+use App\HealthcarePro;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -19,21 +19,21 @@ class HealthcareProPatientCreateTest extends DuskTestCase
      */
     public function testBasicExample()
     {
-        $loginTest = new SuccessfullyLoginTest();
-        $loginTest->testBasicExample();
 
         $patient_count = count(Patient::all());
 
         $this->browse(function (Browser $browser) use ($patient_count) {
-            $browser->clickLink('Pacientes')
-                    ->assertPathIs('/caregivers/public/patients')
-                    ->clickLink('Novo Paciente')
-                    ->assertPathIs('/caregivers/public/patients/create')
+            $browser->loginAs(HealthcarePro::find(14))
+                    ->visit('/')
+                    ->clickLink('Utentes')
+                    ->assertPathIs('/patients')
+                    ->clickLink('Novo Utente')
+                    ->assertPathIs('/patients/create')
                     ->type('name', 'test')
                     ->type('email', 'test@gmail.com')
                     ->type('location', 'test')
                     ->press('Criar')
-                    ->assertPathIs('/caregivers/public/patients');
+                    ->assertPathIs('/patients');
 
             $patient_count_new = count(Patient::all());
             $new_patient = Patient::find($patient_count_new);
@@ -49,8 +49,8 @@ class HealthcareProPatientCreateTest extends DuskTestCase
                     ->assertSeeIn('table tr:first-child td:last-child .btn-warning', 'Editar')
                     ->assertSeeIn('table tr:first-child td:last-child div div:nth-child(2) a', 'Necessidades')
                     ->click('table tr:first-child td:last-child a:first-child', 'Detalhes')
-                    ->assertPathIs('/caregivers/public/patients/'.$new_patient->id)
-                    ->assertSeeIn('h2', 'Paciente: '.$new_patient->name)
+                    ->assertPathIs('/'.'patients/'.$new_patient->id)
+                    ->assertSeeIn('h2', 'Utente: '.$new_patient->name)
                     ->assertSeeIn('h4:first-child', 'Email: '.$new_patient->email)
                     ->assertSeeIn('h4:nth-child(2)', 'Localização: '.$new_patient->location)
                     ->assertSeeIn('h4:nth-child(3)', 'Cuidador: Não tem Cuidador')

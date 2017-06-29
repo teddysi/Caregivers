@@ -2,8 +2,8 @@
 
 namespace Tests\Browser;
 
+use App\HealthcarePro;
 use App\Material;
-use Tests\Browser\SuccessfullyLoginTest;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -19,21 +19,20 @@ class HealthcareProEmergencyContactMaterialCreateTest extends DuskTestCase
      */
     public function testBasicExample()
     {
-        $loginTest = new SuccessfullyLoginTest();
-        $loginTest->testBasicExample();
-
         $material_count = count(Material::all());
 
         $this->browse(function (Browser $browser) use ($material_count) {
-            $browser->clickLink('Materiais')
-                    ->assertPathIs('/caregivers/public/materials')
+            $browser->loginAs(HealthcarePro::find(14))
+                    ->visit('/')
+                    ->clickLink('Materiais')
+                    ->assertPathIs('/materials')
                     ->clickLink('Novo Contacto de Emergência')
-                    ->assertPathIs('/caregivers/public/materials/create/emergencyContact')
+                    ->assertPathIs('/materials/create/emergencyContact')
                     ->type('name', 'test')
                     ->type('description', 'test description')
                     ->type('number', '919999222')
                     ->press('Criar')
-                    ->assertPathIs('/caregivers/public/materials');
+                    ->assertPathIs('/materials');
 
             $material_count_new = count(Material::all());
             $new_material = Material::find($material_count_new);
@@ -50,7 +49,7 @@ class HealthcareProEmergencyContactMaterialCreateTest extends DuskTestCase
                     ->assertSeeIn('table tr:first-child td:last-child .btn-warning', 'Editar')
                     ->assertSeeIn('table tr:first-child td:last-child button.btn-danger', 'Bloquear')
                     ->click('table tr:first-child td:last-child a:first-child', 'Detalhes')
-                    ->assertPathIs('/caregivers/public/materials/'.$new_material->id)
+                    ->assertPathIs('/'.'materials/'.$new_material->id)
                     ->assertSeeIn('h2', 'Material: '.$new_material->name)
                     ->assertSeeIn('h4:first-child', 'Tipo: '.$new_material->type)
                     ->assertSeeIn('h4:nth-child(2)', 'Descrição: '.$new_material->description)

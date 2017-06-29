@@ -19,12 +19,13 @@ class SuccessfullyLoginTest extends DuskTestCase
         $user = HealthcarePro::find(14);
 
         $this->browse(function ($browser) use ($user) {
-            $browser->visit('/caregivers/public/')
+            $browser->visit('/')
                     ->type('username', $user->username)
                     ->type('password', 'propw')
                     ->press('Login')
-                    ->assertPathIs('/caregivers/public/')
-                    ->assertSee('Os meus Cuidadores');
+                    ->assertPathIs('/')
+                    ->assertSee('Os meus Cuidadores')
+                    ->pause(5000);
         });
     }
     

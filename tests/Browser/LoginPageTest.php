@@ -2,6 +2,7 @@
 
 namespace Tests\Browser;
 
+use App\HealthcarePro;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -18,7 +19,7 @@ class LoginPageTest extends DuskTestCase
     public function testBasicExample()
     {
         $this->browse(function (Browser $browser) {
-            $browser->visit('/caregivers/public/')
+            $browser->visit('/')
                     ->assertSee('Username')
                     ->assertInputValue('#username', '')
                     ->assertSee('Password')

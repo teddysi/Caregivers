@@ -3,8 +3,8 @@
 namespace Tests\Browser;
 
 use App\Caregiver;
+use App\HealthcarePro;
 use App\Material;
-use Tests\Browser\SuccessfullyLoginTest;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -20,15 +20,15 @@ class HealthcareProCaregiverMaterialsAssociateTest extends DuskTestCase
      */
     public function testBasicExample()
     {
-        $loginTest = new SuccessfullyLoginTest();
-        $loginTest->testBasicExample();
 
         $this->browse(function (Browser $browser) {
-            $browser->assertSee('Caregiver')
+            $browser->loginAs(HealthcarePro::find(14))
+                    ->visit('/')
+                    ->assertSee('Caregiver')
                     ->assertSeeIn('table tr:first-child td:first-child', 'Caregiver')
                     ->assertSeeIn('table tr:first-child td:last-child div:nth-child(3) a', 'Materiais')
                     ->click('table tr:first-child td:last-child div:nth-child(3) a', 'Materiais')
-                    ->assertPathIs('/caregivers/public/caregivers/15/materials')
+                    ->assertPathIs('/caregivers/15/materials')
                     ->assertSee('Associar Materiais')
                     ->assertVisible('button.btn-default')
                     ->assertSeeIn('button.btn-default', 'Associar')
@@ -78,7 +78,7 @@ class HealthcareProCaregiverMaterialsAssociateTest extends DuskTestCase
                 }
             }
             
-            $browser->assertSee('Necessidades dos Pacientes de Caregiver')     
+            $browser->assertSee('Necessidades dos Utentes de Caregiver')     
                     ->assertVisible('table.patients-needs')
                     ->assertSeeIn('table th:first-child', 'Descrição')
                     ->assertSeeIn('table th:nth-child(2)', 'Criador')
@@ -153,7 +153,7 @@ class HealthcareProCaregiverMaterialsAssociateTest extends DuskTestCase
                     ->assertVisible('a.btn-default')
                     ->click('select[name=\'material\'] option:last-child', 'Composto 48')
                     ->press('Associar')
-                    ->assertPathIs('/caregivers/public/caregivers/15/materials');
+                    ->assertPathIs('/caregivers/15/materials');
 
             $materials_count = count(Material::all());
             $material_associated = Material::find($materials_count);

@@ -2,10 +2,10 @@
 
 namespace Tests\Browser;
 
+use App\HealthcarePro;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Tests\Browser\SuccessfullyLoginTest;
 
 class LogoutTest extends DuskTestCase
 {
@@ -18,15 +18,15 @@ class LogoutTest extends DuskTestCase
      */
     public function testBasicExample()
     {
-        $loginTest = new SuccessfullyLoginTest();
-        $loginTest->testBasicExample();
 
         $this->browse(function (Browser $browser) {
-            $browser->clickLink('HealthcarePro')
+            $browser->loginAs(HealthcarePro::find(14))
+                    ->visit('/')
+                    ->clickLink('HealthcarePro')
                     ->assertSee('Logout')
                     ->pause(1000)
                     ->clickLink('Logout')
-                    ->assertPathIs('/caregivers/public/')
+                    ->assertPathIs('/')
                     ->assertSee('Login')
                     ->assertSee('Username')
                     ->assertSee('Password')

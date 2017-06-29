@@ -3,7 +3,6 @@
 namespace Tests\Browser;
 
 use App\HealthcarePro;
-use Tests\Browser\SuccessfullyLoginTest;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -19,15 +18,15 @@ class HealthcareProCaregiverAssociateTest extends DuskTestCase
      */
     public function testBasicExample()
     {
-        $loginTest = new SuccessfullyLoginTest();
-        $loginTest->testBasicExample();
 
         $this->browse(function (Browser $browser) {
-            $browser->assertSee('Caregiver')
+            $browser->loginAs(HealthcarePro::find(14))
+                    ->visit('/')
+                    ->assertSee('Caregiver')
                     ->assertSeeIn('table tr:first-child td:first-child', 'Caregiver')
                     ->assertSeeIn('table tr:first-child td:last-child div:nth-child(6) button.btn-danger', 'Desassociar')
                     ->click('table tr:first-child td:last-child div:nth-child(6) button.btn-danger', 'Desassociar')
-                    ->assertPathIs('/caregivers/public/')
+                    ->assertPathIs('/')
                     ->assertSee('Não existem cuidadores a meu cargo.')
                     ->assertSeeIn('table tr:first-child td:first-child', 'Caregiver')
                     ->assertSeeIn('table tr:first-child td:nth-child(2)', 'caregiver@mail.com')
@@ -36,11 +35,11 @@ class HealthcareProCaregiverAssociateTest extends DuskTestCase
                     ->assertSeeIn('table tr:first-child td:last-child div div:nth-child(3) button', 'Bloquear')
                     ->assertSeeIn('table tr:first-child td:last-child button.btn-success', 'Associar')
                     ->click('table tr:first-child td:last-child button.btn-success', 'Associar')
-                    ->assertPathIs('/caregivers/public/')
+                    ->assertPathIs('/')
                     ->assertSeeIn('table tr:first-child td:first-child', 'Caregiver')
                     ->assertSeeIn('table tr:first-child td:nth-child(2)', 'caregiver@mail.com')
                     ->assertSeeIn('table tr:first-child td:last-child div div:first-child a', 'Detalhes')
-                    ->assertSeeIn('table tr:first-child td:last-child div div:nth-child(2) a', 'Pacientes')
+                    ->assertSeeIn('table tr:first-child td:last-child div div:nth-child(2) a', 'Utentes')
                     ->assertSeeIn('table tr:first-child td:last-child div div:nth-child(3) a', 'Materiais')
                     ->assertSeeIn('table tr:first-child td:last-child div div:nth-child(4) a', 'Editar')
                     ->assertSeeIn('table tr:first-child td:last-child div:nth-child(5) button.btn-danger', 'Bloquear')

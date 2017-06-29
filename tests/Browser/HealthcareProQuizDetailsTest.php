@@ -2,8 +2,8 @@
 
 namespace Tests\Browser;
 
+use App\HealthcarePro;
 use App\Quiz;
-use Tests\Browser\SuccessfullyLoginTest;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -19,22 +19,22 @@ class HealthcareProQuizDetailsTest extends DuskTestCase
      */
     public function testBasicExample()
     {
-        $login = new SuccessfullyLoginTest();
-        $login->testBasicExample();
 
         $quiz = Quiz::find(1);
         $question1 = $quiz->questions->get(0);
         $question2 = $quiz->questions->get(1);
 
         $this->browse(function (Browser $browser) use ($quiz, $question1, $question2){
-            $browser->clickLink('Recursos')
+            $browser->loginAs(HealthcarePro::find(14))
+                    ->visit('/')
+                    ->clickLink('Recursos')
                     ->assertSee('Questionários')
                     ->clickLink('Questionários')
-                    ->assertPathIs('/caregivers/public/quizs')
-                    ->assertSeeIn('table tr:first-child td:first-child', $quiz->name)
-                    ->assertSeeIn('table tr:first-child td:last-child div div:first-child a', 'Detalhes')
-                    ->click('table tr:first-child td:last-child div div:first-child a', 'Detalhes')
-                    ->assertPathIs('/caregivers/public/quizs/'.$quiz->id)
+                    ->assertPathIs('/quizs')
+                    ->assertSeeIn('table', $quiz->name)
+                    ->assertSeeIn('a[href=\'http://192.168.99.100/quizs/1\']', 'Detalhes')
+                    ->click('a[href=\'http://192.168.99.100/quizs/1\']', 'Detalhes')
+                    ->assertPathIs('/'.'quizs/'.$quiz->id)
                     ->assertSeeIn('h2', 'Questionário: '.$quiz->name)
                     ->assertSeeIn('h4:first-child', 'Criador: '.$quiz->creator->username)
                     ->assertSeeIn('h4:nth-child(2)', 'Data da criação: '.(string)$quiz->created_at)

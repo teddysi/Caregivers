@@ -5,7 +5,7 @@ namespace Tests\Browser;
 use App\Evaluation;
 use Storage;
 use App\User;
-use Tests\Browser\SuccessfullyLoginTest;
+use App\HealthcarePro;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -26,22 +26,21 @@ class HealthcareProCaregiverEvaluationCreateTest extends DuskTestCase
             'Model A'
         ];
 
-        $loginTest = new SuccessfullyLoginTest();
-        $loginTest->testBasicExample();
-
         $storagePath  = Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
 
         $this->browse(function (Browser $browser) use ($new_evaluation, $storagePath){
-            $browser->assertSee('Caregiver')
-                    ->assertSeeIn('a[href=\'http://192.168.99.100/caregivers/public/users/15\']', 'Detalhes')
-                    ->click('a[href=\'http://192.168.99.100/caregivers/public/users/15\']', 'Detalhes')
-                    ->assertPathIs('/caregivers/public/users/15')
-                    ->assertSeeIn('a[href=\'http://192.168.99.100/caregivers/public/caregivers/15/rate\']', 'Avaliações')
-                    ->click('a[href=\'http://192.168.99.100/caregivers/public/caregivers/15/rate\']', 'Avaliações')
-                    ->assertPathIs('/caregivers/public/caregivers/15/rate')
+            $browser->loginAs(HealthcarePro::find(14))
+                    ->visit('/')
+                    ->assertSee('Caregiver')
+                    ->assertSeeIn('a[href=\'http://192.168.99.100/users/15\']', 'Detalhes')
+                    ->click('a[href=\'http://192.168.99.100/users/15\']', 'Detalhes')
+                    ->assertPathIs('/users/15')
+                    ->assertSeeIn('a[href=\'http://192.168.99.100/caregivers/15/rate\']', 'Avaliações')
+                    ->click('a[href=\'http://192.168.99.100/caregivers/15/rate\']', 'Avaliações')
+                    ->assertPathIs('/caregivers/15/rate')
                     ->assertSee('Nova Avaliação')
                     ->clickLink('Nova Avaliação')
-                    ->assertPathIs('/caregivers/public/caregivers/15/evaluations/create/eval')
+                    ->assertPathIs('/caregivers/15/evaluations/create/eval')
                     ->assertSee('Descrição')
                     ->assertSee('Tipo de Avaliação')
                     ->assertSee('Modelo')
@@ -53,7 +52,7 @@ class HealthcareProCaregiverEvaluationCreateTest extends DuskTestCase
                     ->type('model', $new_evaluation[2])
                     ->attach('path', $storagePath.'/images/Imagem-1.jpg')
                     ->press('Submeter Avaliação')
-                    ->assertPathIs('/caregivers/public/caregivers/15/rate')
+                    ->assertPathIs('/caregivers/15/rate')
                     ->assertSeeIn('table.evaluations tr:first-child td:first-child', $new_evaluation[0])
                     ->assertSeeIn('table.evaluations tr:first-child td:nth-child(2)', $new_evaluation[1])
                     ->assertSeeIn('table.evaluations tr:first-child td:nth-child(3)', $new_evaluation[2])

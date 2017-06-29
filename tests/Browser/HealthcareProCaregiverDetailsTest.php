@@ -3,8 +3,8 @@
 namespace Tests\Browser;
 
 use App\Caregiver;
+use App\HealthcarePro;
 use App\Log;
-use Tests\Browser\SuccessfullyLoginTest;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -21,15 +21,14 @@ class HealthcareProCaregiverDetailsTest extends DuskTestCase
     public function testBasicExample()
     {
 
-        $loginTest = new SuccessfullyLoginTest();
-        $loginTest->testBasicExample();
-
         $this->browse(function (Browser $browser) {
-            $browser->assertSee('Caregiver')
-                    ->assertSeeIn('table tr:first-child td:first-child', 'Caregiver')
-                    ->assertSeeIn('table tr:first-child td:last-child a:first-child', 'Detalhes')
-                    ->click('table tr:first-child td:last-child a:first-child', 'Detalhes')
-                    ->assertPathIs('/caregivers/public/users/15')
+            $browser->loginAs(HealthcarePro::find(14))
+                    ->visit('/')
+                    ->assertSee('Caregiver')
+                    ->assertSeeIn('table', 'Caregiver')
+                    ->assertSeeIn('a[href=\'http://192.168.99.100/users/15\']', 'Detalhes')
+                    ->click('a[href=\'http://192.168.99.100/users/15\']', 'Detalhes')
+                    ->assertPathIs('/users/15')
                     ->assertSeeIn('h2', 'Utilizador: caregiver')
                     ->assertSeeIn('div.details h4:first-child', 'Nome: Caregiver')
                     ->assertSeeIn('div.details h4:nth-child(2)', 'Email: caregiver@mail.com')
@@ -45,7 +44,7 @@ class HealthcareProCaregiverDetailsTest extends DuskTestCase
                     ->assertSeeIn('div.panel-heading h3', 'Ações')
                     ->assertSeeIn('div.panel-body','Editar')
                     ->assertSeeIn('div.panel-body','Bloquear')
-                    ->assertSeeIn('div.panel-body','Pacientes')
+                    ->assertSeeIn('div.panel-body','Utentes')
                     ->assertSeeIn('div.panel-body','Materiais')
                     ->assertSeeIn('div.panel-body','Avaliações')
                     ->assertSeeIn('div.panel-body','Voltar Atrás');

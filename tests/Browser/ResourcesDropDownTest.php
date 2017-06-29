@@ -2,7 +2,7 @@
 
 namespace Tests\Browser;
 
-use Tests\Browser\SuccessfullyLoginTest;
+use App\HealthcarePro;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -18,13 +18,13 @@ class ResourcesDropDownTest extends DuskTestCase
      */
     public function testBasicExample()
     {
-        $loginTest = new SuccessfullyLoginTest();
-        $loginTest->testBasicExample();
 
         $this->browse(function (Browser $browser) {
-            $browser->clickLink('Recursos')
+            $browser->loginAs(HealthcarePro::find(14))
+                    ->visit('/')
+                    ->clickLink('Recursos')
                     ->assertSee('Cuidadores')
-                    ->assertSee('Pacientes')
+                    ->assertSee('Utentes')
                     ->assertSee('Necessidades')
                     ->assertSee('Materiais')
                     ->assertSee('Questionários')

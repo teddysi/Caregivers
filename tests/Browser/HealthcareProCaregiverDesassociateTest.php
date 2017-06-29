@@ -3,7 +3,6 @@
 namespace Tests\Browser;
 
 use App\HealthcarePro;
-use Tests\Browser\SuccessfullyLoginTest;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -20,15 +19,14 @@ class HealthcareProCaregiverDesassociateTest extends DuskTestCase
     public function testBasicExample()
     {
 
-        $loginTest = new SuccessfullyLoginTest();
-        $loginTest->testBasicExample();
-
         $this->browse(function (Browser $browser) {
-            $browser->assertSee('Caregiver')
+            $browser->loginAs(HealthcarePro::find(14))
+                    ->visit('/')
+                    ->assertSee('Caregiver')
                     ->assertSeeIn('table tr:first-child td:first-child', 'Caregiver')
                     ->assertSeeIn('table tr:first-child td:last-child div:nth-child(6) button.btn-danger', 'Desassociar')
                     ->click('table tr:first-child td:last-child div:nth-child(6) button.btn-danger', 'Desassociar')
-                    ->assertPathIs('/caregivers/public/')
+                    ->assertPathIs('/')
                     ->assertSee('Não existem cuidadores a meu cargo.')
                     ->assertSeeIn('table tr:first-child td:first-child', 'Caregiver')
                     ->assertSeeIn('table tr:first-child td:nth-child(2)', 'caregiver@mail.com')
