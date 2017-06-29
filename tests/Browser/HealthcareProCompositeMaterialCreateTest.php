@@ -122,6 +122,7 @@ class HealthcareProCompositeMaterialCreateTest extends DuskTestCase
 
             $mat1 = $composite->materials->get(0);
             $mat2 = $composite->materials->get(1);
+            $composite->type = 'Composto';
 
             $orderMat1 = $orderOfMaterial = DB::table('composite_material')->select('order')->where([['composite_id', $composite->id], ['material_id', $mat1->id]])->first()->order;
 
@@ -134,6 +135,18 @@ class HealthcareProCompositeMaterialCreateTest extends DuskTestCase
             $browser->pause(2000)
                     ->clickLink('Concluído')
                     ->assertPathIs('/materials')
+                    ->assertSeeIn('table tr:first-child td:nth-child(2)', 'Composto')
+                    ->assertSeeIn('table tr:first-child td:last-child div div:first-child a', 'Detalhes')
+                    ->click('table tr:first-child td:last-child div div:first-child a', 'Detalhes')
+                    ->assertPathIs('/'.'materials/'.$composite->id)
+                    ->assertSeeIn('h2', 'Material: '.$composite->name)
+                    ->assertSeeIn('h4:first-child', 'Tipo: '.$composite->type)
+                    ->assertSeeIn('h4:nth-child(2)', 'Descrição: '.$composite->description)
+                    ->assertSeeIn('h4:nth-child(3)', 'Criador: '.$composite->creator->username)
+                    ->assertSeeIn('h4:nth-child(4)', 'Data da criação: '.(string)$composite->created_at)
+                    ->assertSeeIn('h4:last-child', 'Data da última atualização: '.(string)$composite->updated_at)
+                    ->assertSeeIn('table', $mat1->name)
+                    ->assertSeeIn('table', $mat2->name)
                     ->pause(2000);
         });
     }

@@ -8,7 +8,7 @@
         <div class="col-sm-12 col-md-5 col-lg-5">
             <legend>Outras Questões</legend>
             @if (count($notQuizQuestions))
-		        <table class="table table-striped">
+		        <table class="table table-striped questions-to-associate">
 			        <thead>
 			            <tr>
 			                <th>Questão</th>
@@ -41,7 +41,7 @@
         <div class="col-sm-12 col-md-7 col-lg-7">
             <legend>Questões Associadas ao Questionário {{ $quiz->name }}</legend>
             @if (count($quizQuestions))
-		        <table class="table table-striped">
+		        <table class="table table-striped questions-associated">
 			        <thead>
 			            <tr>
                             <th>Ordem</th>
