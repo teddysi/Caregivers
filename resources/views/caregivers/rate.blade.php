@@ -13,7 +13,7 @@
 					<a class="btn btn-block btn-primary" href="{{ route('caregivers.evaluations.create', ['id' => $caregiver->id, 'type' => 'eval']) }}">Nova Avaliação</a>
 				</div>
 				<div class="col-4 col-sm-4 col-md-4">
-					<a class="btn btn-block btn-primary" href="{{ route('caregivers.evaluations.create', ['id' => $caregiver->id, 'type' => 'quiz']) }}">Disponiblizar Questionário</a>
+					<a class="btn btn-block btn-primary" href="{{ route('caregivers.evaluations.create', ['id' => $caregiver->id, 'type' => 'quiz']) }}">Disponibilizar Questionário</a>
 				</div>
 			</div>
 			<br />

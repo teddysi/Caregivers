@@ -10,7 +10,7 @@
             <legend>Avaliações do Material {{ $material->name }}</legend>
 			<div class="row">
 				<div class="col-4 col-sm-4 col-md-4">
-					<a class="btn btn-block btn-primary" href="{{ route('materials.evaluations.create', ['id' => $caregiver->id, 'material' => $material->id]) }}">Disponiblizar Questionário</a>
+					<a class="btn btn-block btn-primary" href="{{ route('materials.evaluations.create', ['id' => $caregiver->id, 'material' => $material->id]) }}">Disponibilizar Questionário</a>
 				</div>
 			</div>
 			<br />

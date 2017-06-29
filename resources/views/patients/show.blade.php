@@ -53,7 +53,7 @@
 					<a class="btn btn-block btn-primary" href="{{ route('patients.evaluations.create', ['id' => $patient->id, 'typeEval' => 'eval']) }}">Nova Avaliação</a>
 				</div>
 				<div class="col-4 col-sm-4 col-md-4">
-					<a class="btn btn-block btn-primary" href="{{ route('patients.evaluations.create', ['id' => $patient->id, 'typeEval' => 'quiz']) }}">Disponiblizar Questionário</a>
+					<a class="btn btn-block btn-primary" href="{{ route('patients.evaluations.create', ['id' => $patient->id, 'typeEval' => 'quiz']) }}">Disponibilizar Questionário</a>
 				</div>
 			</div>
 			<br />
