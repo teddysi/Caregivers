@@ -89,13 +89,10 @@ class DatabaseSeeder extends Seeder
         }
 
         $caregivers = App\Caregiver::all();
-
         foreach ($caregivers as $c) {
             $patients = $c->patients; 
-                
             foreach ($patients as $p) {
                 $needs = $p->needs;
-
                 foreach ($needs as $n) {
                     for($i = 0; $i < count($n_m); $i++) {
                         if ($n->id == $n_m[$i][0]) {
@@ -117,8 +114,6 @@ class DatabaseSeeder extends Seeder
         }
         
         factory(App\Access::class, 10)->create();
-        $this->buildEvaluations();
-        factory(App\Log::class, 50)->create();
 
         $this->buildQuestions();
         $this->buildQuizs();
@@ -137,29 +132,8 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        $qz_c = [
-            [3, 15, 6]
-        ];
-
-        for($i = 0; $i < count($qz_c); $i++) {
-            DB::table('quiz_caregiver')->insert([
-                'quiz_id' => $qz_c[$i][0],
-                'caregiver_id' => $qz_c[$i][1],
-                'evaluation_id' => $qz_c[$i][2],
-            ]);
-        }
-
-        $qz_p = [
-            [1, 10, 7]
-        ];
-
-        for($i = 0; $i < count($qz_p); $i++) {
-            DB::table('quiz_patient')->insert([
-                'quiz_id' => $qz_p[$i][0],
-                'patient_id' => $qz_p[$i][1],
-                'evaluation_id' => $qz_p[$i][2],
-            ]);
-        }
+        $this->buildEvaluations();
+        factory(App\Log::class, 50)->create();
     }
 
     private function buildCustomUsers()
@@ -267,7 +241,7 @@ class DatabaseSeeder extends Seeder
 
     private function buildEvaluations()
     {
-        /*$patients = App\Patient::all();
+        $patients = App\Patient::all();
         $i = 0;
         $evaluationsName = [
             'Evaluation-1', 'Evaluation-2', 'Evaluation-3', 'Evaluation-4', 'Evaluation-5'
@@ -295,30 +269,73 @@ class DatabaseSeeder extends Seeder
                 $evaluation->patient_id = $patients->random()->id;
             }
 
-
             $evaluation->save();
-        }*/
-        $evaluationsQuizs = ['Evaluation-1', 'Evaluation-2'];
+        }
+        $evaluationsQuizs = ['Evaluation-quiz-1', 'Evaluation-quiz-2', 'Evaluation-quiz-3'];
 
         $evaluationC = new App\Evaluation();
         $evaluationC->type = 'Pela aplicação';
         $evaluationC->description = $evaluationsQuizs[0];
         $evaluationC->model = 'Model X';
-        $evaluationC->path = 'evaluations/'.$evaluationsQuizs[0].'.pdf';
-        $evaluationC->mime = '.pdf';
         $evaluationC->created_by = 14;
         $evaluationC->caregiver_id = 15;
+        $evaluationC->answered_by = 15;
         $evaluationC->save();
+
+        $qz_c = [
+            [3, 15, 6]
+        ];
+
+        for($i = 0; $i < count($qz_c); $i++) {
+            DB::table('quiz_caregiver')->insert([
+                'quiz_id' => $qz_c[$i][0],
+                'caregiver_id' => $qz_c[$i][1],
+                'evaluation_id' => $qz_c[$i][2],
+            ]);
+        }
 
         $evaluationP = new App\Evaluation();
         $evaluationP->type = 'Pela aplicação';
         $evaluationP->description = $evaluationsQuizs[1];
         $evaluationP->model = 'Model X';
-        $evaluationP->path = 'evaluations/'.$evaluationsQuizs[0].'.pdf';
-        $evaluationP->mime = '.pdf';
         $evaluationP->created_by = 14;
         $evaluationP->patient_id = 10;
+        $evaluationP->answered_by = 15;
         $evaluationP->save();
+
+        $qz_p = [
+            [1, 10, 7]
+        ];
+
+        for($i = 0; $i < count($qz_p); $i++) {
+            DB::table('quiz_patient')->insert([
+                'quiz_id' => $qz_p[$i][0],
+                'patient_id' => $qz_p[$i][1],
+                'evaluation_id' => $qz_p[$i][2],
+            ]);
+        }
+
+        $evaluationM = new App\Evaluation();
+        $evaluationM->type = 'Pela aplicação';
+        $evaluationM->description = $evaluationsQuizs[2];
+        $evaluationM->model = 'Model X';
+        $evaluationM->created_by = 14;
+        $evaluationM->material_id = 1;
+        $evaluationM->answered_by = 15;
+        $evaluationM->save();
+
+        $qz_m = [
+            [2, 1, 15, 8]
+        ];
+
+        for($i = 0; $i < count($qz_m); $i++) {
+            DB::table('quiz_material')->insert([
+                'quiz_id' => $qz_m[$i][0],
+                'material_id' => $qz_m[$i][1],
+                'caregiver_id' => $qz_m[$i][2],
+                'evaluation_id' => $qz_m[$i][3],
+            ]);
+        }
     }
 
     private function buildQuestions()

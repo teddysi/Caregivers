@@ -21,7 +21,6 @@ $factory->define(App\Caregiver::class, function (Faker\Generator $faker) {
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('carepw'),
-        'remember_token' => str_random(10),
         'role' => 'caregiver',
         'location' => $faker->randomElement($array = array('Lisboa', 'Porto', 'Leiria', 'Coimbra', 'Faro')),
         'created_by' => $users->random()->id,
@@ -36,7 +35,6 @@ $factory->define(App\Admin::class, function (Faker\Generator $faker) {
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('adminpw'),
-        'remember_token' => str_random(10),
         'role' => 'admin',
     ];
 });
@@ -49,7 +47,6 @@ $factory->define(App\HealthcarePro::class, function (Faker\Generator $faker) {
         'name' => $faker->name,
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('propw'),
-        'remember_token' => str_random(10),
         'role' => 'healthcarepro',
         'facility' => $faker->company,
         'job' => $faker->randomElement($array = array('Médico Geral', 'Médico de Família', 'Enfermeiro')),
