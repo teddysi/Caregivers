@@ -9,7 +9,8 @@ use App\HealthcarePro;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-class HealthcareProCaregiverEvaluationCreateTest extends DuskTestCase
+
+class HealthcareProCaregiverAnnexEvaluationCreateTest extends DuskTestCase
 {
     use DatabaseMigrations;
 
