@@ -264,7 +264,6 @@ class DatabaseSeeder extends Seeder
                 $caregiver = $healthcare_pro->caregivers->random();
                 $evaluation->created_by = $healthcare_pro->id;
                 $evaluation->caregiver_id = $caregiver->id;
-                $i++;
             } elseif ($i == 3) {
                 $evaluation->created_by = 14;
                 $evaluation->caregiver_id = 15;
@@ -275,8 +274,8 @@ class DatabaseSeeder extends Seeder
                 $evaluation->created_by = App\HealthcarePro::all()->random()->id;
                 $evaluation->patient_id = $patients->random()->id;
             }
-
             $evaluation->save();
+            $i++;
         }
         $evaluationsQuizs = ['Evaluation-quiz-1', 'Evaluation-quiz-2', 'Evaluation-quiz-3'];
 
