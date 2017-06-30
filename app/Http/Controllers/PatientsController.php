@@ -143,9 +143,9 @@ class PatientsController extends Controller
 	public function update(Request $request, Patient $patient)
 	{
 		$this->validate($request, [
-			'name' => 'required',
+			'name' => 'required|min:4',
 			'email' => 'required|email|unique:patients,email,'.$patient->id,
-			'location' => 'required',
+			'location' => 'required|min:4',
 		], $this->messages);
 
 		$patient->name = $request->input('name');

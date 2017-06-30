@@ -293,7 +293,7 @@ class UsersController extends Controller
 		}
 
 		$this->validate($request, [
-			'name' => 'required',
+			'name' => 'required|min:4',
 			'email' => 'required|email|unique:users,email,'.$user->id,
 			'job' => 'nullable|min:4|required_if:role,Profissional de Saúde',
 			'facility' => 'nullable|min:4|required_if:role,Profissional de Saúde',
