@@ -46,9 +46,9 @@
         <div class="form-group">
             <button type="submit" class="btn btn-primary" name="save">Submeter Avaliação</button>
             @if (str_contains(Request::url(), '/patients/'))
-                <a class="btn btn-default" href="{{ route('patients.show', ['patient' => $patient->id]) }}">Cancelar</a>
+                <a class="btn btn-default" href="{{ route('patients.show', ['patient' => $id]) }}">Cancelar</a>
             @else
-                <a class="btn btn-default" href="{{ route('caregivers.rate', ['caregiver' => $caregiver->id]) }}">Cancelar</a>
+                <a class="btn btn-default" href="{{ route('caregivers.rate', ['caregiver' => $id]) }}">Cancelar</a>
             @endif
         </div>
     @include('layouts.errors')

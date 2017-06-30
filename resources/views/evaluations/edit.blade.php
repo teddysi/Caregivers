@@ -36,15 +36,15 @@
 
         <div class="form-group">
             <button type="submit" class="btn btn-primary" name="save">Guardar</button>
-            @if (str_contains(Request::url(), '/patients/'))
+            @if ($evaluation->patient_id)
                 <a class="btn btn-default" href="{{ route('patients.show', ['patient' => $evaluation->patient_id]) }}">Cancelar</a>
-            @elseif (str_contains(Request::url(), '/materials/'))
+            @elseif ($evaluation->material_id)
                 @if ($evaluation->answered_by && !$evaluation->submitted_by)
                     <a class="btn btn-default" href="{{ route('materials.rate', ['caregiver' => $evaluation->answered_by, 'material' => $evaluation->material_id]) }}">Cancelar</a>
                 @elseif (!$evaluation->answered_by && $evaluation->submitted_by)
                     <a class="btn btn-default" href="{{ route('materials.rate', ['caregiver' => $evaluation->submitted_by, 'material' => $evaluation->material_id]) }}">Cancelar</a>
                 @endif
-            @else
+            @elseif ($evaluation->caregiver_id)
                 <a class="btn btn-default" href="{{ route('caregivers.rate', ['caregiver' => $evaluation->caregiver_id]) }}">Cancelar</a>
             @endif
         </div>
