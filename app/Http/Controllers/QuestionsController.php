@@ -184,6 +184,13 @@ class QuestionsController extends Controller
             $errors->add('values', 'O campo "Opções" tem que ter pelo menos duas respostas.');
         }
 
+        $answers = explode(";" ,$values);
+        for($i = 0; $i <= (count($answers)-2); $i++) {
+                if(strlen($answers[$i]) < 1){
+                $errors->add('values', 'O campo "Opções" tem não pode ter opções entre ";" vazias.');
+            }
+        }
+
         return $errors;
     }
 

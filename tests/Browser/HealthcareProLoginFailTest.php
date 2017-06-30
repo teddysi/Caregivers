@@ -5,9 +5,8 @@ namespace Tests\Browser;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use App\HealthcarePro;
 
-class SuccessfullyLoginTest extends DuskTestCase
+class HealthcareProLoginFailTest extends DuskTestCase
 {
     use DatabaseMigrations;
 
@@ -16,17 +15,19 @@ class SuccessfullyLoginTest extends DuskTestCase
      */
     public function testBasicExample()
     {
-        $user = HealthcarePro::find(14);
+        $user = [
+            'aaaaaaaaaaa',
+            'bbbbbbbbbbbb'
+        ];
 
         $this->browse(function ($browser) use ($user) {
             $browser->visit('/')
-                    ->type('username', $user->username)
-                    ->type('password', 'propw')
+                    ->type('username', $user[0])
+                    ->type('password', $user[1])
                     ->press('Login')
                     ->assertPathIs('/')
-                    ->assertSee('Os meus Cuidadores')
+                    ->assertSee('Estas credênciais não existem nos nossos registos.')
                     ->pause(5000);
         });
     }
-    
 }
