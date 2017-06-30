@@ -48,8 +48,6 @@ class HealthcareProCaregiverQuizEvaluationCreateTest extends DuskTestCase
                     ->assertPathIs('/caregivers/15/rate')
                     ->assertSeeIn('table.evaluations tr:first-child td:first-child', $new_evaluation[0])
                     ->assertSeeIn('table.evaluations tr:first-child td:nth-child(2)', $new_evaluation[1])
-                    ->assertSeeIn('table.evaluations tr:first-child td:nth-child(3)', 'Questionário Quiz-2')
-                    ->assertSeeIn('table.evaluations tr:first-child td:nth-child(4)', 'healthcarePro')
                     ->pause(2000);
 
             $evaluations_count = count(Evaluation::all());

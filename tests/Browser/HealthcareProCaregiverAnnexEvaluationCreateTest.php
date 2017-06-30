@@ -68,7 +68,7 @@ class HealthcareProCaregiverAnnexEvaluationCreateTest extends DuskTestCase
 
             $browser->assertSeeIn('table.evaluations tr:first-child td:nth-child(5)', (string)$evaluation->created_at)
                     ->click('table.evaluations tr:first-child td:last-child a:first-child', 'Detalhes')
-                    ->assertPathIs('/evaluations/4')
+                    ->assertPathIs('/'.'evaluations/'.$evaluation->id)
                     ->assertSeeIn('h2', 'Avaliação: '.$evaluation->description)
                     ->assertSeeIn('h4:first-child', 'Tipo de Avaliação: '.$evaluation->type)
                     ->assertSeeIn('h4:nth-child(2)', 'Modelo: '.$evaluation->model)
