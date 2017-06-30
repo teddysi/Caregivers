@@ -181,9 +181,23 @@ class PatientsController extends Controller
 		$patient->needs()->attach($need->id);
 
         $caregiver = $patient->caregiver;
-        foreach ($need->materials as $material) {
-            if (!$caregiver->materials->contains("id", $material->id)) {
-                $caregiver->materials()->attach($material->id);
+        if ($caregiver) {
+            foreach ($need->materials as $material) {
+                if (!$caregiver->materials->contains("id", $material->id)) {
+                    $caregiver->materials()->attach($material->id);
+
+                    $log = new Log();
+                    $log->performed_task = 'Foi associado o Material: '.$material->name.'.';
+                    $log->done_by = Auth::user()->id;
+                    $log->user_id = $caregiver->id;
+                    $log->save();
+
+                    $log = new Log();
+                    $log->performed_task = 'Foi associado ao Cuidador: '.$caregiver->username.'.';
+                    $log->done_by = Auth::user()->id;
+                    $log->material_id = $material->id;
+                    $log->save();
+                }
             }
         }
 

@@ -6,7 +6,7 @@
 
 <div class="container">
     <legend>Disponibilizar Questionário para o Material: {{ $material->name }}</legend>
-	<form action="{{route('evaluations.createForMaterial', ['material' => $material->id])}}" method="POST" class="form-group" enctype="multipart/form-data">
+	<form action="{{ route('evaluations.createForMaterial', ['material' => $material->id]) }}" method="POST" class="form-group" enctype="multipart/form-data">
         {{ csrf_field() }}
         <input name="caregiver" type="hidden" value="{{ $id }}">
 
@@ -37,7 +37,7 @@
 
         <div class="form-group">
             <button type="submit" class="btn btn-primary" name="save">Submeter Avaliação</button>
-            <a class="btn btn-default" href="javascript:history.back()">Cancelar</a>
+            <a class="btn btn-default" href="{{ route('materials.rate', ['caregiver' => $id, 'material' => $material->id]) }}">Cancelar</a>
         </div>
     @include('layouts.errors')
     </form>

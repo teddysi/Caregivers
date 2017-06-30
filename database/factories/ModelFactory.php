@@ -178,7 +178,7 @@ $factory->define(App\Log::class, function (Faker\Generator $faker) {
     $rand = rand(0, 25);
 
     return [
-        'performed_task' => $faker->randomElement($array = array('Criou', 'Atualizou', 'Bloqueou', 'Desbloqueou')),
+        'performed_task' => $faker->randomElement($array = array('Foi criado.', 'Foi atualizado.', 'Foi bloqueado.', 'Foi desbloqueado.')),
         'done_by' => $doneBy->id,
         'user_id' => $rand < 5 ? $user->id : null,
         'patient_id' => ($rand >= 5 && $rand < 10) ? $patient->id : null,
