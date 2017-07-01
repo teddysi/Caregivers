@@ -14,9 +14,9 @@ class QuestionsController extends Controller
 {
 
     private $messages = [
-        'question.unique' => 'Essa pergunta já existe.',
-	    'question.required' => 'A pergunta tem que ser preenchida.',
-	    'question.min' => 'A pergunta tem que ter um tamanho de pelo menos 8 letras.',
+        'question.unique' => 'Essa questão já existe.',
+	    'question.required' => 'A questão tem que ser preenchida.',
+	    'question.min' => 'A questão tem que ter um tamanho de pelo menos 8 letras.',
         'values.required_if' => 'Tem que preencher o campo "Opções" com respostas.'
 	];
 

@@ -40,7 +40,7 @@ class HealthcareProEvaluationEditFailTest extends DuskTestCase
                     ->assertPathIs('/evaluations/4/edit')
                     ->assertSee($messages[0])
                     ->assertSee($messages[2])
-                    ->assertSee($messages[5])
+                    ->assertSee($messages[4])
                     ->type('description', 'a')
                     ->type('type', 'a')
                     ->type('model', 'a')

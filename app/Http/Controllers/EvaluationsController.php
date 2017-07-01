@@ -22,6 +22,7 @@ class EvaluationsController extends Controller
 	    'description.min' => 'A descrição tem que ter pelo menos 4 letras.',
 	    'type.required' => 'O tipo de avaliação tem que ser preenchido',
 	   	'type.min' => 'O tipo de avaliação tem que ter pelo menos 4 letras',
+	   	'model.required' => 'O modelo tem que ser preenchido',
 	   	'model.required_if' => 'O modelo tem que ser preenchido',
 	   	'model.min' => 'O modelo tem que ter pelo menos 3 letras',
 	    'path.required_if' => 'Introduza um ficheiro de avaliação.',
@@ -164,7 +165,7 @@ class EvaluationsController extends Controller
 		$this->validate($request, [
 				'description' => 'required|min:4',
 				'type' => 'required|min:4',
-				'model' => 'required_if:typeEval,eval|min:3',
+				'model' => 'required|min:3',
 		], $this->messages);
 
 		$evaluation->description = $request->input('description');

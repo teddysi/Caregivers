@@ -21,9 +21,9 @@ class HealthcareProQuestionCreateFailTest extends DuskTestCase
     {
 
         $messages = [
-            'Essa pergunta já existe',
-            'A pergunta tem que ser preenchida.',
-            'A pergunta tem que ter um tamanho de pelo menos 8 letras.',
+            'Essa questão já existe.',
+            'A questão tem que ser preenchida.',
+            'A questão tem que ter um tamanho de pelo menos 8 letras.',
             'Tem que preencher o campo "Opções" com respostas.',
             'O campo "Opções" não pode começar com ";".',
             'O campo "Opções" tem que terminar com ";".',
