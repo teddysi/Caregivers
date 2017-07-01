@@ -8,6 +8,7 @@ use App\Caregiver;
 use App\Patient;
 use App\Need;
 use App\Material;
+use App\Quiz;
 use App\Log;
 use App\Http\Controllers\UsersController;
 use DB;
@@ -201,6 +202,10 @@ class CaregiversController extends Controller
 			abort(403);
 		}
 
+        $countProvidableQuizs = count(Quiz::whereNotIn('id', $caregiver->quizs->modelKeys())
+                                ->where('blocked', 0)
+                                ->get());
+
         $evaluations = $caregiver->evaluations()->orderBy('created_at', 'desc')->paginate(10, ['*'], 'evaluations');
         $evaluations->setPageName('evaluations');
 
@@ -213,7 +218,7 @@ class CaregiversController extends Controller
                                 ->paginate(10, ['*'], 'countedAccesses');
         $countedAccesses->setPageName('countedAccesses');
                                 
-        return view('caregivers.rate',  compact('caregiver', 'evaluations', 'countedAccesses')); 
+        return view('caregivers.rate',  compact('caregiver', 'evaluations', 'countProvidableQuizs', 'countedAccesses')); 
     }
 
     public function login(Request $request)

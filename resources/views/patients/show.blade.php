@@ -53,7 +53,11 @@
 					<a class="btn btn-block btn-primary" href="{{ route('patients.evaluations.create', ['id' => $patient->id, 'typeEval' => 'eval']) }}">Nova Avaliação</a>
 				</div>
 				<div class="col-4 col-sm-4 col-md-4">
-					<a class="btn btn-block btn-primary" href="{{ route('patients.evaluations.create', ['id' => $patient->id, 'typeEval' => 'quiz']) }}">Disponibilizar Questionário</a>
+					@if ($countProvidableQuizs > 0)
+						<a class="btn btn-block btn-primary" href="{{ route('patients.evaluations.create', ['id' => $patient->id, 'typeEval' => 'quiz']) }}">Disponibilizar Questionário</a>
+					@else
+						<h5>Não existem questionários disponíveis para disponibilizar.</h5>
+					@endif
 				</div>
 			</div>
 			<br />

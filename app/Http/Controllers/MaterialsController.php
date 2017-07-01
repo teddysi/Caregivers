@@ -13,6 +13,7 @@ use App\Annex;
 use App\Composite;
 use App\User;
 use App\Caregiver;
+use App\Quiz;
 use App\Log;
 use Storage;
 use Response;
@@ -339,13 +340,17 @@ class MaterialsController extends Controller
 			abort(403);
 		}
 		
+		$countProvidableQuizs = count(Quiz::whereNotIn('id', $material->quizs($caregiver->id)->get()->modelKeys())
+                                ->where('blocked', 0)
+                                ->get());
+
 		$evaluations = $material->evaluations()->where(function($query) use($caregiver) {
 			$query->where('answered_by', $caregiver->id)
 				->orWhere('submitted_by', $caregiver->id);
 		})->orderBy('created_at', 'desc')->paginate(10, ['*'], 'evaluations');
         $evaluations->setPageName('evaluations');
 
-		return view('materials.rate', compact('caregiver', 'evaluations', 'material'));
+		return view('materials.rate', compact('caregiver', 'evaluations', 'countProvidableQuizs', 'material'));
 	}
 
 	public function materials(Material $material)

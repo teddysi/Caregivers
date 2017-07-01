@@ -8,6 +8,7 @@ use App\Patient;
 use App\Need;
 use App\User;
 use App\Log;
+use App\Quiz;
 use Auth;
 
 class PatientsController extends Controller
@@ -98,12 +99,17 @@ class PatientsController extends Controller
 
     public function show(Patient $patient)
 	{
+        $countProvidableQuizs = count(Quiz::whereNotIn('id', $patient->quizs->modelKeys())
+                                ->where('blocked', 0)
+                                ->get());
+
         $evaluations = $patient->evaluations()->orderBy('created_at', 'desc')->paginate(10, ['*'], 'evaluations');
 		$evaluations->setPageName('evaluations');;
 
         $logs = $patient->logs()->paginate(10, ['*'], 'logs');
 		$logs->setPageName('logs');
-		return view('patients.show', compact('patient', 'evaluations', 'logs'));
+
+		return view('patients.show', compact('patient', 'evaluations', 'countProvidableQuizs', 'logs'));
 	}
 
     public function create()
