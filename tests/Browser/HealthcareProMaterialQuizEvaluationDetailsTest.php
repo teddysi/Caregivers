@@ -19,9 +19,6 @@ class HealthcareProMaterialQuizEvaluationDetailsTest extends DuskTestCase
     public function testExample()
     {
 
-        $loginTest = new SuccessfullyLoginTest();
-        $loginTest->testBasicExample();
-
         $evaluation = Evaluation::find(8);
 
         $this->browse(function (Browser $browser) use ($evaluation) {

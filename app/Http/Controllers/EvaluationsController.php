@@ -164,7 +164,7 @@ class EvaluationsController extends Controller
 		$this->validate($request, [
 				'description' => 'required|min:4',
 				'type' => 'required|min:4',
-				'model' => 'required|min:3',
+				'model' => 'required_if:typeEval,eval|min:3',
 		], $this->messages);
 
 		$evaluation->description = $request->input('description');

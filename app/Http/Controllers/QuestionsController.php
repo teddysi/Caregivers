@@ -14,10 +14,10 @@ class QuestionsController extends Controller
 {
 
     private $messages = [
+        'question.unique' => 'Essa pergunta já existe.',
 	    'question.required' => 'A pergunta tem que ser preenchida.',
 	    'question.min' => 'A pergunta tem que ter um tamanho de pelo menos 8 letras.',
-        'values.required_if' => 'Tem que preencher o campo "Opções" com respostas.',
-        'conice' => 'merda',
+        'values.required_if' => 'Tem que preencher o campo "Opções" com respostas.'
 	];
 
 	public function index(Request $request)
@@ -132,7 +132,7 @@ class QuestionsController extends Controller
     public function store(Request $request)
     {
         $validator = \Validator::make($request->all(), [
-				'question' => 'required|min:4',
+				'question' => 'unique:questions|required|min:4',
                 'values' => 'required_if:type,radio',
 		], $this->messages);
         $errors = $validator->errors();
@@ -217,7 +217,7 @@ class QuestionsController extends Controller
         }
 
     	$validator = \Validator::make($request->all(), [
-                'question' => 'required|min:4',
+                'question' => 'unique:questions|required|min:4',
                 'values' => 'required_if:type,radio',
         ], $this->messages);
 
