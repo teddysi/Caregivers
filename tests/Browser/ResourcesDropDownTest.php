@@ -12,9 +12,7 @@ class ResourcesDropDownTest extends DuskTestCase
     use DatabaseMigrations;
 
     /**
-     * A Dusk test example.
-     *
-     * @return void
+     * @group healthcarepro
      */
     public function testBasicExample()
     {
