@@ -108,6 +108,11 @@ class EvaluationsController extends Controller
 				$evaluation->patient_id = $id;
 				$evaluation->save();
 
+				$fileExists = Storage::exists('evaluations/'.$evaluation->id.$evaluation->mime);
+				if ($fileExists) {
+					Storage::delete('evaluations/'.$evaluation->id.$evaluation->mime);
+				}
+
 				Storage::move($evaluation->path, 'evaluations/'.$evaluation->id.$evaluation->mime);
 				$evaluation->path = 'evaluations/'.$evaluation->id.$evaluation->mime;
 				$evaluation->save();
@@ -135,6 +140,11 @@ class EvaluationsController extends Controller
 			} else {
 				$evaluation->caregiver_id = $id;
 				$evaluation->save();
+
+				$fileExists = Storage::exists('evaluations/'.$evaluation->id.$evaluation->mime);
+				if ($fileExists) {
+					Storage::delete('evaluations/'.$evaluation->id.$evaluation->mime);
+				}
 
 				Storage::move($evaluation->path, 'evaluations/'.$evaluation->id.$evaluation->mime);
 				$evaluation->path = 'evaluations/'.$evaluation->id.$evaluation->mime;
