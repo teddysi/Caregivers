@@ -13,9 +13,7 @@ class AdminCaregiverEditTest extends DuskTestCase
     use DatabaseMigrations;
 
     /**
-     * A Dusk test example.
-     *
-     * @return void
+     * @group admin
      */
     public function testBasicExample()
     {
@@ -60,9 +58,6 @@ class AdminCaregiverEditTest extends DuskTestCase
                     ->assertSeeIn('div.details h4:nth-child(6)', 'Criador: '.$user->creator->username)
                     ->assertSeeIn('div.details h4:nth-child(7)', 'Data da criação: '.(string)$user->created_at)
                     ->assertSeeIn('div.details h4:last-child', 'Data da última atualização: '.(string)$user->updated_at)
-                    ->assertSeeIn('table.tasks tr:last-child td:first-child', 'Foi atualizado.')
-                    ->assertSeeIn('table.tasks tr:last-child td:nth-child(2)', 'healthcarePro')
-                    ->assertSeeIn('table.tasks tr:last-child td:last-child', (string)$user->updated_at)
                     ->pause(5000);
         });
     }

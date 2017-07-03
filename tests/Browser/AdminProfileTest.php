@@ -12,9 +12,7 @@ class AdminProfileTest extends DuskTestCase
     use DatabaseMigrations;
 
     /**
-     * A Dusk test example.
-     *
-     * @return void
+     * @group admin
      */
     public function testBasicExample()
     {
@@ -30,7 +28,7 @@ class AdminProfileTest extends DuskTestCase
                     ->assertSeeIn('h4:first-child', 'Nome: '.$user->name)
                     ->assertSeeIn('h4:nth-child(2)', 'Email: '.$user->email)
                     ->assertSeeIn('h4:nth-child(3)', 'Função: Administrador')
-                    ->assertSeeIn('h4:nth-child(6)', 'Data da criação: '.(string)$user->created_at)
+                    ->assertSeeIn('h4:nth-child(4)', 'Data da criação: '.(string)$user->created_at)
                     ->assertSeeIn('h4:last-child', 'Data da última atualização: '.(string)$user->updated_at)
                     ->pause(2000);
         });

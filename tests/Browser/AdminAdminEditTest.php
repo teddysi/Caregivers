@@ -12,25 +12,22 @@ class AdminAdminEditTest extends DuskTestCase
     use DatabaseMigrations;
 
     /**
-     * A Dusk test example.
-     *
-     * @return void
+     * @group admin
      */
     public function testExample()
     {
 
-
-        $this->browse(function (Browser $browser) use () {
+        $this->browse(function (Browser $browser) {
             $browser->loginAs(Admin::find(13))
                     ->visit('/')
-                    ->click('Utilizadores')
+                    ->clickLink('Utilizadores')
                     ->assertPathIs('/users')
                     ->assertSeeIn('select[name=\'userRole\'] option:first-child','Todos')
                     ->click('select[name=\'userRole\'] option:nth-child(2)','Administrador')
                     ->press('Procurar')
                     ->assertPathIs('/users')
-                    ->assertSeeIn('a[href=\'http://192.168.99.100/users/13\']', 'Editar')
-                    ->click('a[href=\'http://192.168.99.100/users/13\']', 'Editar')
+                    ->assertSeeIn('a[href=\'http://192.168.99.100/users/13/edit\']', 'Editar')
+                    ->click('a[href=\'http://192.168.99.100/users/13/edit\']', 'Editar')
                     ->assertPathIs('/users/13/edit')
                     ->type('name', 'Im a Test')
                     ->type('email', 'tessssst@gmail.com')

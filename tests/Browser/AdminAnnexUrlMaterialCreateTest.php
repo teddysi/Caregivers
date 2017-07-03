@@ -10,7 +10,15 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 
 class AdminAnnexUrlMaterialCreateTest extends DuskTestCase
 {
-    $material_count = count(Material::all());
+
+    use DatabaseMigrations;
+
+    /**
+     * @group admin
+     */
+    public function testExample()
+    {
+        $material_count = count(Material::all());
 
         $this->browse(function (Browser $browser) use ($material_count) {
             $browser->loginAs(Admin::find(13))

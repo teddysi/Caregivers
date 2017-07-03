@@ -13,9 +13,7 @@ class AdminAdminDetailsTest extends DuskTestCase
     use DatabaseMigrations;
 
     /**
-     * A Dusk test example.
-     *
-     * @return void
+     * @group admin
      */
     public function testBasicExample()
     {
@@ -23,7 +21,7 @@ class AdminAdminDetailsTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->loginAs(Admin::find(13))
                     ->visit('/')
-                    ->click('Utilizadores')
+                    ->clickLink('Utilizadores')
                     ->assertPathIs('/users')
                     ->assertSeeIn('select[name=\'userRole\'] option:first-child','Todos')
                     ->click('select[name=\'userRole\'] option:nth-child(2)','Administrador')

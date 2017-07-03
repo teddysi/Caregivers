@@ -13,9 +13,7 @@ class AdminCaregiverDetailsTest extends DuskTestCase
     use DatabaseMigrations;
 
     /**
-     * A Dusk test example.
-     *
-     * @return void
+     * @group admin
      */
     public function testBasicExample()
     {
@@ -23,7 +21,7 @@ class AdminCaregiverDetailsTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->loginAs(Admin::find(13))
                     ->visit('/')
-                    ->click('Utilizadores')
+                    ->clickLink('Utilizadores')
                     ->assertPathIs('/users')
                     ->assertSeeIn('select[name=\'userRole\'] option:first-child','Todos')
                     ->click('select[name=\'userRole\'] option:last-child','Cuidador')
@@ -46,11 +44,7 @@ class AdminCaregiverDetailsTest extends DuskTestCase
                     ->assertSeeIn('div.details h4:last-child', 'Data da última atualização: '.(string)$caregiver->updated_at)
                     ->assertSeeIn('div.panel-heading h3', 'Ações')
                     ->assertSeeIn('div.panel-body','Editar')
-                    ->assertSeeIn('div.panel-body','Bloquear')
-                    ->assertSeeIn('div.panel-body','Utentes')
-                    ->assertSeeIn('div.panel-body','Materiais')
-                    ->assertSeeIn('div.panel-body','Avaliações')
-                    ->assertSeeIn('div.panel-body','Voltar Atrás');
+                    ->assertSeeIn('div.panel-body','Bloquear');
  
         });
     }

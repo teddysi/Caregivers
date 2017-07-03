@@ -14,9 +14,7 @@ class AdminAnnexFileMaterialCreateTest extends DuskTestCase
     use DatabaseMigrations;
 
     /**
-     * A Dusk test example.
-     *
-     * @return void
+     * @group admin
      */
     public function testBasicExample()
     {

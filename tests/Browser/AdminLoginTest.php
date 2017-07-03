@@ -12,7 +12,7 @@ class AdminLoginTest extends DuskTestCase
     use DatabaseMigrations;
 
     /**
-     * @group healthcarepro
+     * @group admin
      */
     public function testBasicExample()
     {

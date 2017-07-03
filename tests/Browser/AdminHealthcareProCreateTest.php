@@ -13,9 +13,7 @@ class AdminHealthcareProCreateTest extends DuskTestCase
     use DatabaseMigrations;
 
     /**
-     * A Dusk test example.
-     *
-     * @return void
+     * @group admin
      */
     public function testBasicExample()
     {
@@ -57,7 +55,7 @@ class AdminHealthcareProCreateTest extends DuskTestCase
                     ->assertSeeIn('div.details h4:first-child', 'Nome: '.$new_user->name)
                     ->assertSeeIn('div.details h4:nth-child(2)', 'Email: '.$new_user->email)
                     ->assertSeeIn('div.details h4:nth-child(3)', 'Função: Profissional de Saúde')
-                    ->assertSeeIn('div.details h4:nth-child(4)', 'Data da criação: '.(string)$new_user->created_at)
+                    ->assertSeeIn('div.details h4:nth-child(6)', 'Data da criação: '.(string)$new_user->created_at)
                     ->assertSeeIn('div.details h4:last-child', 'Data da última atualização: '.(string)$new_user->updated_at)
                     ->pause(5000);
         });

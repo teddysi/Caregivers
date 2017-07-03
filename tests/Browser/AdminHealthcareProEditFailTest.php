@@ -12,9 +12,7 @@ class AdminHealthcareProEditFailTest extends DuskTestCase
     use DatabaseMigrations;
 
     /**
-     * A Dusk test example.
-     *
-     * @return void
+     * @group admin
      */
     public function testExample()
     {
@@ -41,20 +39,20 @@ class AdminHealthcareProEditFailTest extends DuskTestCase
 
         $healthcarePro = [
             'HealthcarePro',
-            'healthcarePro@mail.com',
+            'admin@mail.com',
         ];
 
         $this->browse(function (Browser $browser) use ($messages, $healthcarePro) {
             $browser->loginAs(Admin::find(13))
                     ->visit('/')
-                    ->click('Utilizadores')
+                    ->clickLink('Utilizadores')
                     ->assertPathIs('/users')
                     ->assertSeeIn('select[name=\'userRole\'] option:first-child','Todos')
                     ->click('select[name=\'userRole\'] option:nth-child(3)','Profissional de Saúde')
                     ->press('Procurar')
                     ->assertPathIs('/users')
-                    ->assertSeeIn('a[href=\'http://192.168.99.100/users/14\']', 'Editar')
-                    ->click('a[href=\'http://192.168.99.100/users/14\']', 'Editar')
+                    ->assertSeeIn('a[href=\'http://192.168.99.100/users/14/edit\']', 'Editar')
+                    ->click('a[href=\'http://192.168.99.100/users/14/edit\']', 'Editar')
                     ->assertPathIs('/users/14/edit')
                     ->type('name', ' ')
                     ->type('email', ' ')

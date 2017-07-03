@@ -13,9 +13,7 @@ class AdminTextMaterialDetailsTest extends DuskTestCase
     use DatabaseMigrations;
 
     /**
-     * A Dusk test example.
-     *
-     * @return void
+     * @group admin
      */
     public function testBasicExample()
     {
@@ -27,8 +25,6 @@ class AdminTextMaterialDetailsTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($material) {
             $browser->loginAs(Admin::find(13))
                     ->visit('/')
-                    ->clickLink('Recursos')
-                    ->assertSee('Materiais')
                     ->clickLink('Materiais')
                     ->assertPathIs('/materials')
                     ->assertSeeIn('select[name=\'materialType\'] option:first-child','Todos')

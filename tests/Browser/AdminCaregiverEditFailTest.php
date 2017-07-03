@@ -12,9 +12,7 @@ class AdminCaregiverEditFailTest extends DuskTestCase
     use DatabaseMigrations;
 
     /**
-     * A Dusk test example.
-     *
-     * @return void
+     * @group admin
      */
     public function testExample()
     {
@@ -41,7 +39,7 @@ class AdminCaregiverEditFailTest extends DuskTestCase
         $this->browse(function (Browser $browser) use ($messages, $caregiver) {
             $browser->loginAs(Admin::find(13))
                     ->visit('/')
-                    ->click('Utilizadores')
+                    ->clickLink('Utilizadores')
                     ->assertPathIs('/users')
                     ->assertSeeIn('select[name=\'userRole\'] option:first-child','Todos')
                     ->click('select[name=\'userRole\'] option:last-child','Cuidador')

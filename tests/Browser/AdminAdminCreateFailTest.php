@@ -12,9 +12,7 @@ class AdminAdminCreateFailTest extends DuskTestCase
     use DatabaseMigrations;
 
     /**
-     * A Dusk test example.
-     *
-     * @return void
+     * @group admin
      */
     public function testBasicExample()
     {
@@ -73,7 +71,6 @@ class AdminAdminCreateFailTest extends DuskTestCase
                     ->type('username', $admin[0])
                     ->type('name', $admin[1])
                     ->type('email', $admin[2])
-                    ->type('location', $admin[3])
                     ->type('password', 'aaaaaa')
                     ->type('password_confirmation', 'aaaaaa')
                     ->press('Criar')

@@ -13,9 +13,7 @@ class AdminHealthcareProDetailsTest extends DuskTestCase
     use DatabaseMigrations;
 
     /**
-     * A Dusk test example.
-     *
-     * @return void
+     * @group admin
      */
     public function testBasicExample()
     {
@@ -23,7 +21,7 @@ class AdminHealthcareProDetailsTest extends DuskTestCase
         $this->browse(function (Browser $browser) {
             $browser->loginAs(Admin::find(13))
                     ->visit('/')
-                    ->click('Utilizadores')
+                    ->clickLink('Utilizadores')
                     ->assertPathIs('/users')
                     ->assertSeeIn('select[name=\'userRole\'] option:first-child','Todos')
                     ->click('select[name=\'userRole\'] option:nth-child(3)','Profissional de Saúde')
@@ -39,7 +37,7 @@ class AdminHealthcareProDetailsTest extends DuskTestCase
                     ->assertSeeIn('div.details h4:first-child', 'Nome: '.$healthcarePro->name)
                     ->assertSeeIn('div.details h4:nth-child(2)', 'Email: '.$healthcarePro->email)
                     ->assertSeeIn('div.details h4:nth-child(3)', 'Função: Profissional de Saúde')
-                    ->assertSeeIn('div.details h4:nth-child(4)', 'Data da criação: '.(string)$healthcarePro->created_at)
+                    ->assertSeeIn('div.details h4:nth-child(6)', 'Data da criação: '.(string)$healthcarePro->created_at)
                     ->assertSeeIn('div.details h4:last-child', 'Data da última atualização: '.(string)$healthcarePro->updated_at)
                     ->pause(5000);
 

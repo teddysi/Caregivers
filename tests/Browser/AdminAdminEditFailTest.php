@@ -12,9 +12,7 @@ class AdminAdminEditFailTest extends DuskTestCase
     use DatabaseMigrations;
 
     /**
-     * A Dusk test example.
-     *
-     * @return void
+     * @group admin
      */
     public function testExample()
     {
@@ -41,43 +39,43 @@ class AdminAdminEditFailTest extends DuskTestCase
 
         $admin = [
             'Admin',
-            'admin@mail.com',
+            'admin@mail.com'
         ];
 
         $this->browse(function (Browser $browser) use ($messages, $admin) {
             $browser->loginAs(Admin::find(13))
                     ->visit('/')
-                    ->click('Utilizadores')
+                    ->clickLink('Utilizadores')
                     ->assertPathIs('/users')
                     ->assertSeeIn('select[name=\'userRole\'] option:first-child','Todos')
                     ->click('select[name=\'userRole\'] option:nth-child(2)','Administrador')
                     ->press('Procurar')
                     ->assertPathIs('/users')
-                    ->assertSeeIn('a[href=\'http://192.168.99.100/users/13\']', 'Editar')
-                    ->click('a[href=\'http://192.168.99.100/users/13\']', 'Editar')
-                    ->assertPathIs('/users/13/edit')
+                    ->assertSeeIn('a[href=\'http://192.168.99.100/users/1/edit\']', 'Editar')
+                    ->click('a[href=\'http://192.168.99.100/users/1/edit\']', 'Editar')
+                    ->assertPathIs('/users/1/edit')
                     ->type('name', ' ')
                     ->type('email', ' ')
                     ->press('Guardar')
-                    ->assertPathIs('/users/13/edit')
+                    ->assertPathIs('/users/1/edit')
                     ->assertSee($messages[5])
                     ->assertSee($messages[6])
                     ->type('name', 'b')
                     ->type('email', 'c@g')
                     ->press('Guardar')
-                    ->assertPathIs('/users/13/edit')
+                    ->assertPathIs('/users/1/edit')
                     ->assertSee($messages[7])
                     ->assertSee($messages[4])
                     ->type('password', 'a')
                     ->type('password_confirmation', 'b')
                     ->press('Guardar')
-                    ->assertPathIs('/users/13/edit')
+                    ->assertPathIs('/users/1/edit')
                     ->assertSee($messages[15])
                     ->assertSee($messages[16])
                     ->type('name', $admin[0])
                     ->type('email', $admin[1])
                     ->press('Guardar')
-                    ->assertPathIs('/users/13/edit')
+                    ->assertPathIs('/users/1/edit')
                     ->assertSee($messages[1])
                     ->pause(3000);
         
