@@ -246,8 +246,8 @@ class MaterialsController extends Controller
 					$material->path = $request->file('pathImage')->storeAs('images', $request->input('name') . '.' . $whatIWant);
 					$material->mime = '.' . $whatIWant;
 				} else if ($material->path && $material->name != $request->input('name')) {
-					Storage::move($material->path, 'images/'. $request->input('name').$material->mime);
-					$material->path = 'images/'. $request->input('name').$material->mime;
+					Storage::move($material->path, 'images/'.$request->input('name').$material->mime);
+					$material->path = 'images/'.$request->input('name').$material->mime;
 				}
 				break;
 

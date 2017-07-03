@@ -89,7 +89,7 @@ class EvaluationsController extends Controller
 
 			$originalName = $request->path->getClientOriginalName();
 			$whatIWant = substr($originalName, strpos($originalName, ".") + 1);
-			$evaluation->path = $request->file('path')->storeAs('evaluations', $request->input('description') . '.' . $whatIWant);
+			$evaluation->path = $request->file('path')->storeAs('evaluations', $request->input('description').'.'.$whatIWant);
 			$evaluation->mime = '.' . $whatIWant;
 		}
 
@@ -106,6 +106,10 @@ class EvaluationsController extends Controller
 				$quiz->patients()->attach([$id => ['evaluation_id'=> $evaluation->id]]);
 			} else {
 				$evaluation->patient_id = $id;
+				$evaluation->save();
+
+				Storage::move($evaluation->path, 'evaluations/'.$evaluation->id.$evaluation->mime);
+				$evaluation->path = 'evaluations/'.$evaluation->id.$evaluation->mime;
 				$evaluation->save();
 			}
 
@@ -130,6 +134,10 @@ class EvaluationsController extends Controller
 				$quiz->caregivers()->attach([$id => ['evaluation_id'=> $evaluation->id]]);
 			} else {
 				$evaluation->caregiver_id = $id;
+				$evaluation->save();
+
+				Storage::move($evaluation->path, 'evaluations/'.$evaluation->id.$evaluation->mime);
+				$evaluation->path = 'evaluations/'.$evaluation->id.$evaluation->mime;
 				$evaluation->save();
 			}
 
