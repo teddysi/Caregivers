@@ -64,6 +64,17 @@ class UsersController extends Controller
 			$materials->setPageName('materials');
             return view('dashboard.admin', compact('users', 'materials'));
         } elseif (Auth::user()->role == 'healthcarepro') {
+			$canExport = false;
+			$myCaregivers = Auth::user()->caregivers;
+			if (count($myCaregivers) > 0) {
+				foreach ($myCaregivers as $myCaregiver) {
+					if (count($myCaregiver->accesses) > 0) {
+						$canExport = true;
+						break;
+					}
+				}
+			}
+
 			$caregivers = Auth::user()->caregivers()->paginate(10, ['*'], 'caregivers');
 			$caregivers->setPageName('caregivers');
 
@@ -75,7 +86,7 @@ class UsersController extends Controller
 			}
 			$otherCaregivers->setPageName('otherCaregivers');
 
-			return view('dashboard.healthcarepro', compact('caregivers', 'otherCaregivers'));
+			return view('dashboard.healthcarepro', compact('caregivers', 'otherCaregivers', 'canExport'));
 		}
 
         Auth::logout();

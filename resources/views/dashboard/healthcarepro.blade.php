@@ -6,17 +6,19 @@
 	<div class="row">
 		<div class="col-lg-12">
             <legend>Os meus Cuidadores</legend>
-			<div class="row">
-				<div class="col-4 col-sm-4 col-md-4">
-					<form action="{{ route('accesses.export') }}" method="POST" class="form-group">
-						{{ csrf_field() }}
-						<div class="form-group">
-							<button type="submit" class="btn btn-block btn-primary" name="block">Exportar Acessos para o Formato CSV</button>
-						</div>
-					</form>
+			@if ($canExport)
+				<div class="row">
+					<div class="col-4 col-sm-4 col-md-4">
+						<form action="{{ route('accesses.export') }}" method="POST" class="form-group">
+							{{ csrf_field() }}
+							<div class="form-group">
+								<button type="submit" class="btn btn-block btn-primary" name="block">Exportar Acessos para o Formato CSV</button>
+							</div>
+						</form>
+					</div>
 				</div>
-			</div>
-			<br />
+				<br />
+			@endif
             @if (count($caregivers))
                 <table class="table table-striped">
                     <thead>

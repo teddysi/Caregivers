@@ -49,6 +49,25 @@ class AccessesController extends Controller
 
     public function export()
     {
+        if (Auth::user()->role != 'healthcarepro') {
+            abort(404);
+        }
+
+        $canExport = false;
+        $myCaregivers = Auth::user()->caregivers;
+        if (count($myCaregivers) > 0) {
+            foreach ($myCaregivers as $myCaregiver) {
+                if (count($myCaregiver->accesses) > 0) {
+                    $canExport = true;
+                    break;
+                }
+            }
+        }
+
+        if (!$canExport) {
+            abort(403);
+        }
+
         $filename = 'Acessos dos cuidadores de '.Auth::user()->name.' em '.Carbon::now();
         $headers = [
                 'Content-Type'        => 'text/csv; charset=utf-8',

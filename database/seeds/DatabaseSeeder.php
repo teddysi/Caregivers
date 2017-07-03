@@ -113,7 +113,7 @@ class DatabaseSeeder extends Seeder
             }
         }
         
-        factory(App\Access::class, 10)->create();
+        factory(App\Access::class, 100)->create();
 
         $this->buildQuestions();
         $this->buildQuizs();
