@@ -252,7 +252,7 @@ class DatabaseSeeder extends Seeder
             $evaluation->type = 'Pela aplicação';
             $evaluation->description = $name;
             $evaluation->model = 'Model X';
-            $evaluation->path = 'evaluations/'.$name.'.pdf';
+            $evaluation->path = 'evaluations/'.($i+1).'.pdf';
             $evaluation->mime = '.pdf';
             
             if($i < 2) {
