@@ -170,6 +170,18 @@ class DatabaseSeeder extends Seeder
         $caregiver->remember_token = str_random(10);
         $caregiver->created_by = $users->random()->id;
         $caregiver->save();
+
+        //HealthcarePro BLOCKED
+        $healthcarePro = new App\HealthcarePro();
+        $healthcarePro->username = 'imBlocked';
+        $healthcarePro->name = 'imBlocked';
+        $healthcarePro->email = 'imBlocked@mail.com';
+        $healthcarePro->facility = 'Hospital de Leiria';
+        $healthcarePro->job = 'Médico';
+        $healthcarePro->blocked = 1;
+        $healthcarePro->password = bcrypt('propw');
+        $healthcarePro->remember_token = str_random(10);
+        $healthcarePro->save();
     }
 
     private function buildImages()

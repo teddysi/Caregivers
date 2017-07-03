@@ -11,11 +11,9 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 class HealthcareProTextMaterialEditFailTest extends DuskTestCase
 {
     use DatabaseMigrations;
-
+    
     /**
-     * A Dusk test example.
-     *
-     * @return void
+     * @group healthcarepro
      */
     public function testBasicExample()
     {
